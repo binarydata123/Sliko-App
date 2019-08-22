@@ -1,0 +1,103 @@
+<resources>
+    <string name="app_name">Sliko</string>
+
+    <string name="selectTime">Chọn thời gian</string>
+    <string name="pickTime">Chọn thời gian</string>
+    <string name="enterAmount">Nhập số tiền</string>
+    <string name="stadiumName">Sân vận động chúa</string>
+    <string name="stadiumNameBigText">Giá sân vận động vGiá sân vận động </string>
+    <string name="stadiumLocation">Lords Pitch cho đầu tiên</string>
+    <string name="bookStadium">Sân vận động sách</string>
+    <string name="payNow">Thanh toán ngay</string>
+    <string name="close">Gần</string>
+    <string name="reviews">Nhận xét</string>
+    <string name="stadiumInfo">Thông tin sân vận động</string>
+    <string name="pitches">Sân</string>
+    <string name="thankYouMessage">Cảm ơn bạn đã chọn Ứng dụng Sliko, Tiếp tục đặt phòng</string>
+    <string name="price">Price</string>
+    <string name="myBookings">Đặt chỗ của tôi</string>
+    <string name="notifications">Thông báo</string>
+    <string name="editProfile">Chỉnh sửa hồ sơ</string>
+    <string name="profile">My Profile</string>
+
+
+    <string name="forgotPassword">Quên mật khẩu</string>
+    <string name="registerToSilko">Đăng ký để Silko</string>
+    <string name="register">Ghi danh</string>
+    <string name="haveAccountLoginHere">Đã có tài khoản? Đăng nhập tại đây</string>
+    <string name="createStadium">Tạo sân vận động</string>
+
+    <!--Add pitch activity-->
+    <string name="Pitch_Name">Tên sân</string>
+    <string name="enterpitchname">Nhập tên sân</string>
+    <string name="Description">Sự miêu tả</string>
+    <string name="enterDescription">Nhập mô tả</string>
+    <string name="Price">Giá bán</string>
+    <string name="enterprice">Nhập giá</string>
+    <string name="availability">khả dụng</string>
+    <string name="startime">Thời gian bắt đầu</string>
+    <string name="endtime">Thời gian kết thúc</string>
+    <string name="stadium_image">Hình ảnh sân vận động</string>
+    <string name="selectimagetoupload">Chọn hình ảnh để tải lên</string>
+    <string name="formatsholdbe">Định dạng phải là .jpeg .png</string>
+    <string name="addpitch">Thêm sân</string>
+    <!-- detail pitch-->
+    <string name="mobilenumber">Số điện thoại</string>
+    <string name="enter_mobilenumber">Nhập số điện thoại di động</string>
+    <string name="entertime">Nhập thời gian</string>
+    <string name="startdate">Ngày bắt đầu</string>
+    <string name="enddate">Ngày cuối</string>
+    <string name="time">Thời gian</string>
+    <string name="select_date">Chọn ngày</string>
+    <string name="Save">Tiết kiệm</string>
+    <string name="edit">Chỉnh sửa</string>
+    <!--login-->
+    <string name="enteremail">Nhập email</string>
+    <string name="loginToSilko">Đăng nhập vào Silko</string>
+    <string name="login">Đăng nhập</string>
+    <string name="noAccountCreateHere">Không tài khoản? Tạo ở đây</string>
+    <string name="Password">Mật khẩu</string>
+    <!--pitch listening-->
+    <string name="Add_Pitch">Thêm sân</string>
+    <!--profile activity-->
+    <string name="Address">Địa chỉ nhà</string>
+    <string name="Enter_Address">Nhập địa chỉ</string>
+    <!--registration-->
+    <string name="enterusername">Điền tên đăng nhập</string>
+    <string name="confirmpasswd">Xác nhận mật khẩu</string>
+    <string name="addedStadium">sân vận động</string>
+    <string name="menu_pitches">Sân</string>
+    <string name="menu_bookings">Đặt chỗ</string>
+    <string name="addPitch">Add Pitch</string>
+
+
+    <string name="plzEnterpitchname">Vui lòng nhập tên sân</string>
+    <string name="plzEnterdescption">Vui lòng nhập mô tả</string>
+    <string name="plzenteraddress">Vui lòng nhập địa chỉ</string>
+    <string name="plzselectimage">Vui lòng chọn hình ảnh</string>
+
+    <string name="please_enter_username">Please enter username</string>
+    <string name="please_enter_phone">Please enter phone</string>
+    <string name="please_enter_valid_phone">Please enter a valid phone</string>
+    <string name="please_enter_email">Please enter email</string>
+    <string name="please_enter_valid_email">Please enter valid email</string>
+    <string name="please_enter_password">Please enter password</string>
+    <string name="please_confirm_password">Please enter confirm password</string>
+    <string name="password_do_not_match">Password does not match</string>
+    <string name="noStadiumFound">You dont\'t have any stadium</string>
+    <string name="submit">Submit</string>
+    <string name="changePassword">Change Password</string>
+    <string name="newPassword">Enter New Password</string>
+    <string name="cancel">Cancel</string>
+    <string name="appRequiresPermission">App needs permission enable them in settings</string>
+    <string name="bookingDetail">Booking Detail</string>
+    <string name="pitchName">Sân cỏ</string>
+    <string name="bookingOrder">Tổng số đơn đặt hàng</string>
+    <string name="menu_rating">All Reviews</string>
+    <string name="singOut">SignOut</string>
+    <string name="editStadium">Edit Stadium</string>
+    <string name="stadiumDescription">Description</string>
+    <string name="addedon">AddedON</string>
+    <string name="pitchImages">Pitch Images</string>
+
+</resources>

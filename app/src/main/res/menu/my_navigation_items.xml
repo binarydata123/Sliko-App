@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_stadium"
+        android:icon="@drawable/ic_stadium_owner"
+        android:title="@string/addedStadium" />
+    <item
+        android:id="@+id/action_pitches"
+        android:icon="@drawable/ic_pitch"
+        android:enabled="false"
+        android:visible="false"
+        android:title="@string/menu_pitches" />
+    <item
+        android:id="@+id/action_bookings"
+        android:icon="@drawable/ic_booking"
+        android:title="@string/menu_bookings"/>
+    <item
+        android:id="@+id/action_all_reviews"
+        android:icon="@drawable/ic_star"
+        android:title="@string/menu_rating"/>
+</menu>

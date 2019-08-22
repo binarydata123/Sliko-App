@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="app.sliko">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".activity.SplashActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.here.android.maps.appid"
+            android:value="owoBGfD55oi1azvTYGmV" />
+        <meta-data
+            android:name="com.here.android.maps.apptoken"
+            android:value="km25Osrehe0yLjxBIlQOhA" />
+
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.UserHomeActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity
+            android:name=".activity.UserBookingListActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
+        <activity
+            android:name=".activity.StadiumDetailActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.AfterPayConfirmActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".owner.activity.AddStadiumActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".owner.activity.StadiumOwnerHomeActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".owner.activity.OwnerPitchBookingActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".owner.activity.PitchDetailActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".owner.activity.AddPitchActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+    </application>
+
+</manifest>
