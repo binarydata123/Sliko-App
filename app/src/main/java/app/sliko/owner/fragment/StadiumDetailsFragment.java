@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import app.sliko.R;
 import app.sliko.adapter.StadiumImagesAdapter;
 import app.sliko.owner.activity.AddStadiumActivity;
+import app.sliko.owner.activity.EditStadiumActivity;
 import app.sliko.owner.adapter.PitchAdapterOwner;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.owner.model.PitchModel;
@@ -75,6 +76,8 @@ public class StadiumDetailsFragment extends Fragment {
     ColorRatingBar stadiumRating;
     @BindView(R.id.createdDate)
     TextView createdDate;
+    @BindView(R.id.editStadiumLayout)
+    LinearLayout editStadiumLayout;
     private ArrayList<String> reviewsModelArrayList;
     private StadiumImagesAdapter stadiumImagesAdapter;
     private View view;
@@ -112,7 +115,7 @@ public class StadiumDetailsFragment extends Fragment {
             EventBus.getDefault().register(this);
         }
         weakReference = new WeakReference<>(StadiumDetailsFragment.this);
-
+        editStadiumLayout.setVisibility(View.VISIBLE);
         return view;
     }
 
@@ -226,6 +229,12 @@ public class StadiumDetailsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), AddStadiumActivity.class));
+            }
+        });
+        editStadiumLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), EditStadiumActivity.class));
             }
         });
     }

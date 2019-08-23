@@ -54,25 +54,25 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
         Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.pitchImage);
 //        Picasso.get().load(pitchModelArrayList.get(i).getPitch_gallery().get(0)).into(myViewHolder.pitchImage);
 //        myViewHolder.pitchRating.setRating(Float.parseFloat(pitchModelArrayList.get(i).getPitch_review_avg()));
-//        myViewHolder.viewDetailsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//            }
-//        });
-//        Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.pitchImage);
-//        myViewHolder.viewBookingDetailsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ((Activity) context).startActivity(new Intent(context, OwnerPitchBookingActivity.class));
-//            }
-//        });
-//        myViewHolder.viewDetailsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ((Activity) context).startActivity(new Intent(context, PitchDetailActivity.class));
-//            }
-//        });
+         myViewHolder.viewDetailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            }
+        });
+
+        Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.pitchImage);
+        myViewHolder.viewBookingDetailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((Activity) context).startActivity(new Intent(context, OwnerPitchBookingActivity.class));
+            }
+        });
+        myViewHolder.viewDetailsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((Activity) context).startActivity(new Intent(context, PitchDetailActivity.class));
+            }
+        });
     }
 
 

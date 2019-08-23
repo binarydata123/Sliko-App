@@ -54,6 +54,30 @@
                         app:ci_orientation="horizontal">
 
                     </me.relex.circleindicator.CircleIndicator>
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/editStadiumLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:layout_margin="5dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_bg_green"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="3dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_edit_white"
+                            android:drawablePadding="8dp"
+                            android:textColor="@color/white"
+                            android:text="Edit" />
+                    </LinearLayout>
                 </FrameLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
@@ -142,21 +166,19 @@
                             android:id="@+id/stadiumDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/stadiumDescription"
-                            />
+                            android:text="@string/stadiumDescription" />
 
                         <TextView
                             android:id="@+id/stadiumLocation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/stadiumLocation"
-                          />
+                            android:text="@string/stadiumLocation" />
+
                         <TextView
                             android:id="@+id/createdDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/addedon"
-                          />
+                            android:text="@string/addedon" />
 
 
                     </LinearLayout>
@@ -198,7 +220,8 @@
                         android:layout_width="28sp"
                         android:layout_height="28sp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="25dp" />
+                        android:layout_marginTop="25dp"
+                        android:visibility="gone" />
                 </FrameLayout>
             </LinearLayout>
 
