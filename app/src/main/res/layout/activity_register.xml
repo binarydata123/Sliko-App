@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@drawable/background"
     android:orientation="vertical">
 
     <ScrollView
@@ -21,14 +22,13 @@
                 android:orientation="vertical"
                 android:padding="26dp">
 
-
                 <TextView
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:text="@string/registerToSilko"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="22sp" />
 
                 <LinearLayout
@@ -202,6 +202,8 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:textSize="18sp"
+                            android:textColor="@color/white"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Choose your role" />
@@ -212,12 +214,14 @@
                             android:orientation="horizontal">
 
                             <RadioGroup
+
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
 
                                 <RadioButton
                                     android:id="@+id/checkUser"
+                                    android:textColor="@color/white"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:checked="true"
@@ -228,6 +232,7 @@
                                     android:layout_height="match_parent" />
 
                                 <RadioButton
+                                    android:textColor="@color/white"
                                     android:id="@+id/checkOwner"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -279,7 +284,7 @@
                         <TextView
                             android:layout_width="40dp"
                             android:layout_height="1dp"
-                            android:background="@color/black" />
+                            android:background="@color/white" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -288,13 +293,13 @@
                             android:paddingLeft="8dp"
                             android:paddingRight="8dp"
                             android:text="@string/haveAccountLoginHere"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="40dp"
                             android:layout_height="1dp"
-                            android:background="@color/black" />
+                            android:background="@color/white" />
 
                     </LinearLayout>
 

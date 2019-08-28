@@ -56,13 +56,17 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(LoginActivity.this);
         dialog = M.showDialog(LoginActivity.this, "", false);
         setListeners();
-
     }
 
     private void setListeners() {
         loginbtn.setOnClickListener(view -> {
-            startActivity(new Intent(LoginActivity.this, StadiumOwnerHomeActivity.class));
-            finish();
+           if(checkOwner.isChecked()){
+               startActivity(new Intent(LoginActivity.this, StadiumOwnerHomeActivity.class));
+               finish();
+           }else{
+               startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
+               finish();
+           }
 //            if ((etUserEmail.length() == 0 || etUserEmail.getText().toString().trim().length() == 0)) {
 //                Toast.makeText(LoginActivity.this, getString(R.string.please_enter_email), Toast.LENGTH_SHORT).show();
 //

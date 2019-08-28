@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@drawable/background"
     android:orientation="vertical">
 
     <ScrollView
@@ -28,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
                     android:text="@string/loginToSilko"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="22sp" />
 
                 <LinearLayout
@@ -108,6 +109,8 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="18sp"
                             android:text="Choose your role" />
 
                         <LinearLayout
@@ -122,7 +125,8 @@
 
                                 <RadioButton
                                     android:id="@+id/checkUser"
-                                    android:checked="true"
+
+                                    android:textColor="@color/white"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="User" />
@@ -132,6 +136,8 @@
                                     android:layout_height="match_parent" />
 
                                 <RadioButton
+                                    android:checked="true"
+                                    android:textColor="@color/white"
                                     android:id="@+id/checkOwner"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -149,7 +155,7 @@
                         android:gravity="end|center_vertical"
                         android:padding="16dp"
                         android:text="@string/forgotPassword"
-                        android:textColor="@color/forgotPasswordColor"
+                        android:textColor="@color/yellow"
                         android:textSize="16sp" />
 
                     <FrameLayout
@@ -195,6 +201,7 @@
                             android:background="@color/black" />
 
                         <TextView
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"

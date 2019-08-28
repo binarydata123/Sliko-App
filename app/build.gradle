@@ -5,7 +5,7 @@ android {
     buildToolsVersion "29.0.1"
     defaultConfig {
         applicationId "app.sliko"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -54,5 +54,8 @@ dependencies {
     implementation 'com.yalantis:ucrop:2.2.0-native'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'me.relex:circleindicator:2.1.4'
+
+    implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
+    implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.0'
     implementation project(':HERE-sdk')
 }

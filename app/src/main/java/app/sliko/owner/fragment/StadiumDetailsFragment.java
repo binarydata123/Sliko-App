@@ -28,15 +28,20 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import app.sliko.R;
 import app.sliko.adapter.StadiumImagesAdapter;
+import app.sliko.dialogs.DialogMethodCaller;
+import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.owner.activity.AddStadiumActivity;
 import app.sliko.owner.activity.EditStadiumActivity;
 import app.sliko.owner.adapter.PitchAdapterOwner;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
+import app.sliko.owner.model.ImagesModel;
 import app.sliko.owner.model.PitchModel;
 import app.sliko.utills.M;
+import app.sliko.web.Api;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
@@ -78,6 +83,10 @@ public class StadiumDetailsFragment extends Fragment {
     TextView createdDate;
     @BindView(R.id.editStadiumLayout)
     LinearLayout editStadiumLayout;
+    @BindView(R.id.deleteStadiumLayout)
+    LinearLayout deleteSadiumLayout;
+    @BindView(R.id.stadiumChangeLayout)
+    LinearLayout changeStadiumLayout;
     private ArrayList<String> reviewsModelArrayList;
     private StadiumImagesAdapter stadiumImagesAdapter;
     private View view;
@@ -95,7 +104,8 @@ public class StadiumDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        updateLayout();
+        if (getActivity() != null)
+            updateLayout();
         setListeners();
     }
 
@@ -115,10 +125,9 @@ public class StadiumDetailsFragment extends Fragment {
             EventBus.getDefault().register(this);
         }
         weakReference = new WeakReference<>(StadiumDetailsFragment.this);
-        editStadiumLayout.setVisibility(View.VISIBLE);
+        changeStadiumLayout.setVisibility(View.VISIBLE);
         return view;
     }
-
 
     private void updateLayout() {
         is_stadium = M.fetchUserTrivialInfo(getActivity(), "is_stadium");
@@ -134,6 +143,7 @@ public class StadiumDetailsFragment extends Fragment {
     }
 
     private ArrayList<String> pitchGalleryStringArrayList;
+    String id;
 
     private void fetchStadiumInfo() {
         pitchModelArrayList = new ArrayList<>();
@@ -155,6 +165,7 @@ public class StadiumDetailsFragment extends Fragment {
                         if (status.equalsIgnoreCase("true")) {
                             JSONObject data = jsonObject.getJSONObject("data");
                             String stadium_name = data.getString("stadium_name");
+                            id = data.getString("id");
                             String description = data.getString("description");
                             String address = data.getString("address");
                             String pitch_review_avg = data.getString("pitch_review_avg");
@@ -189,6 +200,7 @@ public class StadiumDetailsFragment extends Fragment {
                                 pitchModelArrayList.add(pitchModel);
                             }
 
+
                             stadiumImagesAdapter = new StadiumImagesAdapter(getActivity(), reviewsModelArrayList);
                             viewPager.setAdapter(stadiumImagesAdapter);
                             circleIndicator.setViewPager(viewPager);
@@ -203,7 +215,6 @@ public class StadiumDetailsFragment extends Fragment {
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-
             }
 
             @Override
@@ -223,20 +234,24 @@ public class StadiumDetailsFragment extends Fragment {
 
     }
 
+    private DialogConfirmation dialogConfirmation;
 
     private void setListeners() {
-        addStadiumButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), AddStadiumActivity.class));
-            }
-        });
-        editStadiumLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getActivity(), EditStadiumActivity.class));
-            }
-        });
+        addStadiumButton.setOnClickListener(view -> startActivity(new Intent(getActivity(), AddStadiumActivity.class)));
+        editStadiumLayout.setOnClickListener(view -> startActivity(new Intent(getActivity(), EditStadiumActivity.class).putExtra("stadium_id", id)));
+        deleteSadiumLayout.setOnClickListener(view -> {
+                    dialogConfirmation = DialogMethodCaller.openDialogConfirmation(getActivity(), R.layout.dialog_confirmation, false);
+                    dialogConfirmation.getDialog_error().show();
+                    dialogConfirmation.getDialogConfirmationTitle().setText(getString(R.string.deleteStadium));
+                    dialogConfirmation.getDialogConfirmationMessage().setText(getString(R.string.sureDeleteThisStadium));
+                    dialogConfirmation.getOkButton().setOnClickListener(view12 -> {
+                        dialogConfirmation.getDialog_error().cancel();
+                        M.updateTrivialInfo(getActivity(), Api.IS_STADIUM, Api.STADIUM_REMOVE);
+                        EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
+                    });
+                    dialogConfirmation.getCloseButton().setOnClickListener(view1 -> dialogConfirmation.getDialog_error().cancel());
+                }
+        );
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

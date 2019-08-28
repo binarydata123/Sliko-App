@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 
+import app.sliko.EditProfileActivity;
 import app.sliko.R;
 import app.sliko.owner.fragment.AllReviewsFragment;
 import app.sliko.owner.fragment.BookingFragment;
@@ -47,6 +48,8 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
     LinearLayout editStadiumLayout;
     @BindView(R.id.etName)
     TextView etName;
+    @BindView(R.id.editProfileLayout)
+    LinearLayout editProfileLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -106,6 +109,9 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
         });
         addPitchLayout.setOnClickListener(view -> {
             handleTransition(AddPitchActivity.class);
+        });
+        editProfileLayout.setOnClickListener(view -> {
+            handleTransition(EditProfileActivity.class);
         });
     }
 

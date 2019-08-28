@@ -1,101 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar" />
-
-    <Button
-        android:id="@+id/addBookingButton"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:layout_gravity="end"
-        android:layout_margin="5dp"
-        android:background="@drawable/edit_bg_green"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:text="Add Booking"
-        android:textColor="@color/white" />
-
-    <RelativeLayout
+    <FrameLayout
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/bottomLayout"
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:padding="10dp">
-
-            <LinearLayout
-                android:id="@+id/pickStartDate"
+            android:background="@drawable/card"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include layout="@layout/toolbar_transparent" />
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".4"
-                android:background="@drawable/edit_bg_grey"
-                android:gravity="center">
+                android:layout_height="match_parent">
 
-                <TextView
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:id="@+id/bottomLayout"
+                        android:layout_margin="12dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:orientation="horizontal">
+
+                        <include layout="@layout/sorting_layout" />
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/pitchBookingRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/bottomLayout" />
+                </RelativeLayout>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/addBookingButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/ic_calendar"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:text="Start Date" />
-            </LinearLayout>
+                    android:layout_gravity="end|bottom"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/edit_bg_green"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:src="@drawable/ic_add_white"
+                    android:text="Add Booking"
+                    android:textColor="@color/white"
+                    android:visibility="gone"
+                    app:fabSize="mini"
+                    app:maxImageSize="15sp" />
 
-            <TextView
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:id="@+id/pickEndDate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".4"
-                android:background="@drawable/edit_bg_grey"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/ic_calendar"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:text="End Date" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:id="@+id/searchButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".6"
-                android:background="@drawable/edit_bg_green"
-                android:gravity="center"
-                android:padding="10dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/ic_search" />
-            </LinearLayout>
+            </FrameLayout>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/pitchBookingRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/bottomLayout" />
-
-    </RelativeLayout>
+    </FrameLayout>
 
 
 </LinearLayout>

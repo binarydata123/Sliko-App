@@ -3,12 +3,14 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@color/white"
     android:layout_height="match_parent">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/stadiumLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
@@ -56,27 +58,61 @@
                     </me.relex.circleindicator.CircleIndicator>
 
                     <LinearLayout
-                        android:visibility="gone"
-                        android:id="@+id/editStadiumLayout"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/stadiumChangeLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
                         android:layout_margin="5dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_bg_green"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="3dp"
-                        android:paddingRight="16dp"
-                        android:paddingBottom="3dp">
+                        android:gravity="end|center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
-                        <TextView
+                        <LinearLayout
+                            android:id="@+id/deleteStadiumLayout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/ic_edit_white"
-                            android:drawablePadding="8dp"
-                            android:textColor="@color/white"
-                            android:text="Edit" />
+                            android:background="@drawable/red_round_corner"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="3dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="3dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/delete"
+                                android:textColor="@color/white" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="5dp"
+
+                            android:layout_height="wrap_content" />
+
+                        <LinearLayout
+                            android:id="@+id/editStadiumLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/edit_bg_green"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="3dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="3dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:drawableLeft="@drawable/ic_edit_white"
+                                android:drawablePadding="8dp"
+                                android:text="@string/edit"
+                                android:textColor="@color/white" />
+                        </LinearLayout>
+
                     </LinearLayout>
                 </FrameLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>

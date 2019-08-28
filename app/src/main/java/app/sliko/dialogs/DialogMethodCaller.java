@@ -15,6 +15,7 @@ import app.navizinhanca.utils.alerts.models.StadiumInfoDialog;
 import app.sliko.R;
 import app.sliko.dialogs.models.BookPitchMauallyDialog;
 import app.sliko.dialogs.models.ChangePasswordDialog;
+import app.sliko.dialogs.models.DialogConfirmation;
 import hyogeun.github.com.colorratingbarlib.ColorRatingBar;
 
 public class DialogMethodCaller {
@@ -54,6 +55,17 @@ public class DialogMethodCaller {
         Button bookButtonLayout = viewError.findViewById(R.id.bookButtonLayout);
         Button cancelButton = viewError.findViewById(R.id.cancelButton);
         return new BookPitchMauallyDialog(dialog_error, etName, etPhone, bookButtonLayout,cancelButton);
+    }
+
+    public static DialogConfirmation openDialogConfirmation(final Context context, int layoutId, boolean isCancellable) {
+        final View viewError = LayoutInflater.from(context).inflate(layoutId, null);
+        AlertDialog dialog_error = makeDialog(context, viewError);
+        dialog_error.setCancelable(isCancellable);
+        TextView dialogConfirmationTitle = viewError.findViewById(R.id.dialogConfirmationTitle);
+        TextView dialogConfirmationMessage = viewError.findViewById(R.id.dialogConfirmationMessage);
+        Button okButton = viewError.findViewById(R.id.okButton);
+        LinearLayout closeButton = viewError.findViewById(R.id.closeButton);
+        return new DialogConfirmation(dialog_error, dialogConfirmationTitle, dialogConfirmationMessage, okButton,closeButton);
     }
 
     private static AlertDialog makeDialog(Context context, View view) {

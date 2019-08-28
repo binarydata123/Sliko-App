@@ -22,7 +22,6 @@ public interface ApiInterface {
                                    @Field("role") String role,
                                    @Field("social_id") String social_id,
                                    @Field("fcm_token") String fcm_token);
-
     @FormUrlEncoded
     @POST("login")
     Call<ResponseBody> ep_login(@Field("email") String email,
@@ -42,7 +41,6 @@ public interface ApiInterface {
     @POST("stadium/getAddrLatLong")
     Call<ResponseBody> ep_getLatLng(@Field("address") String address);
 
-
     @FormUrlEncoded
     @POST("forgetpassword")
     Call<ResponseBody> ep_forgetpassword(@Field("email") String email);
@@ -51,7 +49,6 @@ public interface ApiInterface {
     @POST("resetpassword")
     Call<ResponseBody> ep_resetPassword(@Field("email") String email,
                                         @Field("new_password") String new_password);
-
 
     @Multipart
     @POST("stadium/create")
@@ -65,23 +62,13 @@ public interface ApiInterface {
             @Part("lng") RequestBody lng);
 
 
-    @GET("choir/allchoirlisting")
-    Call<ResponseBody> getAllEventList();
-
-    @GET("choir/allchoirlisting")
-    Call<ResponseBody> getAllChoirListening();
+    @FormUrlEncoded
+    @POST("resetpassword")
+    Call<ResponseBody> ep_bookingList(@Field("email") String email,
+                                        @Field("new_password") String new_password);
 
     @FormUrlEncoded
-    @POST("choir/single-choir")
-    Call<ResponseBody> getViewDetailList(@Field("user_id") String userid, @Field("group_id") String groupid);
-
-    @FormUrlEncoded
-    @POST("pitch/lists")
-    Call<ResponseBody> ep_pitchList(@Field("user_id") String userid, @Field("stadium_id") String groupid);
-
-    /*get home choir data*/
-    @GET("user/{user_id}")
-    Call<ResponseBody> getSingleUserDetail(@Path("user_id") String id);
-
-
+    @POST("resetpassword")
+    Call<ResponseBody> ep_ownerBookingList(@Field("email") String email,
+                                        @Field("new_password") String new_password);
 }

@@ -152,6 +152,35 @@
                     android:background="@color/black_color" />
 
                 <LinearLayout
+                    android:id="@+id/editProfileLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="10dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="8dp"
+                        android:text="@string/editProfile"
+                        android:textColor="@color/black" />
+
+
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:alpha=".2"
+                    android:background="@color/black_color" />
+
+                <LinearLayout
                     android:id="@+id/addPitchLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

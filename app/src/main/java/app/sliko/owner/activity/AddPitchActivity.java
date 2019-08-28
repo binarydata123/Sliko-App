@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -27,11 +26,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import app.sliko.R;
+import app.sliko.models.StadiumImagesModel;
 import app.sliko.owner.adapter.AddImagesAdapter;
 import app.sliko.utills.M;
 import butterknife.BindView;
@@ -98,8 +97,8 @@ public class AddPitchActivity extends Activity {
     TextView saturdayET;
     private static final int PERMISSIONS_REQUEST_CODE = 0x1;
     Dialog dialog;
-    private ArrayList<String> imagesEncodedList;
-    String  chkbxsunday = "0", chkbxmonday = "0", chkbxtuesday = "0", chkbxwednsday = "0", chkbxthursday = "0",
+    private ArrayList<StadiumImagesModel> imagesEncodedList;
+    String chkbxsunday = "0", chkbxmonday = "0", chkbxtuesday = "0", chkbxwednsday = "0", chkbxthursday = "0",
             chkbxfriday = "0", chkbxsaturday = "0";
     AddImagesAdapter pitchImageAdapter;
     LinearLayoutManager lm;
@@ -274,9 +273,9 @@ public class AddPitchActivity extends Activity {
         } else if (etprice.length() == 0 || etprice.getText().toString().trim().length() == 0) {
             Toast.makeText(AddPitchActivity.this, getResources().getString(R.string.enterprice), Toast.LENGTH_SHORT).show();
         } else if (imagesEncodedList.size() == 0) {
-            Toast.makeText(this, "" + getResources().getString(R.string.plzselectimage), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "" + getResources().getString(R.string.please_insert_one_image_atleast), Toast.LENGTH_SHORT).show();
         } else {
-            updateMyInfo(imagesEncodedList);
+            updateMyInfo();
         }
     }
 
@@ -295,8 +294,11 @@ public class AddPitchActivity extends Activity {
                         // Move to first row
                         cursor.moveToFirst();
                         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        imagesEncodedList.add(cursor.getString(columnIndex));
-                        Log.e(">>idImage", "onActivityResult: "  + mImageUri.getPath());
+                        StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
+                        stadiumImagesModel.setImageId("");
+                        stadiumImagesModel.setImageName(cursor.getString(columnIndex));
+                        imagesEncodedList.add(stadiumImagesModel);
+                        Log.e(">>idImage", "onActivityResult: " + mImageUri.getPath());
                         cursor.close();
                     } else {
                         if (data.getClipData() != null) {
@@ -313,8 +315,11 @@ public class AddPitchActivity extends Activity {
                                 cursor.moveToFirst();
 
                                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                                imagesEncodedList.add(cursor.getString(columnIndex));
-                                Log.e(">>idImage", "onActivityResult: " +  "\n" + uri.getPath());
+                                StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
+                                stadiumImagesModel.setImageId("");
+                                stadiumImagesModel.setImageName(cursor.getString(columnIndex));
+                                imagesEncodedList.add(stadiumImagesModel);
+                                Log.e(">>idImage", "onActivityResult: " + "\n" + uri.getPath());
                                 cursor.close();
                             }
                             Log.v("LOG_TAG", "Selected Images" + mArrayUri.size());
@@ -449,7 +454,9 @@ public class AddPitchActivity extends Activity {
 
 
     /*Api*/
-    public void updateMyInfo(ArrayList<String> files) {
+    public void updateMyInfo() {
+//        ArrayList<StadiumImagesModel> files = new ArrayList<>(pitchImageAdapter.getUpdatedList());
+//
 //        try {
 //            Log.e("size", "==" + files.size() + "==" + files.toString());
 //            dialog.show();
@@ -458,20 +465,20 @@ public class AddPitchActivity extends Activity {
 //            if (files.size() != 0) {
 //                multipart_body = new MultipartBody.Part[files.size()];
 //                for (int k = 0; k < files.size(); k++) {
-//                    File file = new File(files.get(k));
+//                    File file = new File(files.get(k).getImageName());
 //                    RequestBody reqFile = RequestBody.create(MediaType.parse("*/*"), file);
 //                    multipart_body[k] = MultipartBody.Part.createFormData("images[]", file.getName(), reqFile);
 //                }
 //
 //            }
-//            Log.e("name","=="+etfname.getText().toString()+chkbxsunday+sundayST.getText().toString()+
-//                    sundayET.getText().toString()+mondayST.getText().toString());
+//            Log.e("name", "==" + etfname.getText().toString() + chkbxsunday + sundayST.getText().toString() +
+//                    sundayET.getText().toString() + mondayST.getText().toString());
 //
 //            Call<ResponseBody> call = service.createPitch(
 //                    multipart_body,
 //                    RequestBody.create(MediaType.parse("multipart/form-data"), etfname.getText().toString()),
 //                    RequestBody.create(MediaType.parse("multipart/form-data"), "1"),
-//                    RequestBody.create(MediaType.parse("multipart/form-data"),"2"),
+//                    RequestBody.create(MediaType.parse("multipart/form-data"), "2"),
 //                    RequestBody.create(MediaType.parse("multipart/form-data"), etdescriptn.getText().toString()),
 //                    RequestBody.create(MediaType.parse("multipart/form-data"), etprice.getText().toString()),
 //
@@ -507,7 +514,7 @@ public class AddPitchActivity extends Activity {
 //                    RequestBody.create(MediaType.parse("multipart/form-data"), saturdayST.getText().toString()),
 //                    RequestBody.create(MediaType.parse("multipart/form-data"), saturdayET.getText().toString())
 //
-//                    );
+//            );
 //
 //            final Callback<ResponseBody> callback = new Callback<ResponseBody>() {
 //                @Override
@@ -515,22 +522,29 @@ public class AddPitchActivity extends Activity {
 //                    dialog.dismiss();
 //                    if (response.isSuccessful()) {
 //                        try {
-//                            String responseString = response.body().string();
 //
-//                            Log.e("create pitch", ">>>>>: " + responseString);
+//                            if (response.isSuccessful()) {
+//                                String sResponse = response.body().toString();
+//
+//                                JSONObject jsonObject = new JSONObject(sResponse);
+//                                String status = jsonObject.getString("status");
+//                                String message = jsonObject.getString("message");
 //
 //
-//
-//                            JSONObject jsonObject = new JSONObject(responseString);
-//                            String status = jsonObject.getString("status");
-//                            String messgae = jsonObject.getString("message");
-//                            Toast.makeText(AddPitchActivity.this, ""+messgae, Toast.LENGTH_SHORT).show();
-//                            Log.e(">>data", "onResponse: " + jsonObject.toString());
-//                            Log.e(">>status", status);
+//                                Toast.makeText(AddPitchActivity.this, message, Toast.LENGTH_SHORT).show();
+//                                if (status.equalsIgnoreCase("true")) {
+//                                    EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
+//                                } else {
+//                                    EventBus.getDefault().postSticky(false);
+//                                }
+//                                finish();
+//                            } else {
+//                                Toast.makeText(AddPitchActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+//                            }
 //
 //
 //                        } catch (Exception e) {
-//                            Log.e(">>exception", "onResponse: " +  e.getMessage() + "\n" + response.errorBody().toString());
+//                            Log.e(">>exception", "onResponse: " + e.getMessage() + "\n" + response.errorBody().toString());
 //
 //                            Toast.makeText(AddPitchActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
 //                        }
@@ -552,5 +566,6 @@ public class AddPitchActivity extends Activity {
 //            e.printStackTrace();
 //            Log.d(">>apiException", "update student failure : " + "api NotResponding Failure");
 //        }
+//    }
     }
 }

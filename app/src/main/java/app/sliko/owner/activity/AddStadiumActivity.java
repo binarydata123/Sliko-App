@@ -35,7 +35,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.models.StadiumImagesModel;
 import app.sliko.owner.adapter.AddImagesAdapter;
+import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.owner.model.ImagesModel;
 import app.sliko.utills.M;
 import app.sliko.web.Api;
@@ -58,25 +60,22 @@ public class AddStadiumActivity extends AppCompatActivity {
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.etfname)
-    EditText etfname;
-    @BindView(R.id.etdescriptn)
-    EditText etdescriptn;
-    @BindView(R.id.txtVAddress)
-    AutoCompleteTextView txtVAddress;
+    @BindView(R.id.stadiumName)
+    EditText stadiumName;
+    @BindView(R.id.stadiumDescription)
+    EditText stadiumDescription;
+    @BindView(R.id.stadiumAddress)
+    AutoCompleteTextView stadiumAddress;
     @BindView(R.id.ll_selectmultiImg)
     LinearLayout llSelectmultiImg;
     @BindView(R.id.recyclrVIPichImg)
     RecyclerView recyclrVIPichImg;
     private static final int PERMISSIONS_REQUEST_CODE = 0x1;
-    File imageFile;
-    int leftOutImages;
     Dialog dialog;
-    private ArrayList<String> imagesEncodedList;
+    private ArrayList<StadiumImagesModel> imagesEncodedList;
     String imageEncoded, address = "";
     AddImagesAdapter addPitchImageAdapter;
     LinearLayoutManager lm;
-    ArrayList<ImagesModel> pichimagelist = new ArrayList<>();
     String userId;
     String lat = "", lng = "";
 
@@ -110,9 +109,9 @@ public class AddStadiumActivity extends AppCompatActivity {
         setlisteners();
     }
 
-    @OnClick(R.id.txtVAddress)
+    @OnClick(R.id.stadiumAddress)
     void clickAddress() {
-        txtVAddress.addTextChangedListener(new TextWatcher() {
+        stadiumAddress.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -129,7 +128,7 @@ public class AddStadiumActivity extends AppCompatActivity {
             }
         });
 
-        txtVAddress.setOnItemClickListener((parent, view, position, id) -> {
+        stadiumAddress.setOnItemClickListener((parent, view, position, id) -> {
             address = arrayListOfAddresses.get(position);
             getLatLong(address);
         });
@@ -197,8 +196,8 @@ public class AddStadiumActivity extends AppCompatActivity {
                             }
                             Log.i(">>sie", "onSuccess: " + arrayListOfAddresses.size() + "");
                             adapter_ArrayListOfAddress = new ArrayAdapter<String>(AddStadiumActivity.this, R.layout.auto_complete_text, R.id.text, arrayListOfAddresses);
-                            txtVAddress.setThreshold(1);
-                            txtVAddress.setAdapter(adapter_ArrayListOfAddress);
+                            stadiumAddress.setThreshold(1);
+                            stadiumAddress.setAdapter(adapter_ArrayListOfAddress);
                             adapter_ArrayListOfAddress.notifyDataSetChanged();
                         }
                     } else {
@@ -219,16 +218,16 @@ public class AddStadiumActivity extends AppCompatActivity {
 
     private void setlisteners() {
 
-        if (etfname.length() == 0 || etfname.getText().toString().trim().length() == 0) {
+        if (stadiumName.length() == 0 || stadiumName.getText().toString().trim().length() == 0) {
             Toast.makeText(AddStadiumActivity.this, getResources().getString(R.string.plzEnterpitchname), Toast.LENGTH_SHORT).show();
-        } else if (etdescriptn.length() == 0 || etdescriptn.getText().toString().trim().length() == 0) {
+        } else if (stadiumDescription.length() == 0 || stadiumDescription.getText().toString().trim().length() == 0) {
             Toast.makeText(AddStadiumActivity.this, getResources().getString(R.string.plzEnterdescption), Toast.LENGTH_SHORT).show();
-        } else if (txtVAddress.length() == 0 || txtVAddress.getText().toString().trim().length() == 0) {
+        } else if (stadiumAddress.length() == 0 || stadiumAddress.getText().toString().trim().length() == 0) {
             Toast.makeText(AddStadiumActivity.this, getResources().getString(R.string.plzenteraddress), Toast.LENGTH_SHORT).show();
         } else if (imagesEncodedList.size() == 0) {
-            Toast.makeText(this, "" + getResources().getString(R.string.plzselectimage), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "" + getResources().getString(R.string.please_insert_one_image_atleast), Toast.LENGTH_SHORT).show();
         } else {
-            updateMyInfo(imagesEncodedList);
+            updateMyInfo();
         }
 
     }
@@ -268,7 +267,10 @@ public class AddStadiumActivity extends AppCompatActivity {
                         cursor.moveToFirst();
                         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                         imageEncoded = cursor.getString(columnIndex);
-                        imagesEncodedList.add(imageEncoded);
+                        StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
+                        stadiumImagesModel.setImageId("");
+                        stadiumImagesModel.setImageName(imageEncoded);
+                        imagesEncodedList.add(stadiumImagesModel);
                         Log.i(">>idImage", "onActivityResult: " + imageEncoded + "\n" + mImageUri.getPath());
                         cursor.close();
                     } else {
@@ -287,7 +289,10 @@ public class AddStadiumActivity extends AppCompatActivity {
 
                                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                                 imageEncoded = cursor.getString(columnIndex);
-                                imagesEncodedList.add(imageEncoded);
+                                StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
+                                stadiumImagesModel.setImageId("");
+                                stadiumImagesModel.setImageName(imageEncoded);
+                                imagesEncodedList.add(stadiumImagesModel);
                                 Log.i(">>idImage", "onActivityResult: " + imageEncoded + "\n" + uri.getPath());
                                 cursor.close();
                             }
@@ -313,7 +318,8 @@ public class AddStadiumActivity extends AppCompatActivity {
         }
     }
 
-    public void updateMyInfo(ArrayList<String> files) {
+    public void updateMyInfo() {
+        ArrayList<StadiumImagesModel> files = new ArrayList<>(addPitchImageAdapter.getUpdatedList());
         if (lat.equalsIgnoreCase("") || lng.equalsIgnoreCase("")) {
             lat = Api.LAT + "";
             lng = Api.LNG + "";
@@ -326,7 +332,7 @@ public class AddStadiumActivity extends AppCompatActivity {
             if (files.size() != 0) {
                 multipart_body = new MultipartBody.Part[files.size()];
                 for (int k = 0; k < files.size(); k++) {
-                    File file = new File(files.get(k));
+                    File file = new File(files.get(k).getImageName());
                     RequestBody reqFile = RequestBody.create(MediaType.parse("*/*"), file);
                     multipart_body[k] = MultipartBody.Part.createFormData("images[]", file.getName(), reqFile);
                 }
@@ -335,10 +341,10 @@ public class AddStadiumActivity extends AppCompatActivity {
 
             Call<ResponseBody> call = service.createStadium(
                     multipart_body,
-                    RequestBody.create(MediaType.parse("multipart/form-data"), etfname.getText().toString()),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumName.getText().toString()),
                     RequestBody.create(MediaType.parse("multipart/form-data"), userId),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), etdescriptn.getText().toString()),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), txtVAddress.getText().toString()),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumDescription.getText().toString()),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumAddress.getText().toString()),
                     RequestBody.create(MediaType.parse("multipart/form-data"), lat),
                     RequestBody.create(MediaType.parse("multipart/form-data"), lng));
 
@@ -354,10 +360,10 @@ public class AddStadiumActivity extends AppCompatActivity {
                             String message = jsonObject.getString("message");
                             Toast.makeText(AddStadiumActivity.this, message, Toast.LENGTH_SHORT).show();
                             if (status.equalsIgnoreCase("true")) {
-                                EventBus.getDefault().postSticky(true);
+                                EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
                                 M.updateTrivialInfo(AddStadiumActivity.this, Api.IS_STADIUM, Api.STADIUM_ADDED);
                             } else {
-                                EventBus.getDefault().postSticky(false);
+                                EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(false));
                             }
                             finish();
                         } catch (Exception e) {

@@ -1,88 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
-
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/bottomLayout"
+        <RelativeLayout
             android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/bottomLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+                <include layout="@layout/sorting_layout" />
+
+
+            </LinearLayout>
+
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/bottomLayout"
+                android:fillViewport="true">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/bookingRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false" />
+                </RelativeLayout>
+            </androidx.core.widget.NestedScrollView>
+
+        </RelativeLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addBookingButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal"
-            android:padding="10dp">
+            android:layout_gravity="end|bottom"
+            android:layout_margin="5dp"
+            android:background="@drawable/edit_bg_green"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:src="@drawable/ic_add_white"
+            android:text="Add Booking"
+            android:textColor="@color/white"
+            app:fabSize="mini"
+            app:maxImageSize="15sp" />
 
-            <LinearLayout
-                android:id="@+id/pickStartDate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".4"
-                android:background="@drawable/edit_bg_grey"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/ic_calendar"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:text="Start Date" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:id="@+id/pickEndDate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".4"
-                android:background="@drawable/edit_bg_grey"
-                android:gravity="center">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/ic_calendar"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:text="End Date" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
-            <LinearLayout
-                android:id="@+id/searchButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".6"
-                android:background="@drawable/edit_bg_green"
-                android:gravity="center"
-                android:padding="10dp">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/ic_search" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/bookingRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/bottomLayout" />
-
-    </RelativeLayout>
+    </FrameLayout>
 
 
 </LinearLayout>

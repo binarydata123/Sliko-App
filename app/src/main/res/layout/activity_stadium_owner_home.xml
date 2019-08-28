@@ -4,35 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <include layout="@layout/toolbar" />
-
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomLayout"
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            app:itemHorizontalTranslationEnabled="false"
-            app:itemIconTint="@drawable/selector_navigation"
-            app:itemTextColor="@drawable/selector_navigation"
-            app:menu="@menu/my_navigation_items" />
+            android:background="@drawable/card" />
 
-
-        <FrameLayout
-            android:id="@+id/frameContainer"
+        <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/bottomLayout" />
-    </RelativeLayout>
-</LinearLayout>
-    <include layout="@layout/side_menu_owner"/>
+            android:orientation="vertical">
+            <include layout="@layout/toolbar_transparent" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:background="@android:color/transparent"
+                    android:id="@+id/frameContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/bottomLayout" />
+
+
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:id="@+id/bottomLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/white"
+                    app:itemHorizontalTranslationEnabled="false"
+                    app:itemIconTint="@drawable/selector_navigation"
+                    app:itemTextColor="@drawable/selector_navigation"
+                    app:menu="@menu/my_navigation_items" />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </FrameLayout>
+
+
+    <include layout="@layout/side_menu_owner" />
 </androidx.drawerlayout.widget.DrawerLayout>

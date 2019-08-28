@@ -15,18 +15,17 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import app.sliko.R;
-import app.sliko.owner.model.ImagesModel;
+import app.sliko.models.StadiumImagesModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AddImagesAdapter extends RecyclerView.Adapter<AddImagesAdapter.MyViewHolder> {
 
     private String type;
     private Context context;
-    private ArrayList<String> imagesModelArrayList;
+    private ArrayList<StadiumImagesModel> imagesModelArrayList;
 
-    public AddImagesAdapter(Context context, ArrayList<String> imagesModelArrayList, String type) {
+    public AddImagesAdapter(Context context, ArrayList<StadiumImagesModel> imagesModelArrayList, String type) {
         this.context = context;
         this.imagesModelArrayList = imagesModelArrayList;
         this.type = type;
@@ -42,15 +41,29 @@ public class AddImagesAdapter extends RecyclerView.Adapter<AddImagesAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
 
-        Glide.with(context).load(imagesModelArrayList.get(i)).into(myViewHolder.imageViewDocument);
+        Glide.with(context).load(imagesModelArrayList.get(i).getImageName()).into(myViewHolder.imageViewDocument);
         myViewHolder.deleteImage.setOnClickListener(v -> {
-            imagesModelArrayList.remove(i);
+            if (imagesModelArrayList.get(i).getImageId().equalsIgnoreCase("")) {
+                imagesModelArrayList.remove(i);
+
+            } else {
+                //delete Image from server
+            }
             AddImagesAdapter.this.notifyDataSetChanged();
         });
+
     }
 
-    public ArrayList<String> getUpdatedList() {
-        return imagesModelArrayList;
+    ArrayList<StadiumImagesModel> updatedList;
+
+    public ArrayList<StadiumImagesModel> getUpdatedList() {
+        updatedList = new ArrayList<>();
+        for (int k = 0; k < imagesModelArrayList.size(); k++) {
+            if (imagesModelArrayList.get(k).getImageId().equalsIgnoreCase("")) {
+                updatedList.add(imagesModelArrayList.get(k));
+            }
+        }
+        return updatedList;
     }
 
 

@@ -1,10 +1,12 @@
 package app.sliko.owner.fragment;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,13 +14,28 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.applikeysolutions.cosmocalendar.view.CalendarView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.dialogs.DialogMethodCaller;
+import app.sliko.dialogs.models.BookPitchMauallyDialog;
 import app.sliko.owner.adapter.O_PitchBookingAdapter;
 import app.sliko.owner.model.BookingModel;
+import app.sliko.utills.M;
+import app.sliko.web.ApiInterface;
+import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BookingFragment extends Fragment {
     View view;
@@ -30,6 +47,8 @@ public class BookingFragment extends Fragment {
 
     @BindView(R.id.pickStartDate)
     LinearLayout pickStartDate;
+    @BindView(R.id.addBookingButton)
+    FloatingActionButton addBookingButton;
     @BindView(R.id.pickEndDate)
     LinearLayout pickEndDate;
     @BindView(R.id.searchButton)
@@ -48,10 +67,88 @@ public class BookingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_bookings, container, false);
         ButterKnife.bind(BookingFragment.this, view);
+        dialog = M.showDialog(getActivity(), "", false);
         setListeners();
         setAdapter();
+        ;
+
+        bookingRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0 || dy < 0 && addBookingButton.isShown())
+                    addBookingButton.hide();
+            }
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    addBookingButton.show();
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
         return view;
     }
+
+
+    CalendarView calendarView;
+
+
+    private Dialog dialog;
+
+    private void getAllBookingData() {
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_bookingList("", "");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    JSONObject jsonObject = new JSONObject("response");
+                    String message = jsonObject.getString("message");
+                    String status = jsonObject.getString("status");
+                    if (status.equalsIgnoreCase("true")) {
+                        JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("data");
+                        for (int k = 0; k < jsonArray.length(); k++) {
+                            BookingModel bookingModel = new BookingModel();
+                            JSONObject dataObject = jsonArray.getJSONObject(k);
+                            bookingModel.setFullname(dataObject.getString("fullname"));
+                            bookingModel.setPhone(dataObject.getString("phone"));
+                            bookingModel.setStadium_name(dataObject.getString("stadium_name"));
+                            bookingModel.setStadium_address(dataObject.getString("stadium_address"));
+                            bookingModel.setPitch_name(dataObject.getString("pitch_name"));
+                            bookingModel.setPrice(dataObject.getString("price"));
+                            bookingModel.setCost(dataObject.getString("cost"));
+                            bookingModel.setPitch_review_avg(dataObject.getString("pitch_review_avg"));
+                            bookingModel.setId(dataObject.getString("id"));
+                            bookingModel.setStadium_id(dataObject.getString("stadium_id"));
+                            bookingModel.setPitch_id(dataObject.getString("pitch_id"));
+                            bookingModel.setStart_date(dataObject.getString("start_date"));
+                            bookingModel.setEnd_date(dataObject.getString("end_date"));
+                            bookingModel.setTime(dataObject.getString("time"));
+                            bookingModel.setUser_id(dataObject.getString("user_id"));
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (Exception e) {
+
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
+    private BookPitchMauallyDialog bookPitchMauallyDialog;
 
     private void setListeners() {
         searchButton.setOnClickListener(view -> {
@@ -63,6 +160,11 @@ public class BookingFragment extends Fragment {
         pickStartDate.setOnClickListener(view -> {
 
         });
+        addBookingButton.setOnClickListener(view -> {
+            bookPitchMauallyDialog = DialogMethodCaller.openBookPitchMauallyDialog(getActivity(), R.layout.dialog_add_booking_manually, false);
+            bookPitchMauallyDialog.getDialog_error().show();
+            bookPitchMauallyDialog.getCancelButton().setOnClickListener(view1 -> bookPitchMauallyDialog.getDialog_error().cancel());
+        });
 
     }
 
@@ -70,6 +172,7 @@ public class BookingFragment extends Fragment {
         o_pitchBookingAdapter = new O_PitchBookingAdapter(getActivity(), bookingModelArrayList);
         bookingRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         bookingRecyclerView.setAdapter(o_pitchBookingAdapter);
+        bookingRecyclerView.setNestedScrollingEnabled(false);
         o_pitchBookingAdapter.notifyDataSetChanged();
     }
 

@@ -6,291 +6,311 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include
-
-        layout="@layout/toolbar" />
-
-    <RelativeLayout
-        android:background="@color/white"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/addpitchbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="5dp"
-            android:background="@color/lightGreen"
-            android:paddingLeft="16dp"
-            android:paddingTop="5dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="5dp"
-            android:text="@string/addpitch"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/card" />
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/nestedScroll"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/addpitchbtn"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:orientation="vertical">
 
-            <LinearLayout
-
-                android:padding="16dp"
+            <include
+                layout="@layout/toolbar" />
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
-                <!--name-->
-                <LinearLayout
+                android:background="@android:color/transparent">
+
+                <Button
+                    android:id="@+id/addpitchbtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="5dp"
+                    android:background="@color/lightGreen"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="5dp"
+                    android:text="@string/addpitch"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+                <androidx.cardview.widget.CardView
+                    app:cardBackgroundColor="@color/white"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_margin="16dp"
+                    android:layout_above="@id/addpitchbtn"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    android:layout_height="match_parent">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/Pitch_Name" />
-
-                        <TextView
-                            android:layout_width="5dp"
-                            android:layout_height="match_parent" />
-
-                        <TextView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="*"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/edit_bg_grey"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-
-                        <EditText
-                            android:id="@+id/etfname"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/transparent"
-                            android:ellipsize="end"
-                            android:hint="@string/enterpitchname"
-                            android:imeOptions="actionNext"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:singleLine="true"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-                <!--Description-->
-                <LinearLayout
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/nestedScroll"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:fillViewport="true">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/Description" />
-
-                        <TextView
-                            android:layout_width="5dp"
-                            android:layout_height="match_parent" />
-
-                        <TextView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="*"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/edit_bg_grey"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-
-                        <EditText
-                            android:id="@+id/etdescriptn"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/transparent"
-                            android:ellipsize="end"
-                            android:hint="@string/enterDescription"
-                            android:imeOptions="actionNext"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:singleLine="true"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-                <!--address-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/Price" />
-
-                        <TextView
-                            android:layout_width="5dp"
-                            android:layout_height="match_parent" />
-
-                        <TextView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="*"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="22sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/edit_bg_grey"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-
-                        <EditText
-                            android:id="@+id/etprice"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@android:color/transparent"
-                            android:ellipsize="end"
-                            android:hint="@string/enterprice"
-                            android:imeOptions="actionNext"
-                            android:inputType="phone"
-                            android:paddingLeft="16dp"
-                            android:paddingRight="16dp"
-                            android:singleLine="true"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/pitchImages" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+                        <!--name-->
                         <LinearLayout
-                            android:id="@+id/ll_addmultiImg"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:background="@drawable/edit_bg_grey"
-                            android:gravity="center">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:background="@drawable/ic_add" />
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/Pitch_Name" />
+
+                                <TextView
+                                    android:layout_width="5dp"
+                                    android:layout_height="match_parent" />
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="*"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="22sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:background="@drawable/edit_bg_grey"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+
+                                <EditText
+                                    android:id="@+id/etfname"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@android:color/transparent"
+                                    android:ellipsize="end"
+                                    android:hint="@string/enterpitchname"
+                                    android:imeOptions="actionNext"
+                                    android:paddingLeft="16dp"
+                                    android:paddingRight="16dp"
+                                    android:singleLine="true"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                        <!--Description-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/Description" />
+
+                                <TextView
+                                    android:layout_width="5dp"
+                                    android:layout_height="match_parent" />
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="*"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="22sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:background="@drawable/edit_bg_grey"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+
+                                <EditText
+                                    android:id="@+id/etdescriptn"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@android:color/transparent"
+                                    android:ellipsize="end"
+                                    android:hint="@string/enterDescription"
+                                    android:imeOptions="actionNext"
+                                    android:paddingLeft="16dp"
+                                    android:paddingRight="16dp"
+                                    android:singleLine="true"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+
                         </LinearLayout>
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recyclrVIPichImg"
+
+                        <!--address-->
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp">
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
 
-                        </androidx.recyclerview.widget.RecyclerView>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/Price" />
+
+                                <TextView
+                                    android:layout_width="5dp"
+                                    android:layout_height="match_parent" />
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="*"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="22sp" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:background="@drawable/edit_bg_grey"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
 
 
-                    </LinearLayout>
-                </LinearLayout>
+                                <EditText
+                                    android:id="@+id/etprice"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@android:color/transparent"
+                                    android:ellipsize="end"
+                                    android:hint="@string/enterprice"
+                                    android:imeOptions="actionNext"
+                                    android:inputType="phone"
+                                    android:paddingLeft="16dp"
+                                    android:paddingRight="16dp"
+                                    android:singleLine="true"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
 
+                        </LinearLayout>
 
-                <!--availability-->
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/availability" />
+                            android:layout_marginTop="15dp"
+                            android:orientation="vertical">
 
-                        <TextView
-                            android:layout_width="5dp"
-                            android:layout_height="match_parent" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center"
+                                android:orientation="horizontal">
 
-                        <TextView
+                                <LinearLayout
+                                    android:id="@+id/ll_addmultiImg"
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:background="@drawable/edit_bg_grey"
+                                    android:gravity="center">
 
-                            android:layout_width="wrap_content"
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:background="@drawable/ic_add" />
+                                </LinearLayout>
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/recyclrVIPichImg"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="10dp">
+
+                                </androidx.recyclerview.widget.RecyclerView>
+
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/pitchImages" />
+                        </LinearLayout>
+
+
+                        <!--availability-->
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="*"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="22sp" />
+                            android:layout_marginTop="15dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/availability" />
+
+                                <TextView
+                                    android:layout_width="5dp"
+                                    android:layout_height="match_parent" />
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="*"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="22sp" />
+                            </LinearLayout>
+
+                            <include layout="@layout/content_availability"></include>
+                        </LinearLayout>
                     </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
 
-                    <include layout="@layout/content_availability"></include>
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
-    </RelativeLayout>
-
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

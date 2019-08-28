@@ -35,6 +35,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.models.StadiumImagesModel;
 import app.sliko.owner.adapter.AddImagesAdapter;
 import app.sliko.owner.model.ImagesModel;
 import app.sliko.utills.M;
@@ -58,33 +59,34 @@ public class EditStadiumActivity extends AppCompatActivity {
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.etfname)
-    EditText etfname;
-    @BindView(R.id.etdescriptn)
-    EditText etdescriptn;
-    @BindView(R.id.txtVAddress)
-    AutoCompleteTextView txtVAddress;
+    @BindView(R.id.stadiumName)
+    EditText stadiumName;
+    @BindView(R.id.stadiumDescription)
+    EditText stadiumDescription;
+    @BindView(R.id.stadiumAddress)
+    AutoCompleteTextView stadiumAddress;
     @BindView(R.id.ll_selectmultiImg)
     LinearLayout llSelectmultiImg;
     @BindView(R.id.recyclrVIPichImg)
     RecyclerView recyclrVIPichImg;
     private static final int PERMISSIONS_REQUEST_CODE = 0x1;
-    File imageFile;
-    int leftOutImages;
     Dialog dialog;
-    private ArrayList<String> imagesEncodedList;
+    private ArrayList<StadiumImagesModel> imagesEncodedList;
     String imageEncoded, address = "";
-    AddImagesAdapter addPitchImageAdapter;
+    AddImagesAdapter addImageAdapter;
     LinearLayoutManager lm;
     ArrayList<ImagesModel> pichimagelist = new ArrayList<>();
     String userId;
     String lat = "", lng = "";
+
+    String stadium_id = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_stadium_activity);
         ButterKnife.bind(this);
+        stadium_id = getIntent().getStringExtra("stadium_id");
         userId = M.fetchUserTrivialInfo(EditStadiumActivity.this, "id");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,10 +101,68 @@ public class EditStadiumActivity extends AppCompatActivity {
         imagesEncodedList.clear();
         lm = new LinearLayoutManager(EditStadiumActivity.this, LinearLayoutManager.HORIZONTAL, false);
         recyclrVIPichImg.setLayoutManager(lm);
-        addPitchImageAdapter = new AddImagesAdapter(this, imagesEncodedList, "");
-        recyclrVIPichImg.setAdapter(addPitchImageAdapter);
+        addImageAdapter = new AddImagesAdapter(this, imagesEncodedList, "");
+        recyclrVIPichImg.setAdapter(addImageAdapter);
+        fetchStadiumInfo();
+    }
 
+    private ArrayList<StadiumImagesModel> stadiumImagesDataArrayList;
 
+    private void fetchStadiumInfo() {
+        stadiumImagesDataArrayList = new ArrayList<>();
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_stadium_detail(M.fetchUserTrivialInfo(EditStadiumActivity.this, "id"));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String stadium_name = data.getString("stadium_name");
+                            stadium_id = data.getString("id");
+                            String description = data.getString("description");
+                            String address = data.getString("address");
+                            lat = data.getString("lat");
+                            lng = data.getString("long");
+                            stadiumName.setText(stadium_name);
+                            stadiumDescription.setText(description);
+                            stadiumAddress.setText(address);
+                            JSONArray jsonArray = jsonObject.getJSONArray("stadium_gallery");
+                            for (int k = 0; k < jsonArray.length(); k++) {
+                                JSONObject stadiumImages = jsonArray.getJSONObject(k);
+                                StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
+                                String imageId = stadiumImages.getString("stadium_image");
+                                String stadiumImage = stadiumImages.getString("stadium_image");
+                                stadiumImagesModel.setImageId(imageId);
+                                stadiumImagesModel.setImageName(stadiumImage);
+                                stadiumImagesDataArrayList.add(stadiumImagesModel);
+                            }
+                            addImageAdapter.notifyDataSetChanged();
+
+                        } else {
+                            Toast.makeText(EditStadiumActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(EditStadiumActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(EditStadiumActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(EditStadiumActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @OnClick(R.id.submitButton)
@@ -110,9 +170,9 @@ public class EditStadiumActivity extends AppCompatActivity {
         setlisteners();
     }
 
-    @OnClick(R.id.txtVAddress)
+    @OnClick(R.id.stadiumAddress)
     void clickAddress() {
-        txtVAddress.addTextChangedListener(new TextWatcher() {
+        stadiumAddress.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -129,7 +189,7 @@ public class EditStadiumActivity extends AppCompatActivity {
             }
         });
 
-        txtVAddress.setOnItemClickListener((parent, view, position, id) -> {
+        stadiumAddress.setOnItemClickListener((parent, view, position, id) -> {
             address = arrayListOfAddresses.get(position);
             getLatLong(address);
         });
@@ -197,8 +257,8 @@ public class EditStadiumActivity extends AppCompatActivity {
                             }
                             Log.i(">>sie", "onSuccess: " + arrayListOfAddresses.size() + "");
                             adapter_ArrayListOfAddress = new ArrayAdapter<String>(EditStadiumActivity.this, R.layout.auto_complete_text, R.id.text, arrayListOfAddresses);
-                            txtVAddress.setThreshold(1);
-                            txtVAddress.setAdapter(adapter_ArrayListOfAddress);
+                            stadiumAddress.setThreshold(1);
+                            stadiumAddress.setAdapter(adapter_ArrayListOfAddress);
                             adapter_ArrayListOfAddress.notifyDataSetChanged();
                         }
                     } else {
@@ -219,16 +279,16 @@ public class EditStadiumActivity extends AppCompatActivity {
 
     private void setlisteners() {
 
-        if (etfname.length() == 0 || etfname.getText().toString().trim().length() == 0) {
+        if (stadiumName.length() == 0 || stadiumName.getText().toString().trim().length() == 0) {
             Toast.makeText(EditStadiumActivity.this, getResources().getString(R.string.plzEnterpitchname), Toast.LENGTH_SHORT).show();
-        } else if (etdescriptn.length() == 0 || etdescriptn.getText().toString().trim().length() == 0) {
+        } else if (stadiumDescription.length() == 0 || stadiumDescription.getText().toString().trim().length() == 0) {
             Toast.makeText(EditStadiumActivity.this, getResources().getString(R.string.plzEnterdescption), Toast.LENGTH_SHORT).show();
-        } else if (txtVAddress.length() == 0 || txtVAddress.getText().toString().trim().length() == 0) {
+        } else if (stadiumAddress.length() == 0 || stadiumAddress.getText().toString().trim().length() == 0) {
             Toast.makeText(EditStadiumActivity.this, getResources().getString(R.string.plzenteraddress), Toast.LENGTH_SHORT).show();
         } else if (imagesEncodedList.size() == 0) {
-            Toast.makeText(this, "" + getResources().getString(R.string.plzselectimage), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.please_insert_one_image_atleast), Toast.LENGTH_SHORT).show();
         } else {
-            updateMyInfo(imagesEncodedList);
+            updateMyInfo();
         }
 
     }
@@ -255,49 +315,53 @@ public class EditStadiumActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case 102:
-                if (data != null) {
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    if (data.getData() != null) {
-                        Uri mImageUri = data.getData();
-                        // Get the cursor
-                        Cursor cursor = getContentResolver().query(mImageUri,
-                                filePathColumn, null, null, null);
-                        // Move to first row
-                        cursor.moveToFirst();
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        imageEncoded = cursor.getString(columnIndex);
-                        imagesEncodedList.add(imageEncoded);
-                        Log.i(">>idImage", "onActivityResult: " + imageEncoded + "\n" + mImageUri.getPath());
-                        cursor.close();
-                    } else {
-                        if (data.getClipData() != null) {
-                            ClipData mClipData = data.getClipData();
-                            ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
-                            for (int i = 0; i < mClipData.getItemCount(); i++) {
+        if (requestCode == 102) {
+            if (data != null) {
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                if (data.getData() != null) {
+                    Uri mImageUri = data.getData();
+                    // Get the cursor
+                    Cursor cursor = getContentResolver().query(mImageUri,
+                            filePathColumn, null, null, null);
+                    // Move to first row
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    imageEncoded = cursor.getString(columnIndex);
 
-                                ClipData.Item item = mClipData.getItemAt(i);
-                                Uri uri = item.getUri();
-                                mArrayUri.add(uri);
-                                // Get the cursor
-                                Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
-                                // Move to first row
-                                cursor.moveToFirst();
+                    StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
+                    stadiumImagesModel.setImageId("");
+                    stadiumImagesModel.setImageName(imageEncoded);
+                    imagesEncodedList.add(stadiumImagesModel);
+                    Log.i(">>idImage", "onActivityResult: " + imageEncoded + "\n" + mImageUri.getPath());
+                    cursor.close();
+                } else {
+                    if (data.getClipData() != null) {
+                        ClipData mClipData = data.getClipData();
+                        ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
+                        for (int i = 0; i < mClipData.getItemCount(); i++) {
 
-                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                                imageEncoded = cursor.getString(columnIndex);
-                                imagesEncodedList.add(imageEncoded);
-                                Log.i(">>idImage", "onActivityResult: " + imageEncoded + "\n" + uri.getPath());
-                                cursor.close();
-                            }
-                            Log.v("LOG_TAG", "Selected Images" + mArrayUri.size());
+                            ClipData.Item item = mClipData.getItemAt(i);
+                            Uri uri = item.getUri();
+                            mArrayUri.add(uri);
+                            // Get the cursor
+                            Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
+                            // Move to first row
+                            cursor.moveToFirst();
+
+                            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                            imageEncoded = cursor.getString(columnIndex);
+                            StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
+                            stadiumImagesModel.setImageId("");
+                            stadiumImagesModel.setImageName(imageEncoded);
+                            imagesEncodedList.add(stadiumImagesModel);
+                            Log.i(">>idImage", "onActivityResult: " + imageEncoded + "\n" + uri.getPath());
+                            cursor.close();
                         }
+                        Log.v("LOG_TAG", "Selected Images" + mArrayUri.size());
                     }
-                    addPitchImageAdapter.notifyDataSetChanged();
                 }
-
-                break;
+                addImageAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -313,32 +377,27 @@ public class EditStadiumActivity extends AppCompatActivity {
         }
     }
 
-    public void updateMyInfo(ArrayList<String> files) {
-        if (lat.equalsIgnoreCase("") || lng.equalsIgnoreCase("")) {
-            lat = Api.LAT + "";
-            lng = Api.LNG + "";
-        }
+    public void updateMyInfo() {
+        dialog.show();
+        ArrayList<StadiumImagesModel> files = new ArrayList<>(addImageAdapter.getUpdatedList());
         try {
-            Log.e("size", "==" + files.size() + "==" + files.toString());
-            dialog.show();
             ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
             MultipartBody.Part[] multipart_body = null;
             if (files.size() != 0) {
                 multipart_body = new MultipartBody.Part[files.size()];
                 for (int k = 0; k < files.size(); k++) {
-                    File file = new File(files.get(k));
+                    File file = new File(files.get(k).getImageName());
                     RequestBody reqFile = RequestBody.create(MediaType.parse("*/*"), file);
                     multipart_body[k] = MultipartBody.Part.createFormData("images[]", file.getName(), reqFile);
                 }
-
             }
 
             Call<ResponseBody> call = service.createStadium(
                     multipart_body,
-                    RequestBody.create(MediaType.parse("multipart/form-data"), etfname.getText().toString()),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumName.getText().toString()),
                     RequestBody.create(MediaType.parse("multipart/form-data"), userId),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), etdescriptn.getText().toString()),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), txtVAddress.getText().toString()),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumDescription.getText().toString()),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumAddress.getText().toString()),
                     RequestBody.create(MediaType.parse("multipart/form-data"), lat),
                     RequestBody.create(MediaType.parse("multipart/form-data"), lng));
 
@@ -364,7 +423,6 @@ public class EditStadiumActivity extends AppCompatActivity {
                             Toast.makeText(EditStadiumActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-
                         Toast.makeText(EditStadiumActivity.this, response.toString() + "\n" + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
                         Log.i(">>response", "onResponse: " + response.toString() + "\n" + response.errorBody().toString());
                     }
@@ -383,6 +441,5 @@ public class EditStadiumActivity extends AppCompatActivity {
             Log.d(">>apiException", "update student failure : " + "api NotResponding Failure");
         }
     }
-
 
 }
