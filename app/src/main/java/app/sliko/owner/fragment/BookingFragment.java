@@ -14,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.applikeysolutions.cosmocalendar.view.CalendarView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -55,7 +54,6 @@ public class BookingFragment extends Fragment {
     LinearLayout searchButton;
 
     public static BookingFragment newInstance() {
-
         Bundle args = new Bundle();
         BookingFragment fragment = new BookingFragment();
         fragment.setArguments(args);
@@ -70,10 +68,7 @@ public class BookingFragment extends Fragment {
         dialog = M.showDialog(getActivity(), "", false);
         setListeners();
         setAdapter();
-        ;
-
         bookingRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0 || dy < 0 && addBookingButton.isShown())
@@ -89,10 +84,6 @@ public class BookingFragment extends Fragment {
         });
         return view;
     }
-
-
-    CalendarView calendarView;
-
 
     private Dialog dialog;
 
@@ -165,7 +156,6 @@ public class BookingFragment extends Fragment {
             bookPitchMauallyDialog.getDialog_error().show();
             bookPitchMauallyDialog.getCancelButton().setOnClickListener(view1 -> bookPitchMauallyDialog.getDialog_error().cancel());
         });
-
     }
 
     private void setAdapter() {
@@ -175,6 +165,4 @@ public class BookingFragment extends Fragment {
         bookingRecyclerView.setNestedScrollingEnabled(false);
         o_pitchBookingAdapter.notifyDataSetChanged();
     }
-
-
 }
