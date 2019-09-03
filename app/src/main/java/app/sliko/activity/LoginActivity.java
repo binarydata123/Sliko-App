@@ -60,30 +60,32 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setListeners() {
         loginbtn.setOnClickListener(view -> {
-           if(checkOwner.isChecked()){
-               startActivity(new Intent(LoginActivity.this, StadiumOwnerHomeActivity.class));
-               finish();
-           }else{
-               startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
-               finish();
-           }
-//            if ((etUserEmail.length() == 0 || etUserEmail.getText().toString().trim().length() == 0)) {
-//                Toast.makeText(LoginActivity.this, getString(R.string.please_enter_email), Toast.LENGTH_SHORT).show();
-//
-//            } else if (!M.validateEmail(etUserEmail.getText().toString())) {
-//                Toast.makeText(LoginActivity.this, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
-//
-//            } else if ((etPassword.length() == 0 || etPassword.getText().toString().trim().length() == 0)) {
-//                Toast.makeText(LoginActivity.this, getString(R.string.please_enter_password), Toast.LENGTH_SHORT).show();
-//
-//            } else {
-//                loginPassword();
-//            }
+//           if(checkOwner.isChecked()){
+//               startActivity(new Intent(LoginActivity.this, StadiumOwnerHomeActivity.class));
+//               finish();
+//           }else{
+//               startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
+//               finish();
+//           }
+            if ((etUserEmail.length() == 0 || etUserEmail.getText().toString().trim().length() == 0)) {
+                Toast.makeText(LoginActivity.this, getString(R.string.please_enter_email), Toast.LENGTH_SHORT).show();
+
+            } else if (!M.validateEmail(etUserEmail.getText().toString())) {
+                Toast.makeText(LoginActivity.this, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
+
+            } else if ((etPassword.length() == 0 || etPassword.getText().toString().trim().length() == 0)) {
+                Toast.makeText(LoginActivity.this, getString(R.string.please_enter_password), Toast.LENGTH_SHORT).show();
+
+            } else {
+                loginPassword();
+            }
         });
+
         noAccountClick.setOnClickListener(view -> {
             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             finish();
         });
+
         forgotPassword.setOnClickListener(view -> {
             startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
             finish();
@@ -133,7 +135,6 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();

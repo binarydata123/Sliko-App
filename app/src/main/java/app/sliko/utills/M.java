@@ -7,14 +7,10 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,13 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import app.sliko.R;
-import app.sliko.owner.activity.EditStadiumActivity;
-import app.sliko.web.ApiInterface;
-import app.sliko.web.RetrofitClientInstance;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class M {
@@ -51,6 +40,28 @@ public class M {
     public static boolean validateEmail(String emailStr) {
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.find();
+    }
+
+    public static boolean matchValidation(EditText editText) {
+        return (editText.getText().toString().length() == 0 || editText.length() == 0);
+    }
+
+
+    //for data that is saved during login like user data
+    public static String actAccordingly(Context context, String receivedString) {
+        return (M.fetchUserTrivialInfo(context, receivedString).equalsIgnoreCase("") ||
+                M.fetchUserTrivialInfo(context, receivedString).equalsIgnoreCase("null")
+        ) ? "N.A"
+                : M.fetchUserTrivialInfo(context, receivedString);
+    }
+
+
+    //for live data
+    public static String actAccordinglyWithJson(Context context, String receivedString) {
+        return (receivedString.equalsIgnoreCase("") ||
+                receivedString.equalsIgnoreCase("null")
+        ) ? "N.A"
+                : receivedString;
     }
 
     public static String fetchUserTrivialInfo(Context context, String receivedVar) {
@@ -162,14 +173,11 @@ public class M {
     }
 
 
-
-
-
-//    public static ArrayAdapter<String> makeSpinnerAdapterWhite(Context context, ArrayList<String> spinnerArray, Spinner spinner) {
-//        ArrayAdapter<String> aa = new ArrayAdapter<String>(context, R.layout.text_view_white, spinnerArray);
-//        aa.setDropDownViewResource(R.layout.drop_down_list_item_white);
-//        spinner.setAdapter(aa);
-//        return aa;
-//    }
+    public static ArrayAdapter<String> makeSpinnerAdapterWhite(Context context, ArrayList<String> spinnerArray, Spinner spinner) {
+        ArrayAdapter<String> aa = new ArrayAdapter<String>(context, R.layout.text_view_white, spinnerArray);
+        aa.setDropDownViewResource(R.layout.drop_down_list_item_white);
+        spinner.setAdapter(aa);
+        return aa;
+    }
 
 }

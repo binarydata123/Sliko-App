@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@drawable/background"
     android:orientation="vertical">
 
     <ScrollView
@@ -14,6 +13,16 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:alpha=".9"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:background="@drawable/background"
+                    android:scaleType="fitXY"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -21,17 +30,20 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:padding="26dp">
-
-
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/slicko_simple_image"
+                    android:layout_height="wrap_content"/>
                 <TextView
-
+                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/loginToSilko"
                     android:textColor="@color/white"
                     android:textSize="22sp" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -105,47 +117,53 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:text="Choose your role" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:background="@drawable/edit_bg"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                            <TextView
+                                android:textSize="16sp"
+                                android:textColor="@color/black_color"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Choose your role" />
 
-                            <RadioGroup
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
 
-                                <RadioButton
-                                    android:id="@+id/checkUser"
-
-                                    android:textColor="@color/white"
-                                    android:layout_width="wrap_content"
+                                <RadioGroup
+                                    android:layout_marginTop="10dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="User" />
+                                    android:orientation="horizontal">
 
-                                <TextView
-                                    android:layout_width="15dp"
-                                    android:layout_height="match_parent" />
+                                    <RadioButton
+                                        android:gravity="center_vertical"
+                                        android:id="@+id/checkUser"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:checked="true"
+                                        android:text="User" />
 
-                                <RadioButton
-                                    android:checked="true"
-                                    android:textColor="@color/white"
-                                    android:id="@+id/checkOwner"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Stadium Owner" />
+                                    <TextView
+                                        android:layout_width="15dp"
+                                        android:layout_height="match_parent" />
 
-                            </RadioGroup>
+                                    <RadioButton
+                                        android:gravity="center_vertical"
+                                        android:id="@+id/checkOwner"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Stadium Owner" />
+
+                                </RadioGroup>
+                            </LinearLayout>
                         </LinearLayout>
-
                     </LinearLayout>
 
                     <TextView
@@ -162,7 +180,7 @@
                         android:id="@+id/loginButtonContainer"
                         android:layout_width="match_parent"
                         android:layout_height="46dp"
-                        android:layout_marginTop="35dp"
+                        android:layout_marginTop="15dp"
                         android:descendantFocusability="blocksDescendants">
 
                         <ProgressBar

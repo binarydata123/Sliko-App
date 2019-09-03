@@ -8,9 +8,9 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/stadiumLayout"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
@@ -194,7 +194,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:gravity="center_vertical"
-                            android:text="Lords Stadium St Johns wood London"
                             android:textColor="@color/black"
                             android:textSize="16sp" />
 
@@ -202,19 +201,22 @@
                             android:id="@+id/stadiumDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/stadiumDescription" />
+                            />
 
                         <TextView
+                            android:textSize="16sp"
+                            android:layout_marginTop="5dp"
                             android:id="@+id/stadiumLocation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/stadiumLocation" />
+                             />
 
                         <TextView
+                            android:textSize="12sp"
                             android:id="@+id/createdDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/addedon" />
+                            />
 
 
                     </LinearLayout>
@@ -258,6 +260,36 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="25dp"
                         android:visibility="gone" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:id="@+id/noPitchLayout"
+                        android:visibility="gone"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="25dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:textSize="16sp"
+                            android:text="No Pitch found in this stadium"
+                            android:paddingLeft="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="2dp"
+                            android:paddingBottom="2dp"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:background="@drawable/edit_bg_green"
+                            android:text="Add Pitch"
+                            android:textColor="@color/white"
+                            android:paddingLeft="16dp"
+                            android:layout_marginTop="5dp"
+                            android:paddingRight="16dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
                 </FrameLayout>
             </LinearLayout>
 

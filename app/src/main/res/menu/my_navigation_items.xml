@@ -5,11 +5,9 @@
         android:icon="@drawable/ic_stadium_owner"
         android:title="@string/addedStadium" />
     <item
-        android:id="@+id/action_pitches"
-        android:icon="@drawable/ic_pitch"
-        android:enabled="false"
-        android:visible="false"
-        android:title="@string/menu_pitches" />
+        android:id="@+id/action_overview"
+        android:icon="@drawable/ic_overview"
+        android:title="@string/reports" />
     <item
         android:id="@+id/action_bookings"
         android:icon="@drawable/ic_booking"
@@ -18,4 +16,8 @@
         android:id="@+id/action_all_reviews"
         android:icon="@drawable/ic_star"
         android:title="@string/menu_rating"/>
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/ic_user"
+        android:title="@string/profile"/>
 </menu>

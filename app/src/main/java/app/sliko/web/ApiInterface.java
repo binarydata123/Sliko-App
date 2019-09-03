@@ -21,7 +21,12 @@ public interface ApiInterface {
                                    @Field("password") String password,
                                    @Field("role") String role,
                                    @Field("social_id") String social_id,
-                                   @Field("fcm_token") String fcm_token);
+                                   @Field("fcm_token") String fcm_token,
+                                   @Field("favourite_team") String favourite_team,
+                                   @Field("play_position") String playPosition,
+                                   @Field("height") String height,
+                                   @Field("weight") String weight,
+                                   @Field("footedness") String footedness);
     @FormUrlEncoded
     @POST("login")
     Call<ResponseBody> ep_login(@Field("email") String email,
@@ -32,6 +37,13 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("stadium/single_detail")
     Call<ResponseBody> ep_stadium_detail(@Field("user_id") String user_id);
+
+    @GET("playPostionList")
+    Call<ResponseBody> ep_playerPosition();
+
+    @FormUrlEncoded
+    @POST("stadium/mapStadiumlist")
+    Call<ResponseBody> ep_homeListing(@Field("user_id") String user_id);
 
     @FormUrlEncoded
     @POST("stadium/getSuggestionsList")
@@ -50,22 +62,30 @@ public interface ApiInterface {
     Call<ResponseBody> ep_resetPassword(@Field("email") String email,
                                         @Field("new_password") String new_password);
 
+    @FormUrlEncoded
+    @POST("user/single_detail")
+    Call<ResponseBody> ep_getUserProfile(@Field("user_id") String user_id);
+
+    @FormUrlEncoded
+    @POST("pitchreview/getReviews")
+    Call<ResponseBody> ep_allReviews(@Field("user_id") String user_id);
+
     @Multipart
     @POST("stadium/create")
     Call<ResponseBody> createStadium(
-            @Part MultipartBody.Part[] choir_profile,
-            @Part("name") RequestBody user_id,
-            @Part("user_id") RequestBody group_name,
-            @Part("description") RequestBody group_desc,
-            @Part("address") RequestBody group_city,
+            @Part MultipartBody.Part[] multipleStadiumImages,
+            @Part("stadium_name") RequestBody stadium_name,
+            @Part("user_id") RequestBody user_id,
+            @Part("description") RequestBody description,
+            @Part("address") RequestBody address,
             @Part("lat") RequestBody lat,
-            @Part("lng") RequestBody lng);
+            @Part("long") RequestBody lng);
 
 
     @FormUrlEncoded
     @POST("resetpassword")
-    Call<ResponseBody> ep_bookingList(@Field("email") String email,
-                                        @Field("new_password") String new_password);
+    Call<ResponseBody> ep_bookingList(@Field("user_id") String user_id,
+                                        @Field("stadium_id") String stadium_id);
 
     @FormUrlEncoded
     @POST("resetpassword")

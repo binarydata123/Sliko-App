@@ -3,6 +3,7 @@ package app.sliko.owner.fragment;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,17 +29,16 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import app.sliko.R;
 import app.sliko.adapter.StadiumImagesAdapter;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.DialogConfirmation;
+import app.sliko.owner.activity.AddPitchActivity;
 import app.sliko.owner.activity.AddStadiumActivity;
 import app.sliko.owner.activity.EditStadiumActivity;
 import app.sliko.owner.adapter.PitchAdapterOwner;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
-import app.sliko.owner.model.ImagesModel;
 import app.sliko.owner.model.PitchModel;
 import app.sliko.utills.M;
 import app.sliko.web.Api;
@@ -81,12 +81,16 @@ public class StadiumDetailsFragment extends Fragment {
     ColorRatingBar stadiumRating;
     @BindView(R.id.createdDate)
     TextView createdDate;
+    @BindView(R.id.SD_stadiumReviews)
+    TextView SD_stadiumReviews;
     @BindView(R.id.editStadiumLayout)
     LinearLayout editStadiumLayout;
     @BindView(R.id.deleteStadiumLayout)
     LinearLayout deleteSadiumLayout;
     @BindView(R.id.stadiumChangeLayout)
     LinearLayout changeStadiumLayout;
+    @BindView(R.id.noPitchLayout)
+    LinearLayout noPitchLayout;
     private ArrayList<String> reviewsModelArrayList;
     private StadiumImagesAdapter stadiumImagesAdapter;
     private View view;
@@ -130,7 +134,8 @@ public class StadiumDetailsFragment extends Fragment {
     }
 
     private void updateLayout() {
-        is_stadium = M.fetchUserTrivialInfo(getActivity(), "is_stadium");
+        is_stadium = M.fetchUserTrivialInfo(getActivity(), Api.IS_STADIUM);
+        Log.i(">>value", "updateLayout: " + is_stadium);
         if (is_stadium.equalsIgnoreCase("0")) {
             noStadiumLayout.setVisibility(View.VISIBLE);
             stadiumLayout.setVisibility(View.GONE);
@@ -168,36 +173,70 @@ public class StadiumDetailsFragment extends Fragment {
                             id = data.getString("id");
                             String description = data.getString("description");
                             String address = data.getString("address");
-                            String pitch_review_avg = data.getString("pitch_review_avg");
-                            stadiumRating.setRating(Float.parseFloat(pitch_review_avg));
+                            String pitch_review_avg = data.getString("review_avg");
+
+
+                            if (pitch_review_avg.equalsIgnoreCase("null")) {
+                                SD_stadiumReviews.setText(getString(R.string.noReviews));
+                                stadiumRating.setVisibility(View.GONE);
+                            } else {
+                                String count = pitch_review_avg.equalsIgnoreCase("null") ?
+                                        "0"
+                                        : pitch_review_avg;
+                                SD_stadiumReviews.setText(count + " " + getString(R.string.reviews));
+                                stadiumRating.setVisibility(View.VISIBLE);
+                            }
+                            stadiumRating.setRating(pitch_review_avg.equalsIgnoreCase("null") ?
+                                    Float.parseFloat("0")
+                                    : Float.parseFloat(pitch_review_avg));
                             String created_at = data.getString("created_at");
                             stadiumName.setText(stadium_name);
                             stadiumDescription.setText(description);
-                            stadiumLocation.setText(address);
+                            stadiumLocation.setText(getString(R.string.adddress) + address);
 
-                            createdDate.setText(M.formateDateTimeBoth(created_at));
-                            JSONArray jsonArray = jsonObject.getJSONArray("stadium_gallery");
-                            for (int k = 0; k < jsonArray.length(); k++) {
-                                JSONObject stadiumImages = jsonArray.getJSONObject(k);
-                                reviewsModelArrayList.add(stadiumImages.getString("stadium_image"));
+                            createdDate.setText(getString(R.string.stadiumAddedOn) + M.formateDateTimeBoth(created_at));
+                            Object stadium_gallery = data.get("stadium_gallery");
+                            if (stadium_gallery instanceof JSONObject) {
+                                JSONObject stadium_galleryObject = data.getJSONObject("stadium_gallery");
+                                reviewsModelArrayList.add(stadium_galleryObject.getString("stadium_image"));
+                            } else {
+                                JSONArray stadium_galleryArray = data.getJSONArray("stadium_gallery");
+                                for (int k = 0; k < stadium_galleryArray.length(); k++) {
+                                    JSONObject stadiumImages = stadium_galleryArray.getJSONObject(k);
+                                    Log.i(">>ataImage", "onResponse: " + stadiumImages.getString("stadium_image"));
+                                    reviewsModelArrayList.add(stadiumImages.getString("stadium_image"));
+                                }
                             }
-                            JSONArray pitchArray = jsonObject.getJSONArray("pitch_listing");
-                            for (int k = 0; k < pitchArray.length(); k++) {
-                                JSONObject pitchObject = pitchArray.getJSONObject(k);
-                                PitchModel pitchModel = new PitchModel();
-                                pitchModel.setPitch_name(pitchObject.getString("pitch_name"));
-                                pitchModel.setProcess_booking(pitchObject.getString("process_booking"));
-                                pitchModel.setComplete_booking(pitchObject.getString("complete_booking"));
-                                pitchModel.setPitch_review_avg(pitchObject.getString("pitch_review_avg"));
-                                pitchModel.setId(pitchObject.getString("id"));
-                                pitchModel.setStadium_id(pitchObject.getString("stadium_id"));
-                                pitchModel.setUser_id(pitchObject.getString("user_id"));
-                                pitchGalleryStringArrayList = new ArrayList<>();
-                                JSONArray pitchGallery = pitchObject.getJSONArray("pitch_gallery");
-                                JSONObject pitchImage = pitchGallery.getJSONObject(0);
-                                pitchGalleryStringArrayList.add(pitchImage.getString("pitch_image"));
-                                pitchModel.setPitch_gallery(pitchGalleryStringArrayList);
-                                pitchModelArrayList.add(pitchModel);
+
+                            JSONArray pitchArray = data.getJSONArray("pitch_listing");
+                            if (pitchArray.length() > 0) {
+                                for (int k = 0; k < pitchArray.length(); k++) {
+                                    JSONObject pitchObject = pitchArray.getJSONObject(k);
+                                    PitchModel pitchModel = new PitchModel();
+                                    pitchModel.setPitch_name(pitchObject.getString("pitch_name"));
+                                    pitchModel.setProcess_booking(pitchObject.getString("process_booking"));
+                                    pitchModel.setComplete_booking(pitchObject.getString("complete_booking"));
+                                    pitchModel.setPitch_review_avg(pitchObject.getString("pitch_review_avg"));
+                                    pitchModel.setId(pitchObject.getString("id"));
+                                    pitchModel.setStadium_id(pitchObject.getString("stadium_id"));
+                                    pitchModel.setUser_id(pitchObject.getString("user_id"));
+                                    pitchGalleryStringArrayList = new ArrayList<>();
+                                    JSONArray pitchGallery = pitchObject.getJSONArray("pitch_gallery");
+                                    JSONObject pitchImage = pitchGallery.getJSONObject(0);
+                                    pitchGalleryStringArrayList.add(pitchImage.getString("pitch_image"));
+                                    pitchModel.setPitch_gallery(pitchGalleryStringArrayList);
+                                    pitchModelArrayList.add(pitchModel);
+                                }
+                                noPitchLayout.setVisibility(View.GONE);
+                            } else {
+                                pitchesRecyclerView.setVisibility(View.GONE);
+                                noPitchLayout.setVisibility(View.VISIBLE);
+                                noPitchLayout.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        startActivity(new Intent(getActivity(), AddPitchActivity.class));
+                                    }
+                                });
                             }
 
 

@@ -11,6 +11,7 @@
         android:gravity="center">
 
         <CheckBox
+            android:checked="true"
             android:id="@+id/chkboxsunday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -49,7 +50,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -92,7 +93,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -100,15 +101,12 @@
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
                             android:singleLine="true"
-                            android:text="05:00"
+                            android:text="10:00"
                             android:textSize="14sp" />
                     </FrameLayout>
-
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -120,6 +118,7 @@
         android:weightSum="1">
 
         <CheckBox
+            android:checked="true"
             android:id="@+id/chkboxmonday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -160,7 +159,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -204,7 +203,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -212,7 +211,7 @@ match_parent
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
                             android:singleLine="true"
-                            android:text="05:00"
+                            android:text="10:00"
                             android:textSize="14sp" />
                     </FrameLayout>
 
@@ -234,9 +233,8 @@ match_parent
         <CheckBox
             android:id="@+id/chkboxtuesday"
             android:layout_width="wrap_content"
-
+            android:checked="true"
             android:layout_height="wrap_content"
-
             android:buttonTint="@color/colorPrimary"
             android:text="T"
             android:textSize="18sp" />
@@ -273,7 +271,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -317,7 +315,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -325,7 +323,7 @@ match_parent
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
                             android:singleLine="true"
-                            android:text="05:00"
+                            android:text="10:00"
                             android:textSize="14sp" />
                     </FrameLayout>
 
@@ -347,7 +345,7 @@ match_parent
         <CheckBox
             android:id="@+id/chkboxwednsday"
             android:layout_width="wrap_content"
-
+            android:checked="true"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="W"
@@ -385,7 +383,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -429,7 +427,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -437,7 +435,7 @@ match_parent
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
                             android:singleLine="true"
-                            android:text="05:00"
+                            android:text="10:00"
                             android:textSize="14sp" />
                     </FrameLayout>
 
@@ -459,7 +457,7 @@ match_parent
         <CheckBox
             android:id="@+id/chkboxthursday"
             android:layout_width="wrap_content"
-
+            android:checked="true"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="T"
@@ -497,7 +495,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -541,7 +539,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -549,7 +547,7 @@ match_parent
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
                             android:singleLine="true"
-                            android:text="05:00"
+                            android:text="10:00"
                             android:textSize="14sp" />
                     </FrameLayout>
 
@@ -571,7 +569,7 @@ match_parent
         <CheckBox
             android:id="@+id/chkboxfriday"
             android:layout_width="wrap_content"
-
+            android:checked="true"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="F"
@@ -609,7 +607,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -653,7 +651,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -661,7 +659,7 @@ match_parent
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
                             android:singleLine="true"
-                            android:text="05:00"
+                            android:text="10:00"
                             android:textSize="14sp" />
                     </FrameLayout>
 
@@ -683,7 +681,7 @@ match_parent
         <CheckBox
             android:id="@+id/chkboxsaturday"
             android:layout_width="wrap_content"
-
+            android:checked="true"
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="S"
@@ -721,7 +719,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -765,7 +763,7 @@ match_parent
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:drawableRight="@drawable/ic_calendar"
+                            android:drawableRight="@drawable/ic_circular_clock"
                             android:ellipsize="end"
                             android:enabled="false"
                             android:gravity="center"
@@ -773,7 +771,7 @@ match_parent
                             android:paddingLeft="16dp"
                             android:paddingRight="16dp"
                             android:singleLine="true"
-                            android:text="05:00"
+                            android:text="10:00"
                             android:textSize="14sp" />
                     </FrameLayout>
 

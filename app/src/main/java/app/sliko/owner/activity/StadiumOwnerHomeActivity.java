@@ -2,6 +2,8 @@ package app.sliko.owner.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -21,7 +23,10 @@ import app.sliko.EditProfileActivity;
 import app.sliko.R;
 import app.sliko.owner.fragment.AllReviewsFragment;
 import app.sliko.owner.fragment.BookingFragment;
+import app.sliko.owner.fragment.ProfileFragment;
+import app.sliko.owner.fragment.ReportsFragment;
 import app.sliko.owner.fragment.StadiumDetailsFragment;
+import app.sliko.utills.M;
 import app.sliko.web.Api;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,8 +53,14 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
     LinearLayout editStadiumLayout;
     @BindView(R.id.etName)
     TextView etName;
+    @BindView(R.id.etEmail)
+    TextView etEmail;
+    @BindView(R.id.etPhone)
+    TextView etPhone;
     @BindView(R.id.editProfileLayout)
     LinearLayout editProfileLayout;
+    @BindView(R.id.stadiumRelatedLayout)
+    LinearLayout stadiumRelatedLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,9 +77,31 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
             } else {
                 mDrawerLayout.openDrawer(GravityCompat.START);
             }
-        });
-        Picasso.get().load(Api.DUMMY_PROFILE).into(imageProfile);
 
+        });
+        setUpLayout();
+        int slot = 2;
+        int temp = 9;
+        for (int k = 9; k < 17; k++) {
+            if(temp<17){
+                Log.i(">>data", "checkForLoop: " + ((temp) + "-" + (temp + slot)));
+                temp += slot;
+            }
+        }
+    }
+
+    private void setUpLayout() {
+        if (M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "profilepic").equalsIgnoreCase("")) {
+            Picasso.get().load(Api.DUMMY_PROFILE).into(imageProfile);
+        } else {
+            Picasso.get().load(Api.DUMMY_PROFILE).into(imageProfile);
+        }
+        etEmail.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "email"));
+        etName.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "fullname"));
+        etPhone.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "phone"));
+        stadiumRelatedLayout.setVisibility(M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, Api.IS_STADIUM).equalsIgnoreCase("0") ?
+                View.VISIBLE
+                : View.VISIBLE);
     }
 
     public void swapContentFragment(final Fragment i_newFragment, final boolean i_addToStack, final int container) {
@@ -88,9 +121,9 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
                     toolbarTitle.setText(getString(R.string.addedStadium));
                     swapContentFragment(StadiumDetailsFragment.newInstance(), true, R.id.frameContainer);
                     return true;
-                case R.id.action_pitches:
-//                    toolbarTitle.setText(getString(R.string.menu_pitches));
-//                    swapContentFragment(AllReviewsFragment.newInstance(), true, R.id.frameContainer);
+                case R.id.action_overview:
+                    toolbarTitle.setText(getString(R.string.reports));
+                    swapContentFragment(ReportsFragment.newInstance(), true, R.id.frameContainer);
                     return true;
                 case R.id.action_bookings:
                     toolbarTitle.setText(getString(R.string.menu_bookings));
@@ -100,19 +133,19 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
                     toolbarTitle.setText(getString(R.string.reviews));
                     swapContentFragment(AllReviewsFragment.newInstance(), true, R.id.frameContainer);
                     return true;
+                case R.id.action_profile:
+                    toolbarTitle.setText(getString(R.string.profile));
+                    swapContentFragment(ProfileFragment.newInstance(), true, R.id.frameContainer);
+                    return true;
             }
             return false;
         });
-        editStadiumLayout.setOnClickListener(view -> {
-            handleTransition(EditStadiumActivity.class);
-
-        });
-        addPitchLayout.setOnClickListener(view -> {
-            handleTransition(AddPitchActivity.class);
-        });
-        editProfileLayout.setOnClickListener(view -> {
-            handleTransition(EditProfileActivity.class);
-        });
+        editStadiumLayout.setOnClickListener(view ->
+            handleTransition(EditStadiumActivity.class));
+        addPitchLayout.setOnClickListener(view ->
+            handleTransition(AddPitchActivity.class));
+        editProfileLayout.setOnClickListener(view ->
+            handleTransition(EditProfileActivity.class));
     }
 
     private void handleTransition(Class<?> navigateTo) {

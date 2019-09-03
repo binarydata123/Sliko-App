@@ -18,12 +18,14 @@ public class StadiumInfoDialog {
     private TextView sd_stadiumPrice;
     private ColorRatingBar sd_stadiumRating;
     private TextView sd_stadiumReviews;
+    private TextView SD_stadiumAddress;
     private LinearLayout sd_stadiumCloseButton;
 
     public StadiumInfoDialog(AlertDialog alertDialog, FrameLayout sd_stadiumSeeDetails,
                              ImageView sd_stadiumImage, ProgressBar sd_stadiumProgressDialog,
                              TextView sd_stadiumName, TextView sd_stadiumPrice, ColorRatingBar sd_stadiumRating,
-                             TextView sd_stadiumReviews, LinearLayout sd_stadiumCloseButton) {
+                             TextView sd_stadiumReviews, LinearLayout sd_stadiumCloseButton,
+                             TextView SD_stadiumAddress) {
         this.alertDialog = alertDialog;
         this.sd_stadiumSeeDetails = sd_stadiumSeeDetails;
         this.sd_stadiumImage = sd_stadiumImage;
@@ -33,6 +35,11 @@ public class StadiumInfoDialog {
         this.sd_stadiumRating = sd_stadiumRating;
         this.sd_stadiumReviews = sd_stadiumReviews;
         this.sd_stadiumCloseButton = sd_stadiumCloseButton;
+        this.SD_stadiumAddress = SD_stadiumAddress;
+    }
+
+    public TextView getSD_stadiumAddress() {
+        return SD_stadiumAddress;
     }
 
     public AlertDialog getAlertDialog() {

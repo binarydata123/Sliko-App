@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +33,10 @@ import java.util.Calendar;
 import app.sliko.R;
 import app.sliko.models.StadiumImagesModel;
 import app.sliko.owner.adapter.AddImagesAdapter;
+import app.sliko.owner.adapter.StadiumOpeningAdapter;
+import app.sliko.owner.model.AvailabilityModel;
 import app.sliko.utills.M;
+import app.sliko.web.Api;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -97,13 +101,16 @@ public class AddPitchActivity extends Activity {
     TextView saturdayET;
     private static final int PERMISSIONS_REQUEST_CODE = 0x1;
     Dialog dialog;
+    StadiumOpeningAdapter stadiumOpeningAdapter;
+
     private ArrayList<StadiumImagesModel> imagesEncodedList;
     String chkbxsunday = "0", chkbxmonday = "0", chkbxtuesday = "0", chkbxwednsday = "0", chkbxthursday = "0",
             chkbxfriday = "0", chkbxsaturday = "0";
     AddImagesAdapter pitchImageAdapter;
     LinearLayoutManager lm;
     private int mHour, mMinute;
-
+    @BindView(R.id.availabilityRecyclerView)
+    RecyclerView availabilityRecyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,8 +133,25 @@ public class AddPitchActivity extends Activity {
         recyclrVIPichImg.setLayoutManager(lm);
         pitchImageAdapter = new AddImagesAdapter(this, imagesEncodedList, "");
         recyclrVIPichImg.setAdapter(pitchImageAdapter);
-    }
 
+        prepareStadiumData();
+
+    }
+    ArrayList<AvailabilityModel> availabilityModels = new ArrayList<>();
+
+    private void prepareStadiumData() {
+        availabilityModels.clear();
+        for (int k = 0; k < Api.timingArray.length; k++) {
+            AvailabilityModel availabilityModel = new AvailabilityModel();
+            availabilityModel.setPicked(false);
+            availabilityModel.setTime(Api.timingArray[k]);
+            availabilityModels.add(availabilityModel);
+        }
+        stadiumOpeningAdapter = new StadiumOpeningAdapter(AddPitchActivity.this, availabilityModels);
+        availabilityRecyclerView.setLayoutManager(new GridLayoutManager(AddPitchActivity.this, 3));
+        availabilityRecyclerView.setAdapter(stadiumOpeningAdapter);
+        stadiumOpeningAdapter.notifyDataSetChanged();
+    }
     public void listenerCheckbox() {
         chkboxsunday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override

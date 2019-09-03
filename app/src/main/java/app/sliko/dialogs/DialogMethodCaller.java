@@ -30,9 +30,10 @@ public class DialogMethodCaller {
         TextView SD_stadiumPrice = viewError.findViewById(R.id.SD_stadiumPrice);
         ColorRatingBar SD_stadiumRating = viewError.findViewById(R.id.SD_stadiumRating);
         TextView SD_stadiumReviews = viewError.findViewById(R.id.SD_stadiumReviews);
+        TextView SD_stadiumAddress = viewError.findViewById(R.id.SD_stadiumAddress);
         LinearLayout SD_stadiumCloseButton = viewError.findViewById(R.id.SD_stadiumCloseButton);
         return new StadiumInfoDialog(dialog_error, SD_stadiumSeeDetails, SD_stadiumImage, SD_stadiumProgressDialog, SD_stadiumName, SD_stadiumPrice,
-                SD_stadiumRating, SD_stadiumReviews, SD_stadiumCloseButton);
+                SD_stadiumRating, SD_stadiumReviews, SD_stadiumCloseButton,SD_stadiumAddress);
     }
 
     public static ChangePasswordDialog openChangePasswordDialog(final Context context, int layoutId, boolean isCancellable) {

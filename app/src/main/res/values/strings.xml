@@ -17,8 +17,8 @@
     <string name="price">Price</string>
     <string name="myBookings">Đặt chỗ của tôi</string>
     <string name="notifications">Thông báo</string>
-    <string name="editProfile">Chỉnh sửa hồ sơ</string>
-    <string name="profile">My Profile</string>
+    <string name="editProfile">Edit Profile</string>
+    <string name="profile">Profile</string>
 
 
     <string name="forgotPassword">Quên mật khẩu</string>
@@ -60,14 +60,14 @@
     <!--pitch listening-->
     <string name="Add_Pitch">Thêm sân</string>
     <!--profile activity-->
-    <string name="Address">Địa chỉ nhà</string>
+    <string name="Address">Address</string>
     <string name="Enter_Address">Nhập địa chỉ</string>
     <!--registration-->
     <string name="enterusername">Điền tên đăng nhập</string>
     <string name="confirmpasswd">Xác nhận mật khẩu</string>
-    <string name="addedStadium">sân vận động</string>
+    <string name="addedStadium">Stadium</string>
     <string name="menu_pitches">Sân</string>
-    <string name="menu_bookings">Đặt chỗ</string>
+    <string name="menu_bookings">All Bookings</string>
     <string name="addPitch">Add Pitch</string>
 
 
@@ -106,5 +106,19 @@
     <string name="timeFormat" translatable="false">EE, dd MMM HH:mm</string>
     <string name="period" translatable="false">%1$s – %2$s</string>
     <string name="editPitch">Edit Pitch</string>
+    <string name="adddress">Address: </string>
+    <string name="stadiumAddedOn" >Stadium created on: </string>
+    <string name="noReviews">No reviews</string>
+    <string name="reports">Reports</string>
+    <string name="userName">Name</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="favouriteTeam">Favourite Team</string>
+    <string name="favouritePosition">Play Position</string>
+    <string name="please_enter_team">Please enter favourite team</string>
+    <string name="please_select_play_position">Please select a play position</string>
+    <string name="please_enter_height">Please enter height</string>
+    <string name="please_enter_weight">Please enter weight</string>
+    <string name="please_enter_footedness">Please enter footedness Left or Right</string>
 
 </resources>

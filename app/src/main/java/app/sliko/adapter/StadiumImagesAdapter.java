@@ -1,6 +1,7 @@
 package app.sliko.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ public class StadiumImagesAdapter extends PagerAdapter {
 
         ImageView imageView = view.findViewById(R.id.imageView);
         ProgressBar progressBar = view.findViewById(R.id.progressBar);
-
+        Log.i(">>val", "instantiateItem: " + reviewsModelArrayList.get(position));
 
         Picasso.get().load(reviewsModelArrayList.get(position))
                 .into(imageView, new Callback() {
@@ -57,7 +58,6 @@ public class StadiumImagesAdapter extends PagerAdapter {
                     @Override
                     public void onError(Exception e) {
                         progressBar.setVisibility(View.GONE);
-                        imageView.setVisibility(View.GONE);
                     }
                 });
 

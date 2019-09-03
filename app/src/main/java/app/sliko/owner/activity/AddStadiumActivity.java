@@ -24,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,8 +38,9 @@ import java.util.ArrayList;
 import app.sliko.R;
 import app.sliko.models.StadiumImagesModel;
 import app.sliko.owner.adapter.AddImagesAdapter;
+import app.sliko.owner.adapter.StadiumOpeningAdapter;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
-import app.sliko.owner.model.ImagesModel;
+import app.sliko.owner.model.AvailabilityModel;
 import app.sliko.utills.M;
 import app.sliko.web.Api;
 import app.sliko.web.ApiInterface;
@@ -70,6 +72,8 @@ public class AddStadiumActivity extends AppCompatActivity {
     LinearLayout llSelectmultiImg;
     @BindView(R.id.recyclrVIPichImg)
     RecyclerView recyclrVIPichImg;
+    @BindView(R.id.availabilityRecyclerView)
+    RecyclerView availabilityRecyclerView;
     private static final int PERMISSIONS_REQUEST_CODE = 0x1;
     Dialog dialog;
     private ArrayList<StadiumImagesModel> imagesEncodedList;
@@ -78,6 +82,8 @@ public class AddStadiumActivity extends AppCompatActivity {
     LinearLayoutManager lm;
     String userId;
     String lat = "", lng = "";
+
+    StadiumOpeningAdapter stadiumOpeningAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +108,23 @@ public class AddStadiumActivity extends AppCompatActivity {
         recyclrVIPichImg.setAdapter(addPitchImageAdapter);
 
 
+        prepareStadiumData();
+    }
+
+    ArrayList<AvailabilityModel> availabilityModels = new ArrayList<>();
+
+    private void prepareStadiumData() {
+        availabilityModels.clear();
+        for (int k = 0; k < Api.timingArray.length; k++) {
+            AvailabilityModel availabilityModel = new AvailabilityModel();
+            availabilityModel.setPicked(false);
+            availabilityModel.setTime(Api.timingArray[k]);
+            availabilityModels.add(availabilityModel);
+        }
+        stadiumOpeningAdapter = new StadiumOpeningAdapter(AddStadiumActivity.this, availabilityModels);
+        availabilityRecyclerView.setLayoutManager(new GridLayoutManager(AddStadiumActivity.this, 3));
+        availabilityRecyclerView.setAdapter(stadiumOpeningAdapter);
+        stadiumOpeningAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.submitButton)
@@ -333,8 +356,8 @@ public class AddStadiumActivity extends AppCompatActivity {
                 multipart_body = new MultipartBody.Part[files.size()];
                 for (int k = 0; k < files.size(); k++) {
                     File file = new File(files.get(k).getImageName());
-                    RequestBody reqFile = RequestBody.create(MediaType.parse("*/*"), file);
-                    multipart_body[k] = MultipartBody.Part.createFormData("images[]", file.getName(), reqFile);
+                    RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
+                    multipart_body[k] = MultipartBody.Part.createFormData("stadium_image[]", file.getName(), reqFile);
                 }
 
             }
@@ -360,8 +383,8 @@ public class AddStadiumActivity extends AppCompatActivity {
                             String message = jsonObject.getString("message");
                             Toast.makeText(AddStadiumActivity.this, message, Toast.LENGTH_SHORT).show();
                             if (status.equalsIgnoreCase("true")) {
-                                EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
                                 M.updateTrivialInfo(AddStadiumActivity.this, Api.IS_STADIUM, Api.STADIUM_ADDED);
+                                EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
                             } else {
                                 EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(false));
                             }

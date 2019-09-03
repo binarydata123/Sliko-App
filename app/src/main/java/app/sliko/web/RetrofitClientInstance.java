@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClientInstance {
 
     private static Retrofit retrofit;
-    private static final String BASE_URL = "http://122.160.255.183/sliko/api/";
+    private static final String BASE_URL = "http://www.iebasketball.com/sliko_sk/api/";
 
     public static Retrofit getRetrofitInstance() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();

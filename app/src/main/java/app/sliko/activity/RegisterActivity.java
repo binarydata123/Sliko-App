@@ -3,17 +3,24 @@ package app.sliko.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import app.sliko.R;
 import app.sliko.utills.M;
@@ -38,6 +45,18 @@ public class RegisterActivity extends AppCompatActivity {
     EditText etPassword;
     @BindView(R.id.etConfirmPassword)
     EditText etConfirmPassword;
+    @BindView(R.id.etFavouriteTeam)
+    EditText etFavouirteTeam;
+    @BindView(R.id.etHeight)
+    EditText etHeight;
+    @BindView(R.id.etWeight)
+    EditText etWeight;
+    @BindView(R.id.leftFoot)
+    RadioButton leftFoot;
+    @BindView(R.id.rightFoot)
+    RadioButton rightFoot;
+    @BindView(R.id.playPositionSpinner)
+    Spinner playPositionSpinner;
     @BindView(R.id.checkOwner)
     RadioButton checkOwner;
     @BindView(R.id.registerButton)
@@ -45,6 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
     @BindView(R.id.haveAccountClick)
     LinearLayout haveAccountClick;
     Dialog dialog;
+    String selectedPlayerPosition = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,7 +73,20 @@ public class RegisterActivity extends AppCompatActivity {
         ButterKnife.bind(RegisterActivity.this);
         dialog = M.showDialog(RegisterActivity.this, "", false);
         setListeners();
+        getPlaysPositions();
+        playPositionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i != 0) {
+                    selectedPlayerPosition = playPositionSpinner.getSelectedItem().toString();
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void setListeners() {
@@ -72,19 +105,32 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (!M.validateEmail(etEmail.getText().toString())) {
                 Toast.makeText(this, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
 
+            } else if ((etFavouirteTeam.length() == 0 || etFavouirteTeam.getText().toString().trim().length() == 0)) {
+                Toast.makeText(this, getString(R.string.please_enter_team), Toast.LENGTH_SHORT).show();
+
+            } else if (playPositionSpinner.getSelectedItemPosition() == 0) {
+                Toast.makeText(this, getString(R.string.please_select_play_position), Toast.LENGTH_SHORT).show();
+
+            } else if ((etHeight.length() == 0 || etHeight.getText().toString().trim().length() == 0)) {
+                Toast.makeText(this, getString(R.string.please_enter_height), Toast.LENGTH_SHORT).show();
+
+            } else if ((etWeight.length() == 0 || etWeight.getText().toString().trim().length() == 0)) {
+                Toast.makeText(this, getString(R.string.please_enter_weight), Toast.LENGTH_SHORT).show();
+
             } else if ((etPassword.length() == 0 || etPassword.getText().toString().trim().length() == 0)) {
                 Toast.makeText(this, getString(R.string.please_enter_password), Toast.LENGTH_SHORT).show();
 
             } else if ((etConfirmPassword.length() == 0 || etConfirmPassword.getText().toString().trim().length() == 0)) {
                 Toast.makeText(this, getString(R.string.please_confirm_password), Toast.LENGTH_SHORT).show();
 
-            } else if (!(etConfirmPassword.getText().toString().equalsIgnoreCase(etEmail.getText().toString()))) {
+            } else if (!(etConfirmPassword.getText().toString().equalsIgnoreCase(etPassword.getText().toString()))) {
                 Toast.makeText(this, getString(R.string.password_do_not_match), Toast.LENGTH_SHORT).show();
 
             } else {
                 registerRequest();
             }
         });
+
         haveAccountClick.setOnClickListener(view -> {
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             finish();
@@ -102,7 +148,9 @@ public class RegisterActivity extends AppCompatActivity {
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_register(etUserName.getText().toString(),
-                etEmail.getText().toString(), etPhone.getText().toString(), etPassword.getText().toString(), role, social_id, fcmToken);
+                etEmail.getText().toString(), etPhone.getText().toString(), etPassword.getText().toString(), role, social_id, fcmToken,
+                etFavouirteTeam.getText().toString(), selectedPlayerPosition, etHeight.getText().toString(),
+                etWeight.getText().toString(), rightFoot.isChecked() ? "Right Foot" : "Left Foot");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -113,13 +161,15 @@ public class RegisterActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
+                        Log.e(">>data", "onResponse: " + jsonObject.toString());
                         if (status.equalsIgnoreCase("true")) {
+                            Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             finish();
                         } else {
                             Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
-                    }else{
+                    } else {
                         Toast.makeText(RegisterActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
@@ -134,5 +184,52 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    ArrayList<String> playPositionsArray = new ArrayList<>();
+
+    private void getPlaysPositions() {
+        playPositionsArray.clear();
+        playPositionsArray.add("Select player position");
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_playerPosition();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+                            for (int l = 0; l < jsonArray.length(); l++) {
+                                JSONObject jsonObject1 = jsonArray.getJSONObject(l);
+                                String positions_name = jsonObject1.getString("positions_name");
+                                playPositionsArray.add(positions_name);
+                            }
+                            playPositionSpinner
+                                    .setAdapter(M.makeSpinnerAdapterWhite(RegisterActivity.this,
+                                            playPositionsArray, playPositionSpinner));
+                        } else {
+                            Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(RegisterActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(RegisterActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

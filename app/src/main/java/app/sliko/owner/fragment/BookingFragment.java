@@ -67,6 +67,7 @@ public class BookingFragment extends Fragment {
         ButterKnife.bind(BookingFragment.this, view);
         dialog = M.showDialog(getActivity(), "", false);
         setListeners();
+        getAllBookingData();
         setAdapter();
         bookingRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -125,7 +126,7 @@ public class BookingFragment extends Fragment {
                     }
 
                 } catch (Exception e) {
-
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 

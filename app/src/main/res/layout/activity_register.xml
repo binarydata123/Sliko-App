@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@drawable/background"
     android:orientation="vertical">
 
     <ScrollView
@@ -14,6 +13,16 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:alpha=".9"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:background="@drawable/background"
+                    android:scaleType="fitXY"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -21,12 +30,17 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:padding="26dp">
-
+                <ImageView
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:background="@drawable/slicko_simple_image"
+                    android:layout_height="wrap_content"/>
                 <TextView
-
+                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="10dp"
                     android:text="@string/registerToSilko"
                     android:textColor="@color/white"
                     android:textSize="22sp" />
@@ -39,7 +53,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:layout_marginTop="32dp"
+                        android:layout_marginTop="16dp"
                         android:background="@drawable/edit_bg"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
@@ -126,11 +140,168 @@
                             android:background="@android:color/transparent"
                             android:hint="Enter Email"
                             android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edit_bg"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/ic_favourite" />
+
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="match_parent" />
+
+
+                        <EditText
+                            android:id="@+id/etFavouriteTeam"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/transparent"
+                            android:hint="Enter Favourite team"
+                            android:imeOptions="actionNext"
                             android:inputType="textPassword"
                             android:singleLine="true"
                             android:textSize="14sp" />
                     </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edit_bg"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
 
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:background="@drawable/ic_play_position" />
+
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="match_parent" />
+
+                        <Spinner
+                            android:background="@android:color/transparent"
+                            android:layout_width="match_parent"
+                            android:id="@+id/playPositionSpinner"
+                            android:layout_height="match_parent"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edit_bg"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:background="@drawable/ic_height" />
+
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="match_parent" />
+
+
+                        <EditText
+                            android:id="@+id/etHeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/transparent"
+                            android:hint="Your Height"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edit_bg"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:background="@drawable/ic_weight" />
+
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="match_parent" />
+
+
+                        <EditText
+                            android:id="@+id/etWeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@android:color/transparent"
+                            android:hint="Your weight"
+                            android:imeOptions="actionNext"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+                    </LinearLayout>  <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:background="@drawable/ic_footedness" />
+
+                    <TextView
+                        android:layout_width="8dp"
+                        android:layout_height="match_parent" />
+
+
+                    <RadioGroup
+                        android:gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_height="match_parent">
+                        <RadioButton
+                            android:id="@+id/rightFoot"
+                            android:checked="true"
+                            android:gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:text="Right Foot"
+                            android:layout_height="wrap_content"/>
+                        <RadioButton
+                            android:id="@+id/leftFoot"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical"
+                            android:layout_width="wrap_content"
+                            android:text="Left Foot"
+                            android:layout_height="wrap_content"/>
+                    </RadioGroup>
+                </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
@@ -200,46 +371,52 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
                         android:orientation="vertical">
-
-                        <TextView
-                            android:textSize="18sp"
-                            android:textColor="@color/white"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Choose your role" />
-
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:background="@drawable/edit_bg"
+                            android:gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                            <TextView
+                                android:textSize="16sp"
+                                android:textColor="@color/black_color"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Choose your role" />
 
-                            <RadioGroup
-
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal">
 
-                                <RadioButton
-                                    android:id="@+id/checkUser"
-                                    android:textColor="@color/white"
-                                    android:layout_width="wrap_content"
+                                <RadioGroup
+
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:checked="true"
-                                    android:text="User" />
+                                    android:orientation="horizontal">
 
-                                <TextView
-                                    android:layout_width="15dp"
-                                    android:layout_height="match_parent" />
+                                    <RadioButton
+                                        android:id="@+id/checkUser"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:checked="true"
+                                        android:text="User" />
 
-                                <RadioButton
-                                    android:textColor="@color/white"
-                                    android:id="@+id/checkOwner"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Stadium Owner" />
+                                    <TextView
+                                        android:layout_width="15dp"
+                                        android:layout_height="match_parent" />
 
-                            </RadioGroup>
+                                    <RadioButton
+                                        android:id="@+id/checkOwner"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Stadium Owner" />
+
+                                </RadioGroup>
+                            </LinearLayout>
                         </LinearLayout>
+
 
                     </LinearLayout>
 
