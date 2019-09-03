@@ -120,5 +120,10 @@
     <string name="please_enter_height">Please enter height</string>
     <string name="please_enter_weight">Please enter weight</string>
     <string name="please_enter_footedness">Please enter footedness Left or Right</string>
+    <string name="signout">SignOut</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="footedness">Feeotedness</string>
+    <string name="doYouWantToSignOut">Do you want to exit the app</string>
 
 </resources>

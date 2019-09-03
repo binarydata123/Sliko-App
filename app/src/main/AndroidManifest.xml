@@ -87,6 +87,11 @@
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
+        <activity
+            android:name=".activity.ProfileActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <meta-data
             android:name="com.here.android.maps.appid"
             android:value="owoBGfD55oi1azvTYGmV" />

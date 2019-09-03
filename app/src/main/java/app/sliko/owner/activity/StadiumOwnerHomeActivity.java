@@ -37,8 +37,8 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
     BottomNavigationView bottomLayout;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @BindView(R.id.imageProfile)
-    CircleImageView imageProfile;
+    @BindView(R.id.ivUserImage)
+    CircleImageView ivUserImage;
     @BindView(R.id.toolbarTitle)
     TextView toolbarTitle;
     @BindView(R.id.toolbar)
@@ -80,10 +80,13 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
 
         });
         setUpLayout();
+
+        int startEntry = 9;
+        int stopEntry = 17;
         int slot = 2;
-        int temp = 9;
-        for (int k = 9; k < 17; k++) {
-            if(temp<17){
+        int temp = startEntry;
+        for (int k = startEntry; k < stopEntry; k++) {
+            if (temp < stopEntry) {
                 Log.i(">>data", "checkForLoop: " + ((temp) + "-" + (temp + slot)));
                 temp += slot;
             }
@@ -92,9 +95,9 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
 
     private void setUpLayout() {
         if (M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "profilepic").equalsIgnoreCase("")) {
-            Picasso.get().load(Api.DUMMY_PROFILE).into(imageProfile);
+            Picasso.get().load(Api.DUMMY_PROFILE).into(ivUserImage);
         } else {
-            Picasso.get().load(Api.DUMMY_PROFILE).into(imageProfile);
+            Picasso.get().load(Api.DUMMY_PROFILE).into(ivUserImage);
         }
         etEmail.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "email"));
         etName.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "fullname"));
@@ -141,11 +144,11 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
             return false;
         });
         editStadiumLayout.setOnClickListener(view ->
-            handleTransition(EditStadiumActivity.class));
+                handleTransition(EditStadiumActivity.class));
         addPitchLayout.setOnClickListener(view ->
-            handleTransition(AddPitchActivity.class));
+                handleTransition(AddPitchActivity.class));
         editProfileLayout.setOnClickListener(view ->
-            handleTransition(EditProfileActivity.class));
+                handleTransition(EditProfileActivity.class));
     }
 
     private void handleTransition(Class<?> navigateTo) {

@@ -44,6 +44,9 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("stadium/mapStadiumlist")
     Call<ResponseBody> ep_homeListing(@Field("user_id") String user_id);
+    @FormUrlEncoded
+    @POST("logout")
+    Call<ResponseBody> ep_logout(@Field("user_id") String user_id);
 
     @FormUrlEncoded
     @POST("stadium/getSuggestionsList")

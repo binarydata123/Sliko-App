@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ import java.util.List;
 
 import app.sliko.R;
 import app.sliko.dialogs.DialogMethodCaller;
+import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.models.HomeStadiumListModel;
 import app.sliko.utills.M;
 import app.sliko.web.Api;
@@ -58,9 +60,33 @@ public class UserHomeActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
+    @BindView(R.id.signOutLayout)
+    LinearLayout signOutLayout;
+    @BindView(R.id.profileLayout)
+    LinearLayout profileLayout;
+    @BindView(R.id.editProfileLayout)
+    LinearLayout editProfileLayout;
+    Image myImage;
+    @BindView(R.id.etName)
+    TextView etName;
+    @BindView(R.id.etEmail)
+    TextView etEmail;
+    @BindView(R.id.etPhone)
+    TextView etPhone;
     @BindView(R.id.ivUserImage)
     CircleImageView ivUserImage;
-    Image myImage;
+
+    private void setUpLayout() {
+        if (M.fetchUserTrivialInfo(UserHomeActivity.this, "profilepic").equalsIgnoreCase("")) {
+            Picasso.get().load(Api.DUMMY_PROFILE).into(ivUserImage);
+        } else {
+            Picasso.get().load(Api.DUMMY_PROFILE).into(ivUserImage);
+        }
+        etEmail.setText(M.actAccordingly(UserHomeActivity.this, "email"));
+        etName.setText(M.actAccordingly(UserHomeActivity.this, "fullname"));
+        etPhone.setText(M.actAccordingly(UserHomeActivity.this, "phone"));
+
+    }
 
     private SupportMapFragment getSupportMapFragmentId() {
         return (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapfragment);
@@ -69,15 +95,83 @@ public class UserHomeActivity extends AppCompatActivity {
     Map map = null;
     private boolean isMapReady = false;
 
+
     app.navizinhanca.utils.alerts.models.StadiumInfoDialog stadiumInfoDialog;
     WeakReference<UserHomeActivity> weakReference;
     Dialog dialog;
+
+    private void setListeners() {
+        profileLayout.setOnClickListener(view -> {
+            startActivity(new Intent(UserHomeActivity.this, ProfileActivity.class));
+        });
+        signOutLayout.setOnClickListener(view -> {
+            dialogConfirmation = DialogMethodCaller.openDialogConfirmation(UserHomeActivity.this, R.layout.dialog_confirmation, false);
+            dialogConfirmation.getDialog_error().show();
+            dialogConfirmation.getDialogConfirmationMessage().setText(getString(R.string.doYouWantToSignOut));
+            dialogConfirmation.getDialogConfirmationTitle().setText(getString(R.string.signout));
+            dialogConfirmation.getCloseButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogConfirmation.getDialog_error().dismiss();
+                }
+            });
+            dialogConfirmation.getOkButton().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogConfirmation.getDialog_error().dismiss();
+                    logoutApi();
+                }
+            });
+        });
+        setUpLayout();
+    }
+
+    private void logoutApi() {
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_logout(M.fetchUserTrivialInfo(UserHomeActivity.this, "id"));
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+                            Toast.makeText(UserHomeActivity.this, message, Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(UserHomeActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(UserHomeActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(UserHomeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Log.i(">>error", "onResponse: " + e.getMessage());
+                    Toast.makeText(UserHomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(UserHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    DialogConfirmation dialogConfirmation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_home);
         ButterKnife.bind(UserHomeActivity.this);
+        setListeners();
         dialog = M.showDialog(UserHomeActivity.this, "", false);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         toolbarTitle.setText(getString(R.string.app_name));
@@ -164,6 +258,7 @@ public class UserHomeActivity extends AppCompatActivity {
         stadiumInfoDialog.getAlertDialog().show();
         stadiumInfoDialog.getSd_stadiumName().setText(homeStadiumListModelArrayList.get(index).getStadium_name());
         stadiumInfoDialog.getSD_stadiumAddress().setText(homeStadiumListModelArrayList.get(index).getAddress());
+        Log.e(">>stadium_image", "inflateDialogForBubbleInfo: " + homeStadiumListModelArrayList.get(index).getStadium_image());
         Picasso.get().load(homeStadiumListModelArrayList.get(index).getStadium_image())
                 .into(stadiumInfoDialog.getSd_stadiumImage(), new Callback() {
                     @Override
@@ -245,7 +340,7 @@ public class UserHomeActivity extends AppCompatActivity {
                                     homeListModel.setPrice(innerJsonObject.getString("price"));
                                     homeListModel.setStadium_image(innerJsonObject.getString("stadium_image"));
                                     homeListModel.setRating(innerJsonObject.getString("rating"));
-                                    if (!(innerJsonObject.getString("lat").equals("") || innerJsonObject.getString("lng").equals(""))) {
+                                    if (!(innerJsonObject.getString("lat").equals("") || innerJsonObject.getString("lat").equals("null") || innerJsonObject.getString("lng").equals("") || innerJsonObject.getString("lng").equals("null"))) {
                                         myImage = new com.here.android.mpa.common.Image();
                                         myImage.setImageResource(R.drawable.placeholder);
                                         myMapMarker =

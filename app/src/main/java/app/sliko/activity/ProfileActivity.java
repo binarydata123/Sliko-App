@@ -1,28 +1,24 @@
-package app.sliko.owner.fragment;
+package app.sliko.activity;
 
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
 
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
 import app.sliko.R;
-import app.sliko.activity.ProfileActivity;
 import app.sliko.utills.M;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
@@ -34,13 +30,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProfileFragment extends Fragment {
-    private View view;
+public class ProfileActivity extends AppCompatActivity {
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.userImage)
     CircleImageView userImage;
+    @BindView(R.id.toolbarTitle)
+    TextView toolbarTitle;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     @BindView(R.id.etName)
     TextView etName;
     @BindView(R.id.etEmail)
@@ -53,47 +50,48 @@ public class ProfileFragment extends Fragment {
     TextView etFavouriteTeam;
     @BindView(R.id.etPlayPosition)
     TextView etPlayPosition;
-    @BindView(R.id.editProfileButton)
-    Button editProfileButton;   @BindView(R.id.progressImage)
-    ProgressBar progressImage;
     @BindView(R.id.etHeight)
     TextView etHeight;
     @BindView(R.id.etWeight)
     TextView etWeight;
     @BindView(R.id.etFootedness)
     TextView etFootedness;
-    public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    @BindView(R.id.editProfileButton)
+    Button editProfileButton;
+    @BindView(R.id.progressImage)
+    ProgressBar progressImage;
+
 
     private Dialog dialog;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_profile, container, false);
-        ButterKnife.bind(ProfileFragment.this, view);
-        dialog = M.showDialog(getActivity(), "", false);
-        toolbar.setVisibility(View.GONE);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_profile);
+        ButterKnife.bind(ProfileActivity.this);
+        dialog = M.showDialog(ProfileActivity.this, "", false);
+
+        toolbar.setNavigationIcon(R.drawable.back_arrow_white);
+        toolbarTitle.setText(getString(R.string.profile));
+        toolbar.setNavigationOnClickListener(v -> {
+            finish();
+        });
         fetchProfileInfo();
-        return view;
     }
+
 
     private void fetchProfileInfo() {
         dialog.show();
-        String userID =M.fetchUserTrivialInfo(getActivity(), "id");
-        Log.i(">>user_id", "fetchProfileInfo: "  + userID);
+        String userID = M.fetchUserTrivialInfo(ProfileActivity.this, "id");
+        Log.i(">>user_id", "fetchProfileInfo: " + userID);
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_getUserProfile(M.fetchUserTrivialInfo(getActivity(), "id"));
+        Call<ResponseBody> call = service.ep_getUserProfile(M.fetchUserTrivialInfo(ProfileActivity.this, "id"));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 dialog.cancel();
                 try {
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         String sResponse = response.body().string();
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String message = jsonObject.getString("message");
@@ -112,31 +110,31 @@ public class ProfileFragment extends Fragment {
                                     progressImage.setVisibility(View.GONE);
                                 }
                             });
-                            etName.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("fullname")));
-                            etEmail.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("email")));
-                            etPhone.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("phone")));
-                            etAddress.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("address")));
-                            etHeight.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("height")));
-                            etWeight.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("weight")));
-                            etFootedness.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("footedness")));
-                            etFavouriteTeam.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("favourite_team")));
-                            etPlayPosition.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("play_position")));
-                        }else{
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            etName.setText(M.actAccordinglyWithJson(ProfileActivity.this, dataObject.getString("fullname")));
+                            etEmail.setText(M.actAccordinglyWithJson(ProfileActivity.this, dataObject.getString("email")));
+                            etPhone.setText(M.actAccordinglyWithJson(ProfileActivity.this, dataObject.getString("phone")));
+                            etAddress.setText(M.actAccordinglyWithJson(ProfileActivity.this, dataObject.getString("address")));
+                            etHeight.setText(M.actAccordinglyWithJson(ProfileActivity.this, dataObject.getString("height")));
+                            etWeight.setText(M.actAccordinglyWithJson(ProfileActivity.this, dataObject.getString("weight")));
+                            etFootedness.setText(M.actAccordinglyWithJson(ProfileActivity.this, dataObject.getString("footedness")));
+                            etFavouriteTeam.setText(M.actAccordinglyWithJson(ProfileActivity.this, dataObject.getString("favourite_team")));
+                            etPlayPosition.setText(M.actAccordinglyWithJson(ProfileActivity.this, dataObject.getString("play_position")));
+                        } else {
+                            Toast.makeText(ProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
-                    }else{
-                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ProfileActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
