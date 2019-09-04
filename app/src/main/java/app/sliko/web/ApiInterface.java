@@ -10,7 +10,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Path;
 
 public interface ApiInterface {
     @FormUrlEncoded
@@ -27,6 +26,7 @@ public interface ApiInterface {
                                    @Field("height") String height,
                                    @Field("weight") String weight,
                                    @Field("footedness") String footedness);
+
     @FormUrlEncoded
     @POST("login")
     Call<ResponseBody> ep_login(@Field("email") String email,
@@ -38,12 +38,18 @@ public interface ApiInterface {
     @POST("stadium/single_detail")
     Call<ResponseBody> ep_stadium_detail(@Field("user_id") String user_id);
 
+    @FormUrlEncoded
+    @POST("stadium/delete")
+    Call<ResponseBody> ep_deleteStadium(@Field("id") String id,
+                                        @Field("user_id") String user_id);
+
     @GET("playPostionList")
     Call<ResponseBody> ep_playerPosition();
 
     @FormUrlEncoded
     @POST("stadium/mapStadiumlist")
     Call<ResponseBody> ep_homeListing(@Field("user_id") String user_id);
+
     @FormUrlEncoded
     @POST("logout")
     Call<ResponseBody> ep_logout(@Field("user_id") String user_id);
@@ -82,16 +88,39 @@ public interface ApiInterface {
             @Part("description") RequestBody description,
             @Part("address") RequestBody address,
             @Part("lat") RequestBody lat,
-            @Part("long") RequestBody lng);
+            @Part("lng") RequestBody lng,
+            @Part("slot_intervel") RequestBody slot_intervel,
+            @Part("open_time") RequestBody open_time,
+            @Part("close_time") RequestBody close_time,
+            @Part("check_mon") RequestBody check_mon,
+            @Part("check_tue") RequestBody check_tue,
+            @Part("check_wed") RequestBody check_wed,
+            @Part("check_thu") RequestBody check_thu,
+            @Part("check_fri") RequestBody check_fri,
+            @Part("check_sat") RequestBody check_sat,
+            @Part("check_sun") RequestBody check_sun
+    );
+
+
+    @Multipart
+    @POST("pitch/create")
+    Call<ResponseBody> createPitch(
+            @Part MultipartBody.Part[] pitchMultipleImages,
+            @Part("user_id") RequestBody user_id,
+            @Part("stadium_id") RequestBody stadium_id,
+            @Part("pitch_name") RequestBody pitch_name,
+            @Part("description") RequestBody description,
+            @Part("price") RequestBody price
+    );
 
 
     @FormUrlEncoded
     @POST("resetpassword")
     Call<ResponseBody> ep_bookingList(@Field("user_id") String user_id,
-                                        @Field("stadium_id") String stadium_id);
+                                      @Field("stadium_id") String stadium_id);
 
     @FormUrlEncoded
     @POST("resetpassword")
     Call<ResponseBody> ep_ownerBookingList(@Field("email") String email,
-                                        @Field("new_password") String new_password);
+                                           @Field("new_password") String new_password);
 }

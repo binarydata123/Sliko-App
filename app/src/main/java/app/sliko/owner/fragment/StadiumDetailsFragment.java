@@ -36,12 +36,12 @@ import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.owner.activity.AddPitchActivity;
 import app.sliko.owner.activity.AddStadiumActivity;
-import app.sliko.owner.activity.EditStadiumActivity;
 import app.sliko.owner.adapter.PitchAdapterOwner;
+import app.sliko.owner.events.StadiumExistEventOrNot;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.owner.model.PitchModel;
 import app.sliko.utills.M;
-import app.sliko.web.Api;
+import app.sliko.utills.Prefs;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
@@ -108,8 +108,6 @@ public class StadiumDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (getActivity() != null)
-            updateLayout();
         setListeners();
     }
 
@@ -133,135 +131,98 @@ public class StadiumDetailsFragment extends Fragment {
         return view;
     }
 
-    private void updateLayout() {
-        is_stadium = M.fetchUserTrivialInfo(getActivity(), Api.IS_STADIUM);
-        Log.i(">>value", "updateLayout: " + is_stadium);
-        if (is_stadium.equalsIgnoreCase("0")) {
-            noStadiumLayout.setVisibility(View.VISIBLE);
-            stadiumLayout.setVisibility(View.GONE);
-        } else {
-            noStadiumLayout.setVisibility(View.GONE);
-            stadiumLayout.setVisibility(View.VISIBLE);
-            fetchStadiumInfo();
-            setAdapter();
-        }
-    }
 
     private ArrayList<String> pitchGalleryStringArrayList;
     String id;
 
-    private void fetchStadiumInfo() {
+    private void fetchStadiumInfo(String response) {
         pitchModelArrayList = new ArrayList<>();
         reviewsModelArrayList = new ArrayList<>();
-        dialog.show();
-        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_stadium_detail(M.fetchUserTrivialInfo(getActivity(), "id"));
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                dialog.cancel();
-                try {
-                    reviewsModelArrayList.clear();
-                    if (response.isSuccessful()) {
-                        String sResponse = response.body().string();
-                        JSONObject jsonObject = new JSONObject(sResponse);
-                        String status = jsonObject.getString("status");
-                        String message = jsonObject.getString("message");
-                        if (status.equalsIgnoreCase("true")) {
-                            JSONObject data = jsonObject.getJSONObject("data");
-                            String stadium_name = data.getString("stadium_name");
-                            id = data.getString("id");
-                            String description = data.getString("description");
-                            String address = data.getString("address");
-                            String pitch_review_avg = data.getString("review_avg");
-
-
-                            if (pitch_review_avg.equalsIgnoreCase("null")) {
-                                SD_stadiumReviews.setText(getString(R.string.noReviews));
-                                stadiumRating.setVisibility(View.GONE);
-                            } else {
-                                String count = pitch_review_avg.equalsIgnoreCase("null") ?
-                                        "0"
-                                        : pitch_review_avg;
-                                SD_stadiumReviews.setText(count + " " + getString(R.string.reviews));
-                                stadiumRating.setVisibility(View.VISIBLE);
-                            }
-                            stadiumRating.setRating(pitch_review_avg.equalsIgnoreCase("null") ?
-                                    Float.parseFloat("0")
-                                    : Float.parseFloat(pitch_review_avg));
-                            String created_at = data.getString("created_at");
-                            stadiumName.setText(stadium_name);
-                            stadiumDescription.setText(description);
-                            stadiumLocation.setText(getString(R.string.adddress) + address);
-
-                            createdDate.setText(getString(R.string.stadiumAddedOn) + M.formateDateTimeBoth(created_at));
-                            Object stadium_gallery = data.get("stadium_gallery");
-                            if (stadium_gallery instanceof JSONObject) {
-                                JSONObject stadium_galleryObject = data.getJSONObject("stadium_gallery");
-                                reviewsModelArrayList.add(stadium_galleryObject.getString("stadium_image"));
-                            } else {
-                                JSONArray stadium_galleryArray = data.getJSONArray("stadium_gallery");
-                                for (int k = 0; k < stadium_galleryArray.length(); k++) {
-                                    JSONObject stadiumImages = stadium_galleryArray.getJSONObject(k);
-                                    Log.i(">>ataImage", "onResponse: " + stadiumImages.getString("stadium_image"));
-                                    reviewsModelArrayList.add(stadiumImages.getString("stadium_image"));
-                                }
-                            }
-
-                            JSONArray pitchArray = data.getJSONArray("pitch_listing");
-                            if (pitchArray.length() > 0) {
-                                for (int k = 0; k < pitchArray.length(); k++) {
-                                    JSONObject pitchObject = pitchArray.getJSONObject(k);
-                                    PitchModel pitchModel = new PitchModel();
-                                    pitchModel.setPitch_name(pitchObject.getString("pitch_name"));
-                                    pitchModel.setProcess_booking(pitchObject.getString("process_booking"));
-                                    pitchModel.setComplete_booking(pitchObject.getString("complete_booking"));
-                                    pitchModel.setPitch_review_avg(pitchObject.getString("pitch_review_avg"));
-                                    pitchModel.setId(pitchObject.getString("id"));
-                                    pitchModel.setStadium_id(pitchObject.getString("stadium_id"));
-                                    pitchModel.setUser_id(pitchObject.getString("user_id"));
-                                    pitchGalleryStringArrayList = new ArrayList<>();
-                                    JSONArray pitchGallery = pitchObject.getJSONArray("pitch_gallery");
-                                    JSONObject pitchImage = pitchGallery.getJSONObject(0);
-                                    pitchGalleryStringArrayList.add(pitchImage.getString("pitch_image"));
-                                    pitchModel.setPitch_gallery(pitchGalleryStringArrayList);
-                                    pitchModelArrayList.add(pitchModel);
-                                }
-                                noPitchLayout.setVisibility(View.GONE);
-                            } else {
-                                pitchesRecyclerView.setVisibility(View.GONE);
-                                noPitchLayout.setVisibility(View.VISIBLE);
-                                noPitchLayout.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        startActivity(new Intent(getActivity(), AddPitchActivity.class));
-                                    }
-                                });
-                            }
-
-
-                            stadiumImagesAdapter = new StadiumImagesAdapter(getActivity(), reviewsModelArrayList);
-                            viewPager.setAdapter(stadiumImagesAdapter);
-                            circleIndicator.setViewPager(viewPager);
-                            pitchAdapterOwner.notifyDataSetChanged();
-
-                        } else {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        try {
+            reviewsModelArrayList.clear();
+            JSONObject jsonObject = new JSONObject(response);
+            Log.e(">>e", "fetchStadiumInfo: " + jsonObject.toString());
+            String status = jsonObject.getString("status");
+            String message = jsonObject.getString("message");
+            if (status.equalsIgnoreCase("true")) {
+                JSONObject data = jsonObject.getJSONObject("data");
+                String stadium_name = data.getString("stadium_name");
+                id = data.getString("id");
+                Prefs.saveStadiumId(id, getActivity());
+                String description = data.getString("description");
+                String address = data.getString("address");
+                String pitch_review_avg = data.getString("review_avg");
+                if (pitch_review_avg.equalsIgnoreCase("null")) {
+                    SD_stadiumReviews.setText(getString(R.string.noReviews));
+                    stadiumRating.setVisibility(View.GONE);
+                } else {
+                    String count = pitch_review_avg.equalsIgnoreCase("null") ?
+                            "0"
+                            : pitch_review_avg;
+                    SD_stadiumReviews.setText(count + " " + getString(R.string.reviews));
+                    stadiumRating.setVisibility(View.VISIBLE);
                 }
-            }
+                stadiumRating.setRating(pitch_review_avg.equalsIgnoreCase("null") ?
+                        Float.parseFloat("0")
+                        : Float.parseFloat(pitch_review_avg));
+                String created_at = data.getString("created_at");
+                stadiumName.setText(stadium_name);
+                stadiumDescription.setText(description);
+                stadiumLocation.setText(getString(R.string.adddress) + address);
+                createdDate.setText(getString(R.string.stadiumAddedOn) + M.formateDateTimeBoth(created_at));
+                Object stadium_gallery = data.get("stadium_gallery");
+                if (stadium_gallery instanceof JSONObject) {
+                    JSONObject stadium_galleryObject = data.getJSONObject("stadium_gallery");
+                    reviewsModelArrayList.add(stadium_galleryObject.getString("stadium_image"));
+                } else {
+                    JSONArray stadium_galleryArray = data.getJSONArray("stadium_gallery");
+                    for (int k = 0; k < stadium_galleryArray.length(); k++) {
+                        JSONObject stadiumImages = stadium_galleryArray.getJSONObject(k);
+                        Log.i(">>ataImage", "onResponse: " + stadiumImages.getString("stadium_image"));
+                        reviewsModelArrayList.add(stadiumImages.getString("stadium_image"));
+                    }
+                }
+                JSONArray pitchArray = data.getJSONArray("pitch_listing");
+                if (pitchArray.length() > 0) {
+                    for (int k = 0; k < pitchArray.length(); k++) {
+                        JSONObject pitchObject = pitchArray.getJSONObject(k);
+                        PitchModel pitchModel = new PitchModel();
+                        pitchModel.setPitch_name(pitchObject.getString("pitch_name"));
+                        pitchModel.setProcess_booking(pitchObject.getString("process_booking"));
+                        pitchModel.setComplete_booking(pitchObject.getString("complete_booking"));
+                        pitchModel.setPitch_review_avg(pitchObject.getString("pitch_review_avg"));
+                        pitchModel.setId(pitchObject.getString("id"));
+                        pitchModel.setStadium_id(pitchObject.getString("stadium_id"));
+                        pitchModel.setUser_id(pitchObject.getString("user_id"));
+                        pitchGalleryStringArrayList = new ArrayList<>();
+                        JSONArray pitchGallery = pitchObject.getJSONArray("pitch_gallery");
+                        JSONObject pitchImage = pitchGallery.getJSONObject(0);
+                        pitchGalleryStringArrayList.add(pitchImage.getString("pitch_image"));
+                        pitchModel.setPitch_gallery(pitchGalleryStringArrayList);
+                        pitchModelArrayList.add(pitchModel);
+                    }
+                    pitchAdapterOwner.notifyDataSetChanged();
+                    noPitchLayout.setVisibility(View.GONE);
+                } else {
+                    pitchesRecyclerView.setVisibility(View.GONE);
+                    noPitchLayout.setVisibility(View.VISIBLE);
+                    noPitchLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(getActivity(), AddPitchActivity.class));
+                        }
+                    });
+                }
+                stadiumImagesAdapter = new StadiumImagesAdapter(getActivity(), reviewsModelArrayList);
+                viewPager.setAdapter(stadiumImagesAdapter);
+                circleIndicator.setViewPager(viewPager);
 
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
-                dialog.cancel();
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
-        });
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private PitchAdapterOwner pitchAdapterOwner;
@@ -276,28 +237,66 @@ public class StadiumDetailsFragment extends Fragment {
     private DialogConfirmation dialogConfirmation;
 
     private void setListeners() {
-        addStadiumButton.setOnClickListener(view -> startActivity(new Intent(getActivity(), AddStadiumActivity.class)));
-        editStadiumLayout.setOnClickListener(view -> startActivity(new Intent(getActivity(), EditStadiumActivity.class).putExtra("stadium_id", id)));
+        addStadiumButton.setOnClickListener(view -> startActivity(new Intent(getActivity(), AddStadiumActivity.class)
+                .putExtra("stadiumType", "add")));
+        editStadiumLayout.setOnClickListener(view -> startActivity(new Intent(getActivity(), AddStadiumActivity.class)
+                .putExtra("stadiumType", "edit")
+                .putExtra("stadium_id", id)));
         deleteSadiumLayout.setOnClickListener(view -> {
                     dialogConfirmation = DialogMethodCaller.openDialogConfirmation(getActivity(), R.layout.dialog_confirmation, false);
                     dialogConfirmation.getDialog_error().show();
                     dialogConfirmation.getDialogConfirmationTitle().setText(getString(R.string.deleteStadium));
                     dialogConfirmation.getDialogConfirmationMessage().setText(getString(R.string.sureDeleteThisStadium));
+                    dialogConfirmation.getOkButton().setText(getString(R.string.yes));
                     dialogConfirmation.getOkButton().setOnClickListener(view12 -> {
                         dialogConfirmation.getDialog_error().cancel();
-                        M.updateTrivialInfo(getActivity(), Api.IS_STADIUM, Api.STADIUM_REMOVE);
-                        EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
+                        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+                        Call<ResponseBody> call = service.ep_deleteStadium(id, M.fetchUserTrivialInfo(getActivity(), "id"));
+                        call.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                try {
+                                    if (response.isSuccessful()) {
+                                        String sResponse = response.body().string();
+                                        JSONObject jsonObject = new JSONObject(sResponse);
+                                        String status = jsonObject.getString("status");
+                                        String message = jsonObject.getString("message");
+                                        if (status.equalsIgnoreCase("true")) {
+                                            EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
+                                        } else {
+                                            EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(false));
+                                        }
+                                    } else {
+                                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (Exception e) {
+                                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
                     });
                     dialogConfirmation.getCloseButton().setOnClickListener(view1 -> dialogConfirmation.getDialog_error().cancel());
                 }
         );
     }
 
+
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onEvent(SuccessFullyStadiumCreated successFullyStadiumCreated) {
-        if (successFullyStadiumCreated != null) {
-            if (successFullyStadiumCreated.isStatus()) {
-                updateLayout();
+    public void onResponseSuccess(StadiumExistEventOrNot stadiumExistEventOrNot) {
+        if (stadiumExistEventOrNot != null) {
+            if (stadiumExistEventOrNot.isResponseSuccess()) {
+                noStadiumLayout.setVisibility(View.GONE);
+                stadiumLayout.setVisibility(View.VISIBLE);
+                fetchStadiumInfo(stadiumExistEventOrNot.getReponse());
+                setAdapter();
+            } else {
+                noStadiumLayout.setVisibility(View.VISIBLE);
+                stadiumLayout.setVisibility(View.GONE);
             }
         }
     }

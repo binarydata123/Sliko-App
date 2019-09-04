@@ -37,6 +37,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.sliko.EditProfileActivity;
 import app.sliko.R;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.DialogConfirmation;
@@ -104,23 +105,19 @@ public class UserHomeActivity extends AppCompatActivity {
         profileLayout.setOnClickListener(view -> {
             startActivity(new Intent(UserHomeActivity.this, ProfileActivity.class));
         });
+        editProfileLayout.setOnClickListener(view -> {
+            startActivity(new Intent(UserHomeActivity.this, EditProfileActivity.class)
+            .putExtra("typeOfProfile" , "user"));
+        });
         signOutLayout.setOnClickListener(view -> {
             dialogConfirmation = DialogMethodCaller.openDialogConfirmation(UserHomeActivity.this, R.layout.dialog_confirmation, false);
             dialogConfirmation.getDialog_error().show();
             dialogConfirmation.getDialogConfirmationMessage().setText(getString(R.string.doYouWantToSignOut));
             dialogConfirmation.getDialogConfirmationTitle().setText(getString(R.string.signout));
-            dialogConfirmation.getCloseButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialogConfirmation.getDialog_error().dismiss();
-                }
-            });
-            dialogConfirmation.getOkButton().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dialogConfirmation.getDialog_error().dismiss();
-                    logoutApi();
-                }
+            dialogConfirmation.getCloseButton().setOnClickListener(view12 -> dialogConfirmation.getDialog_error().dismiss());
+            dialogConfirmation.getOkButton().setOnClickListener(view1 -> {
+                dialogConfirmation.getDialog_error().dismiss();
+                logoutApi();
             });
         });
         setUpLayout();

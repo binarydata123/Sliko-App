@@ -45,15 +45,15 @@ public class EditPitchActivity extends Activity {
     Toolbar toolbar;
     @BindView(R.id.toolbarTitle)
     TextView toolbarTitle;
-    @BindView(R.id.etfname)
+    @BindView(R.id.etPitchName)
     EditText etfname;
-    @BindView(R.id.etdescriptn)
+    @BindView(R.id.etPitchDescription)
     EditText etdescriptn;
-    @BindView(R.id.etprice)
+    @BindView(R.id.etPitchPrice)
     EditText etprice;
-    @BindView(R.id.ll_addmultiImg)
+    @BindView(R.id.pickImageLayout)
     LinearLayout llAddmultiImg;
-    @BindView(R.id.recyclrVIPichImg)
+    @BindView(R.id.pitchImageRecyclerView)
     RecyclerView recyclrVIPichImg;
     @BindView(R.id.chkboxsunday)
     CheckBox chkboxsunday;
@@ -243,12 +243,12 @@ public class EditPitchActivity extends Activity {
         });
     }
 
-    @OnClick(R.id.addpitchbtn)
+    @OnClick(R.id.addPitchButton)
     void onAddpitchbtnClick() {
         setlisteners();
     }
 
-    @OnClick(R.id.ll_addmultiImg)
+    @OnClick(R.id.pickImageLayout)
     void selectMultipleImg() {
 
         if ((ActivityCompat.checkSelfPermission(EditPitchActivity.this,

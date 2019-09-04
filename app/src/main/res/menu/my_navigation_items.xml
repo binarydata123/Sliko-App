@@ -3,15 +3,15 @@
     <item
         android:id="@+id/action_stadium"
         android:icon="@drawable/ic_stadium_owner"
-        android:title="@string/addedStadium" />
+        android:title="@string/home" />
     <item
         android:id="@+id/action_overview"
         android:icon="@drawable/ic_overview"
-        android:title="@string/reports" />
+        android:title="@string/bookingManagement" />
     <item
         android:id="@+id/action_bookings"
         android:icon="@drawable/ic_booking"
-        android:title="@string/menu_bookings"/>
+        android:title="@string/reports"/>
     <item
         android:id="@+id/action_all_reviews"
         android:icon="@drawable/ic_star"

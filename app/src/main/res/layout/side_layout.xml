@@ -54,6 +54,7 @@
                     android:padding="16dp">
 
                     <ImageView
+                        android:background="@drawable/ic_user"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
 
@@ -126,6 +127,7 @@
                     android:padding="16dp">
 
                     <ImageView
+                        android:background="@drawable/ic_edit"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
 
@@ -156,6 +158,7 @@
                     android:padding="16dp">
 
                     <ImageView
+                        android:background="@drawable/ic_logout"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
 

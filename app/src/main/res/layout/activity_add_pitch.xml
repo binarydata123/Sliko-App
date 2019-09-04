@@ -9,21 +9,23 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageView
             android:layout_width="match_parent"
-            android:background="@drawable/card"
-            android:layout_height="wrap_content"/>
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <include
-                layout="@layout/toolbar_transparent" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/card" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                layout="@layout/toolbar" />
             <RelativeLayout
-                android:background="@android:color/transparent"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent">
 
                 <Button
                     android:id="@+id/addPitchButton"
@@ -40,7 +42,6 @@
                     android:text="@string/addpitch"
                     android:textAllCaps="false"
                     android:textColor="@color/white" />
-
                 <androidx.cardview.widget.CardView
                     app:cardBackgroundColor="@color/white"
                     android:layout_width="match_parent"
@@ -48,20 +49,20 @@
                     android:layout_above="@id/addPitchButton"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
                     android:layout_height="match_parent">
+
                     <androidx.core.widget.NestedScrollView
                         android:id="@+id/nestedScroll"
+                        android:scrollbars="none"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-
-                        android:fillViewport="true"
-                        >
+                        android:fillViewport="true">
 
                         <LinearLayout
-
-                            android:padding="16dp"
+                            android:background="@color/white"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:padding="16dp">
                             <!--name-->
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -148,7 +149,7 @@
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="50dp"
+                                    android:layout_height="100dp"
                                     android:background="@drawable/edit_bg_grey"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
@@ -159,12 +160,10 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:background="@android:color/transparent"
-                                        android:ellipsize="end"
+                                        android:gravity="top"
                                         android:hint="@string/enterDescription"
                                         android:imeOptions="actionNext"
-                                        android:paddingLeft="16dp"
-                                        android:paddingRight="16dp"
-                                        android:singleLine="true"
+                                        android:padding="16dp"
                                         android:textSize="14sp" />
                                 </LinearLayout>
 
@@ -218,7 +217,7 @@
                                         android:ellipsize="end"
                                         android:hint="@string/enterprice"
                                         android:imeOptions="actionNext"
-                                        android:inputType="phone"
+                                        android:inputType="number"
                                         android:paddingLeft="16dp"
                                         android:paddingRight="16dp"
                                         android:singleLine="true"
@@ -232,7 +231,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
                                 android:orientation="vertical">
-
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -247,8 +245,8 @@
 
                                     <LinearLayout
                                         android:id="@+id/pickImageLayout"
-                                        android:layout_width="60dp"
-                                        android:layout_height="60dp"
+                                        android:layout_width="30dp"
+                                        android:layout_height="30dp"
                                         android:background="@drawable/edit_bg_grey"
                                         android:gravity="center">
 
@@ -268,6 +266,7 @@
 
 
                                 </LinearLayout>
+
                             </LinearLayout>
 
 
@@ -277,44 +276,66 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="15dp"
                                 android:orientation="vertical">
-
                                 <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center_vertical"
-                                    android:orientation="horizontal">
-
+                                    android:layout_width="match_parent"
+                                    android:visibility="gone"
+                                    android:orientation="vertical"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_height="wrap_content">
                                     <TextView
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/availability" />
+                                        android:text="Pitch Availability"
+                                        android:layout_marginBottom="10dp"
+                                        android:layout_height="wrap_content"/>
+                                    <androidx.recyclerview.widget.RecyclerView
+                                        android:layout_width="match_parent"
 
-                                    <TextView
-                                        android:layout_width="5dp"
-                                        android:layout_height="match_parent" />
+                                        android:nestedScrollingEnabled="false"
+                                        android:id="@+id/availabilityRecyclerView"
+                                        android:layout_height="wrap_content"/>
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:visibility="gone"
+                                        android:orientation="vertical"
+                                        android:layout_height="wrap_content">
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center_vertical"
+                                            android:orientation="horizontal">
 
-                                    <TextView
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="@string/availability" />
 
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="*"
-                                        android:textColor="@color/colorPrimary"
-                                        android:textSize="22sp" />
+                                            <TextView
+                                                android:layout_width="5dp"
+                                                android:layout_height="match_parent" />
+
+                                            <TextView
+
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="*"
+                                                android:textColor="@color/colorPrimary"
+                                                android:textSize="22sp" />
+                                        </LinearLayout>
+                                        <include layout="@layout/content_availability"/>
+                                    </LinearLayout>
+
+
                                 </LinearLayout>
 
-                                <include layout="@layout/content_availability"></include>
+
+
                             </LinearLayout>
                         </LinearLayout>
                     </androidx.core.widget.NestedScrollView>
                 </androidx.cardview.widget.CardView>
-
-
             </RelativeLayout>
+
         </LinearLayout>
     </FrameLayout>
-
-
-
 </LinearLayout>

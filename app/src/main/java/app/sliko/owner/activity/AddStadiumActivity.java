@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,10 +69,10 @@ public class AddStadiumActivity extends AppCompatActivity {
     EditText stadiumDescription;
     @BindView(R.id.stadiumAddress)
     AutoCompleteTextView stadiumAddress;
-    @BindView(R.id.ll_selectmultiImg)
-    LinearLayout llSelectmultiImg;
-    @BindView(R.id.recyclrVIPichImg)
-    RecyclerView recyclrVIPichImg;
+    @BindView(R.id.pickImageLayout)
+    LinearLayout pickImageLayout;
+    @BindView(R.id.pitchImageRecyclerView)
+    RecyclerView stadiumImagesRecyclerView;
     @BindView(R.id.availabilityRecyclerView)
     RecyclerView availabilityRecyclerView;
     private static final int PERMISSIONS_REQUEST_CODE = 0x1;
@@ -83,13 +84,33 @@ public class AddStadiumActivity extends AppCompatActivity {
     String userId;
     String lat = "", lng = "";
 
+    @BindView(R.id.chkboxsunday)
+    CheckBox chkboxsunday;
+    @BindView(R.id.chkboxmonday)
+    CheckBox chkboxmonday;
+    @BindView(R.id.chkboxtuesday)
+    CheckBox chkboxtuesday;
+    @BindView(R.id.chkboxwednsday)
+    CheckBox chkboxwednsday;
+    @BindView(R.id.chkboxthursday)
+    CheckBox chkboxthursday;
+    @BindView(R.id.chkboxfriday)
+    CheckBox chkboxfriday;
+    @BindView(R.id.chkboxsaturday)
+    CheckBox chkboxsaturday;
+
     StadiumOpeningAdapter stadiumOpeningAdapter;
+    private JSONArray timeSlots = null;
+
+    String stadium_id = "";
+    String stadiumType = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_stadium_activity);
         ButterKnife.bind(this);
+        dialog = M.showDialog(this, "", false);
         userId = M.fetchUserTrivialInfo(AddStadiumActivity.this, "id");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,17 +118,26 @@ public class AddStadiumActivity extends AppCompatActivity {
                 finish();
             }
         });
+        stadiumType = getIntent().getStringExtra("stadiumType");
+        assert stadiumType != null;
+        if (stadiumType.equalsIgnoreCase("add")) {
+            toolbarTitle.setText(getString(R.string.addedStadium));
+        } else {
+            toolbarTitle.setText(getString(R.string.editStadium));
+            if (getIntent().getStringExtra("stadium_id") != null) {
+                stadium_id = getIntent().getStringExtra("stadium_id");
+                fetchStadiumInfo(stadium_id);
+            }
+        }
+
+        Log.e(">>", "onCreate: " + stadium_id);
         toolbar.setNavigationIcon(R.drawable.back_arrow_white);
-        toolbarTitle.setText(getString(R.string.addedStadium));
-        dialog = M.showDialog(this, "", false);
         imagesEncodedList = new ArrayList<>();
         imagesEncodedList.clear();
         lm = new LinearLayoutManager(AddStadiumActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        recyclrVIPichImg.setLayoutManager(lm);
+        stadiumImagesRecyclerView.setLayoutManager(lm);
         addPitchImageAdapter = new AddImagesAdapter(this, imagesEncodedList, "");
-        recyclrVIPichImg.setAdapter(addPitchImageAdapter);
-
-
+        stadiumImagesRecyclerView.setAdapter(addPitchImageAdapter);
         prepareStadiumData();
     }
 
@@ -247,15 +277,17 @@ public class AddStadiumActivity extends AppCompatActivity {
             Toast.makeText(AddStadiumActivity.this, getResources().getString(R.string.plzEnterdescption), Toast.LENGTH_SHORT).show();
         } else if (stadiumAddress.length() == 0 || stadiumAddress.getText().toString().trim().length() == 0) {
             Toast.makeText(AddStadiumActivity.this, getResources().getString(R.string.plzenteraddress), Toast.LENGTH_SHORT).show();
+        } else if (stadiumOpeningAdapter.getSelectedArrayList().length() == 0) {
+            Toast.makeText(this, getResources().getString(R.string.please_select_atleast_one_time_slot), Toast.LENGTH_SHORT).show();
         } else if (imagesEncodedList.size() == 0) {
-            Toast.makeText(this, "" + getResources().getString(R.string.please_insert_one_image_atleast), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.please_insert_one_image_atleast), Toast.LENGTH_SHORT).show();
         } else {
             updateMyInfo();
         }
 
     }
 
-    @OnClick(R.id.ll_selectmultiImg)
+    @OnClick(R.id.pickImageLayout)
     void clickPitchImage() {
         if ((ActivityCompat.checkSelfPermission(AddStadiumActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) &&
@@ -359,9 +391,7 @@ public class AddStadiumActivity extends AppCompatActivity {
                     RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
                     multipart_body[k] = MultipartBody.Part.createFormData("stadium_image[]", file.getName(), reqFile);
                 }
-
             }
-
             Call<ResponseBody> call = service.createStadium(
                     multipart_body,
                     RequestBody.create(MediaType.parse("multipart/form-data"), stadiumName.getText().toString()),
@@ -369,7 +399,18 @@ public class AddStadiumActivity extends AppCompatActivity {
                     RequestBody.create(MediaType.parse("multipart/form-data"), stadiumDescription.getText().toString()),
                     RequestBody.create(MediaType.parse("multipart/form-data"), stadiumAddress.getText().toString()),
                     RequestBody.create(MediaType.parse("multipart/form-data"), lat),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), lng));
+                    RequestBody.create(MediaType.parse("multipart/form-data"), lng),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumOpeningAdapter.getSelectedArrayList().toString()),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), ""),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), ""),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxmonday.isChecked() ? "1" : "0"),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxtuesday.isChecked() ? "1" : "0"),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxwednsday.isChecked() ? "1" : "0"),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxthursday.isChecked() ? "1" : "0"),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxfriday.isChecked() ? "1" : "0"),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxsaturday.isChecked() ? "1" : "0"),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxsunday.isChecked() ? "1" : "0")
+            );
 
             final Callback<ResponseBody> callback = new Callback<ResponseBody>() {
                 @Override
@@ -383,7 +424,7 @@ public class AddStadiumActivity extends AppCompatActivity {
                             String message = jsonObject.getString("message");
                             Toast.makeText(AddStadiumActivity.this, message, Toast.LENGTH_SHORT).show();
                             if (status.equalsIgnoreCase("true")) {
-                                M.updateTrivialInfo(AddStadiumActivity.this, Api.IS_STADIUM, Api.STADIUM_ADDED);
+                                //M.updateTrivialInfo(AddStadiumActivity.this, Api.IS_STADIUM, Api.STADIUM_ADDED);
                                 EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
                             } else {
                                 EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(false));
@@ -413,5 +454,70 @@ public class AddStadiumActivity extends AppCompatActivity {
         }
     }
 
+    private ArrayList<StadiumImagesModel> stadiumImagesDataArrayList;
+
+    private void fetchStadiumInfo(String stadiumID) {
+        stadiumImagesDataArrayList = new ArrayList<>();
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_stadium_detail(M.fetchUserTrivialInfo(AddStadiumActivity.this, "id"));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String stadium_name = data.getString("stadium_name");
+                            String description = data.getString("description");
+                            String address = data.getString("address");
+                            lat = data.getString("lat");
+                            lng = data.getString("lng");
+
+                            chkboxmonday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
+                            chkboxtuesday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
+                            chkboxwednsday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
+                            chkboxthursday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
+                            chkboxfriday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
+                            chkboxsaturday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
+                            chkboxsunday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
+                            stadiumName.setText(stadium_name);
+                            stadiumDescription.setText(description);
+                            stadiumAddress.setText(address);
+                            JSONArray jsonArray = jsonObject.getJSONArray("stadium_gallery");
+                            for (int k = 0; k < jsonArray.length(); k++) {
+                                JSONObject stadiumImages = jsonArray.getJSONObject(k);
+                                StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
+                                String imageId = stadiumImages.getString("stadium_image");
+                                String stadiumImage = stadiumImages.getString("stadium_image");
+                                stadiumImagesModel.setImageId(imageId);
+                                stadiumImagesModel.setImageName(stadiumImage);
+                                stadiumImagesDataArrayList.add(stadiumImagesModel);
+                            }
+                            addPitchImageAdapter.notifyDataSetChanged();
+
+                        } else {
+                            Toast.makeText(AddStadiumActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(AddStadiumActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(AddStadiumActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(AddStadiumActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }

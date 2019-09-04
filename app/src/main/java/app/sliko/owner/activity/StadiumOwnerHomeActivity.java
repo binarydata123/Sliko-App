@@ -1,12 +1,15 @@
 package app.sliko.owner.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,18 +22,32 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
+
 import app.sliko.EditProfileActivity;
 import app.sliko.R;
+import app.sliko.owner.events.StadiumExistEventOrNot;
+import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.owner.fragment.AllReviewsFragment;
 import app.sliko.owner.fragment.BookingFragment;
 import app.sliko.owner.fragment.ProfileFragment;
 import app.sliko.owner.fragment.ReportsFragment;
 import app.sliko.owner.fragment.StadiumDetailsFragment;
 import app.sliko.utills.M;
+import app.sliko.utills.Prefs;
 import app.sliko.web.Api;
+import app.sliko.web.ApiInterface;
+import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class StadiumOwnerHomeActivity extends AppCompatActivity {
     @BindView(R.id.bottomLayout)
@@ -61,13 +78,24 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
     LinearLayout editProfileLayout;
     @BindView(R.id.stadiumRelatedLayout)
     LinearLayout stadiumRelatedLayout;
+    Dialog dialog;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stadium_owner_home);
         ButterKnife.bind(StadiumOwnerHomeActivity.this);
-        toolbarTitle.setText(getString(R.string.addedStadium));
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+        dialog = M.showDialog(StadiumOwnerHomeActivity.this, "", false);
+        toolbarTitle.setText(getString(R.string.home));
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         swapContentFragment(StadiumDetailsFragment.newInstance(), true, R.id.frameContainer);
         setListeners();
@@ -79,8 +107,6 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
             }
 
         });
-        setUpLayout();
-
         int startEntry = 9;
         int stopEntry = 17;
         int slot = 2;
@@ -90,6 +116,10 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
                 Log.i(">>data", "checkForLoop: " + ((temp) + "-" + (temp + slot)));
                 temp += slot;
             }
+        }
+        setUpLayout();
+        if (!M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id").equalsIgnoreCase("")) {
+            fetchStadiumInfo();
         }
     }
 
@@ -103,8 +133,9 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
         etName.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "fullname"));
         etPhone.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "phone"));
         stadiumRelatedLayout.setVisibility(M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, Api.IS_STADIUM).equalsIgnoreCase("0") ?
-                View.VISIBLE
+                View.GONE
                 : View.VISIBLE);
+
     }
 
     public void swapContentFragment(final Fragment i_newFragment, final boolean i_addToStack, final int container) {
@@ -121,7 +152,7 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
         bottomLayout.setOnNavigationItemSelectedListener(menuItem -> {
             switch (menuItem.getItemId()) {
                 case R.id.action_stadium:
-                    toolbarTitle.setText(getString(R.string.addedStadium));
+                    toolbarTitle.setText(getString(R.string.home));
                     swapContentFragment(StadiumDetailsFragment.newInstance(), true, R.id.frameContainer);
                     return true;
                 case R.id.action_overview:
@@ -144,15 +175,68 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
             return false;
         });
         editStadiumLayout.setOnClickListener(view ->
-                handleTransition(EditStadiumActivity.class));
+                startActivity(new Intent(StadiumOwnerHomeActivity.this, AddStadiumActivity.class)
+                        .putExtra("stadiumType", "edit")
+                        .putExtra("stadium_id", stadiumId)));
         addPitchLayout.setOnClickListener(view ->
                 handleTransition(AddPitchActivity.class));
         editProfileLayout.setOnClickListener(view ->
-                handleTransition(EditProfileActivity.class));
+                startActivity(new Intent(StadiumOwnerHomeActivity.this, EditProfileActivity.class).putExtra("typeOfProfile", "user")));
     }
 
     private void handleTransition(Class<?> navigateTo) {
         mDrawerLayout.closeDrawer(GravityCompat.START);
         startActivity(new Intent(StadiumOwnerHomeActivity.this, navigateTo));
     }
+
+    String stadiumId = "";
+
+    private void fetchStadiumInfo() {
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_stadium_detail(M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id"));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            stadiumId = data.getString("id");
+                            Prefs.saveStadiumId(stadiumId, StadiumOwnerHomeActivity.this);
+                            EventBus.getDefault().postSticky(new StadiumExistEventOrNot(true, jsonObject.toString()));
+                        } else {
+                            EventBus.getDefault().postSticky(new StadiumExistEventOrNot(false, message));
+                        }
+                    } else {
+                        Toast.makeText(StadiumOwnerHomeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(StadiumOwnerHomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(StadiumOwnerHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(SuccessFullyStadiumCreated successFullyStadiumCreated) {
+        if (successFullyStadiumCreated != null) {
+            if (successFullyStadiumCreated.isStatus()) {
+                fetchStadiumInfo();
+                setUpLayout();
+            }
+        }
+    }
+
 }

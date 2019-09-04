@@ -4,7 +4,7 @@
     <string name="selectTime">Chọn thời gian</string>
     <string name="pickTime">Chọn thời gian</string>
     <string name="enterAmount">Nhập số tiền</string>
-    <string name="stadiumName">Sân vận động chúa</string>
+    <string name="stadiumName">Enter Stadium name</string>
     <string name="stadiumNameBigText">Giá sân vận động vGiá sân vận động </string>
     <string name="stadiumLocation">Lords Pitch cho đầu tiên</string>
     <string name="bookStadium">Sân vận động sách</string>
@@ -25,22 +25,22 @@
     <string name="registerToSilko">Đăng ký để Silko</string>
     <string name="register">Ghi danh</string>
     <string name="haveAccountLoginHere">Đã có tài khoản? Đăng nhập tại đây</string>
-    <string name="createStadium">Tạo sân vận động</string>
+    <string name="createStadium">Create Stadium</string>
 
     <!--Add pitch activity-->
-    <string name="Pitch_Name">Tên sân</string>
-    <string name="enterpitchname">Nhập tên sân</string>
-    <string name="Description">Sự miêu tả</string>
-    <string name="enterDescription">Nhập mô tả</string>
-    <string name="Price">Giá bán</string>
-    <string name="enterprice">Nhập giá</string>
+    <string name="Pitch_Name">Pitch Name</string>
+    <string name="enterpitchname">Enter Pitch Name</string>
+    <string name="Description">Description</string>
+    <string name="enterDescription">Enter Description</string>
+    <string name="Price">Price</string>
+    <string name="enterprice">Enter price</string>
     <string name="availability">khả dụng</string>
     <string name="startime">Thời gian bắt đầu</string>
     <string name="endtime">Thời gian kết thúc</string>
-    <string name="stadium_image">Hình ảnh sân vận động</string>
+    <string name="stadium_image">Upload images to the stadium</string>
     <string name="selectimagetoupload">Chọn hình ảnh để tải lên</string>
     <string name="formatsholdbe">Định dạng phải là .jpeg .png</string>
-    <string name="addpitch">Thêm sân</string>
+    <string name="addpitch">Add Pitch</string>
     <!-- detail pitch-->
     <string name="mobilenumber">Số điện thoại</string>
     <string name="enter_mobilenumber">Nhập số điện thoại di động</string>
@@ -50,7 +50,7 @@
     <string name="time">Thời gian</string>
     <string name="select_date">Chọn ngày</string>
     <string name="Save">Tiết kiệm</string>
-    <string name="edit">Chỉnh sửa</string>
+    <string name="edit">Edit Stadium</string>
     <!--login-->
     <string name="enteremail">Nhập email</string>
     <string name="loginToSilko">Đăng nhập vào Silko</string>
@@ -61,7 +61,7 @@
     <string name="Add_Pitch">Thêm sân</string>
     <!--profile activity-->
     <string name="Address">Address</string>
-    <string name="Enter_Address">Nhập địa chỉ</string>
+    <string name="Enter_Address">Enter Address</string>
     <!--registration-->
     <string name="enterusername">Điền tên đăng nhập</string>
     <string name="confirmpasswd">Xác nhận mật khẩu</string>
@@ -84,7 +84,7 @@
     <string name="please_enter_password">Please enter password</string>
     <string name="please_confirm_password">Please enter confirm password</string>
     <string name="password_do_not_match">Password does not match</string>
-    <string name="noStadiumFound">You dont\'t have any stadium</string>
+    <string name="noStadiumFound">No stadium found, \n please add one stadium</string>
     <string name="submit">Submit</string>
     <string name="changePassword">Change Password</string>
     <string name="newPassword">Enter New Password</string>
@@ -107,7 +107,7 @@
     <string name="period" translatable="false">%1$s – %2$s</string>
     <string name="editPitch">Edit Pitch</string>
     <string name="adddress">Address: </string>
-    <string name="stadiumAddedOn" >Stadium created on: </string>
+    <string name="stadiumAddedOn">Stadium created on: </string>
     <string name="noReviews">No reviews</string>
     <string name="reports">Reports</string>
     <string name="userName">Name</string>
@@ -125,5 +125,12 @@
     <string name="weight">Weight</string>
     <string name="footedness">Feeotedness</string>
     <string name="doYouWantToSignOut">Do you want to exit the app</string>
+    <string name="updateProfile">Update Profile</string>
+    <string name="please_select_atleast_one_time_slot">Please select atleast one time slot</string>
+    <string name="please_retry">Please retry</string>
+    <string name="addStadium">+ Add Stadium</string>
+    <string name="bookingManagement">Booking Management</string>
+    <string name="home">Home</string>
+    <string name="yes">Yes</string>
 
 </resources>

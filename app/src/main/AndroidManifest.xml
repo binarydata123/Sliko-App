@@ -71,10 +71,6 @@
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".owner.activity.EditStadiumActivity"
-            android:theme="@style/Splash.Theme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
             android:name=".owner.activity.AddPitchActivity"
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden" />

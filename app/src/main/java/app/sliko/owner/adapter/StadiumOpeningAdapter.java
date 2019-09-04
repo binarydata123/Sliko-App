@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 
 import app.sliko.R;
@@ -62,13 +64,22 @@ public class StadiumOpeningAdapter extends RecyclerView.Adapter<StadiumOpeningAd
         }
     }
 
+    public JSONArray getSelectedArrayList() {
+        JSONArray jsonArray = new JSONArray();
+        for (int k = 0; k < imagesModelArrayList.size(); k++) {
+            if (imagesModelArrayList.get(k).isPicked()) {
+                jsonArray.put(imagesModelArrayList.get(k).getTime());
+            }
+        }
+        return jsonArray;
+    }
+
     @Override
     public int getItemCount() {
         return imagesModelArrayList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
         @BindView(R.id.changeBackground)
         LinearLayout changeBackground;
         @BindView(R.id.timingText)

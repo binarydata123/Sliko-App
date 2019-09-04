@@ -67,7 +67,7 @@
 
 
                     <EditText
-                        android:id="@+id/etfname"
+                        android:id="@+id/etPitchName"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
@@ -121,7 +121,7 @@
 
 
                     <EditText
-                        android:id="@+id/etdescriptn"
+                        android:id="@+id/etPitchDescription"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
@@ -177,7 +177,7 @@
 
 
                     <EditText
-                        android:id="@+id/etprice"
+                        android:id="@+id/etPitchPrice"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@android:color/transparent"
@@ -247,7 +247,7 @@
                     android:gravity="center_vertical">
 
                     <LinearLayout
-                        android:id="@+id/ll_addmultiImg"
+                        android:id="@+id/pickImageLayout"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:background="@drawable/edit_bg_grey"
@@ -282,13 +282,13 @@
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclrVIPichImg"
+                    android:id="@+id/pitchImageRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="100dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
                 <Button
-                    android:id="@+id/addpitchbtn"
+                    android:id="@+id/addPitchButton"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
                     android:layout_margin="10dp"
