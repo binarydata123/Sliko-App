@@ -54,7 +54,8 @@ dependencies {
     implementation 'com.yalantis:ucrop:2.2.0-native'
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'me.relex:circleindicator:2.1.4'
-
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.github.applikeysolutions:cosmocalendar:1.0.4'
     implementation 'com.github.shrikanth7698:Collapsible-Calendar-View-Android:v1.0.0'
     implementation project(':HERE-sdk')

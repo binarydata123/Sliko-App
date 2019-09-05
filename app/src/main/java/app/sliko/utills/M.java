@@ -64,6 +64,14 @@ public class M {
                 : receivedString;
     }
 
+    //for Floating Point Data
+    public static float actAccordinglyWithJson(String receivedString) {
+        return (receivedString.equalsIgnoreCase("") ||
+                receivedString.equalsIgnoreCase("null")
+        ) ? 0
+                : Float.parseFloat(receivedString);
+    }
+
     public static String fetchUserTrivialInfo(Context context, String receivedVar) {
         try {
             userPreference = new JSONObject(Prefs.getUserData(context));

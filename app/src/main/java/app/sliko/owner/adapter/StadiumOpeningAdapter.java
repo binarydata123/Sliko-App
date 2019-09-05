@@ -22,11 +22,13 @@ import butterknife.ButterKnife;
 public class StadiumOpeningAdapter extends RecyclerView.Adapter<StadiumOpeningAdapter.MyViewHolder> {
     int PICKED = 1, NOT_PICKED = 0;
     private Context context;
+    private String typeOfView;
     private ArrayList<AvailabilityModel> imagesModelArrayList;
 
-    public StadiumOpeningAdapter(Context context, ArrayList<AvailabilityModel> imagesModelArrayList) {
+    public StadiumOpeningAdapter(Context context, ArrayList<AvailabilityModel> imagesModelArrayList,String typeOfView) {
         this.context = context;
         this.imagesModelArrayList = imagesModelArrayList;
+        this.typeOfView = typeOfView;
     }
 
     @Override
@@ -48,12 +50,14 @@ public class StadiumOpeningAdapter extends RecyclerView.Adapter<StadiumOpeningAd
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
-        myViewHolder.changeBackground.setOnClickListener(view -> {
-            AvailabilityModel availabilityModel = imagesModelArrayList.get(i);
-            availabilityModel.setPicked(!availabilityModel.isPicked());
-            imagesModelArrayList.set(i, availabilityModel);
-            StadiumOpeningAdapter.this.notifyDataSetChanged();
-        });
+        if(!typeOfView.equalsIgnoreCase("detailView")){
+            myViewHolder.changeBackground.setOnClickListener(view -> {
+                AvailabilityModel availabilityModel = imagesModelArrayList.get(i);
+                availabilityModel.setPicked(!availabilityModel.isPicked());
+                imagesModelArrayList.set(i, availabilityModel);
+                StadiumOpeningAdapter.this.notifyDataSetChanged();
+            });
+        }
         myViewHolder.timingText.setText(imagesModelArrayList.get(i).getTime());
         if (getItemViewType(i) == PICKED) {
             myViewHolder.changeBackground.setBackground(context.getDrawable(R.drawable.edit_bg_green));

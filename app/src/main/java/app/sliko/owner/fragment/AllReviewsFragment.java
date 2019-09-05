@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -22,6 +27,7 @@ import app.sliko.R;
 import app.sliko.owner.adapter.ReviewsAdapter;
 import app.sliko.owner.model.ReviewModel;
 import app.sliko.utills.M;
+import app.sliko.utills.Prefs;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
@@ -35,9 +41,16 @@ public class AllReviewsFragment extends Fragment {
     @BindView(R.id.allReviewsRecyclerView)
     RecyclerView allReviewsRecyclerView;
 
+    @BindView(R.id.noDataLayout)
+    LinearLayout noDataLayout;
+    @BindView(R.id.image)
+    ImageView image;
+    @BindView(R.id.text)
+    TextView text;
+
     private View view;
-    private ReviewsAdapter pitchAdapterOwner;
-    private ArrayList<ReviewModel> pitchModelArrayList = new ArrayList<>();
+    private ReviewsAdapter reviewsAdapter;
+    private ArrayList<ReviewModel> pitchModelArrayList;
 
     public static AllReviewsFragment newInstance() {
         AllReviewsFragment fragment = new AllReviewsFragment();
@@ -60,9 +73,10 @@ public class AllReviewsFragment extends Fragment {
     }
 
     private void getReviewsListing() {
+        pitchModelArrayList = new ArrayList<>();
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_allReviews(M.fetchUserTrivialInfo(getActivity(), "id"));
+        Call<ResponseBody> call = service.ep_reviewsAll(M.fetchUserTrivialInfo(getActivity(), "id"), Prefs.getStadiumId(getActivity()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -75,19 +89,25 @@ public class AllReviewsFragment extends Fragment {
                         String message = jsonObject.getString("message");
                         if (status.equalsIgnoreCase("true")) {
                             JSONArray reviewArray = jsonObject.getJSONArray("data");
-                            for (int k = 0; k < reviewArray.length(); k++) {
-                                JSONObject reviewObject = reviewArray.getJSONObject(k);
-                                ReviewModel reviewModel = new ReviewModel();
-                                reviewModel.setPitch_name(reviewObject.getJSONObject("pitch_detail").getString("xyz"));
-                                reviewModel.setFullname(reviewObject.getJSONObject("pitch_detail").getString("fullname"));
-                                reviewModel.setRating(reviewObject.getString("rating"));
-                                reviewModel.setMessage(reviewObject.getString("message"));
-                                reviewModel.setCreated_at(M.formateDateTimeBoth(reviewObject.getString("created_at")));
-                                reviewModel.setPitch_image(reviewObject.getJSONObject("pitch_detail").getString("pitch_image"));
+                            if (reviewArray.length() > 0) {
+                                for (int k = 0; k < reviewArray.length(); k++) {
+                                    JSONObject reviewObject = reviewArray.getJSONObject(k);
+                                    ReviewModel reviewModel = new ReviewModel();
+                                    reviewModel.setPitch_name(reviewObject.getJSONObject("pitch_detail").getString("xyz"));
+                                    reviewModel.setFullname(reviewObject.getJSONObject("pitch_detail").getString("fullname"));
+                                    reviewModel.setRating(reviewObject.getString("rating"));
+                                    reviewModel.setMessage(reviewObject.getString("message"));
+                                    reviewModel.setCreated_at(M.formateDateTimeBoth(reviewObject.getString("created_at")));
+                                    reviewModel.setPitch_image(reviewObject.getJSONObject("pitch_detail").getString("pitch_image"));
+                                    pitchModelArrayList.add(reviewModel);
+                                }
+                                reviewsAdapter.notifyDataSetChanged();
+                                noDataLayout.setVisibility(View.GONE);
+                            } else {
+                                handleNoRecord();
                             }
-                            pitchAdapterOwner.notifyDataSetChanged();
                         } else {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            handleNoRecord();
                         }
                     } else {
                         Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
@@ -103,15 +123,19 @@ public class AllReviewsFragment extends Fragment {
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
-
+    private void handleNoRecord() {
+        noDataLayout.setVisibility(View.VISIBLE);
+        image.setBackgroundResource(R.drawable.ic_star);
+        text.setText(getString(R.string.noRatingFound));
     }
 
     private void setAdapter() {
-        pitchAdapterOwner = new ReviewsAdapter(getActivity(), pitchModelArrayList);
+        reviewsAdapter = new ReviewsAdapter(getActivity(), pitchModelArrayList);
         allReviewsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        allReviewsRecyclerView.setAdapter(pitchAdapterOwner);
-        pitchAdapterOwner.notifyDataSetChanged();
+        allReviewsRecyclerView.setAdapter(reviewsAdapter);
+        reviewsAdapter.notifyDataSetChanged();
 
     }
 }

@@ -10,11 +10,11 @@
     <string name="bookStadium">Sân vận động sách</string>
     <string name="payNow">Thanh toán ngay</string>
     <string name="close">Gần</string>
-    <string name="reviews">Nhận xét</string>
-    <string name="stadiumInfo">Thông tin sân vận động</string>
-    <string name="pitches">Sân</string>
+    <string name="reviews">Pitch Reviews</string>
+    <string name="stadiumInfo">Stadium Info</string>
+    <string name="pitches">Pitches</string>
     <string name="thankYouMessage">Cảm ơn bạn đã chọn Ứng dụng Sliko, Tiếp tục đặt phòng</string>
-    <string name="price">Price</string>
+    <string name="price">Price: ₫&#160;</string>
     <string name="myBookings">Đặt chỗ của tôi</string>
     <string name="notifications">Thông báo</string>
     <string name="editProfile">Edit Profile</string>
@@ -32,7 +32,7 @@
     <string name="enterpitchname">Enter Pitch Name</string>
     <string name="Description">Description</string>
     <string name="enterDescription">Enter Description</string>
-    <string name="Price">Price</string>
+    <string name="Price">Price: ₫&#160;</string>
     <string name="enterprice">Enter price</string>
     <string name="availability">khả dụng</string>
     <string name="startime">Thời gian bắt đầu</string>
@@ -106,7 +106,7 @@
     <string name="timeFormat" translatable="false">EE, dd MMM HH:mm</string>
     <string name="period" translatable="false">%1$s – %2$s</string>
     <string name="editPitch">Edit Pitch</string>
-    <string name="adddress">Address: </string>
+    <string name="adddress">Address:&#160;</string>
     <string name="stadiumAddedOn">Stadium created on: </string>
     <string name="noReviews">No reviews</string>
     <string name="reports">Reports</string>
@@ -132,5 +132,15 @@
     <string name="bookingManagement">Booking Management</string>
     <string name="home">Home</string>
     <string name="yes">Yes</string>
-
+    <string name="totalBooking">Total Booking:</string>
+    <string name="deletePitch">Delete Pitch</string>
+    <string name="sureDeleteThisPitch">Are you sure you want to delete this pitch?</string>
+    <string name="noBookingRecords">No bookings records found \nfor this pitch</string>
+    <string name="noRatingFound">No rating found</string>
+    <string name="google_map_key">AIzaSyC3owxdsIZH7Dda3zG6inW1w9tOmpQsigw</string>
+    <string name="stadiumAvailability">Stadium Availability</string>
+    <string name="Stadiums">Stadiums</string>
+    <string name="PitchInfo">Pitch Info</string>
+    <string name="description">Description:&#160;</string>
+    <string name="bookPitch">Book Pitch</string>
 </resources>

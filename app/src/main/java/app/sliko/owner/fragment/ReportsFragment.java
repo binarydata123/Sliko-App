@@ -112,17 +112,17 @@ public class ReportsFragment extends Fragment {
     }
 
     private void setTimingAdapter() {
-        verticalTimingAdapter = new VerticalTimingAdapter(getActivity(), timingData);
-        timingVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        timingVerticalRecyclerView.setAdapter(verticalTimingAdapter);
-        verticalTimingAdapter.notifyDataSetChanged();
+//        verticalTimingAdapter = new VerticalTimingAdapter(getActivity(), timingData);
+//        timingVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+//        timingVerticalRecyclerView.setAdapter(verticalTimingAdapter);
+//        verticalTimingAdapter.notifyDataSetChanged();
     }
 
     private void setPitchAdapter() {
-        verticalPitchAdapter = new VerticalPitchAdapter(getActivity(), verticalPitchArrayList);
-        pitchVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        pitchVerticalRecyclerView.setAdapter(verticalPitchAdapter);
-        verticalPitchAdapter.notifyDataSetChanged();
+//        verticalPitchAdapter = new VerticalPitchAdapter(getActivity(), verticalPitchArrayList);
+//        pitchVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        pitchVerticalRecyclerView.setAdapter(verticalPitchAdapter);
+//        verticalPitchAdapter.notifyDataSetChanged();
     }
 
 }

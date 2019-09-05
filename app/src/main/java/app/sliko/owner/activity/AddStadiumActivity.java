@@ -9,12 +9,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -37,6 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.location.SelectAddressLocation;
 import app.sliko.models.StadiumImagesModel;
 import app.sliko.owner.adapter.AddImagesAdapter;
 import app.sliko.owner.adapter.StadiumOpeningAdapter;
@@ -68,7 +65,7 @@ public class AddStadiumActivity extends AppCompatActivity {
     @BindView(R.id.stadiumDescription)
     EditText stadiumDescription;
     @BindView(R.id.stadiumAddress)
-    AutoCompleteTextView stadiumAddress;
+    TextView stadiumAddress;
     @BindView(R.id.pickImageLayout)
     LinearLayout pickImageLayout;
     @BindView(R.id.pitchImageRecyclerView)
@@ -80,7 +77,6 @@ public class AddStadiumActivity extends AppCompatActivity {
     private ArrayList<StadiumImagesModel> imagesEncodedList;
     String imageEncoded, address = "";
     AddImagesAdapter addPitchImageAdapter;
-    LinearLayoutManager lm;
     String userId;
     String lat = "", lng = "";
 
@@ -126,7 +122,7 @@ public class AddStadiumActivity extends AppCompatActivity {
             toolbarTitle.setText(getString(R.string.editStadium));
             if (getIntent().getStringExtra("stadium_id") != null) {
                 stadium_id = getIntent().getStringExtra("stadium_id");
-                fetchStadiumInfo(stadium_id);
+                fetchStadiumInfo();
             }
         }
 
@@ -134,14 +130,18 @@ public class AddStadiumActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.back_arrow_white);
         imagesEncodedList = new ArrayList<>();
         imagesEncodedList.clear();
-        lm = new LinearLayoutManager(AddStadiumActivity.this, LinearLayoutManager.HORIZONTAL, false);
-        stadiumImagesRecyclerView.setLayoutManager(lm);
-        addPitchImageAdapter = new AddImagesAdapter(this, imagesEncodedList, "");
-        stadiumImagesRecyclerView.setAdapter(addPitchImageAdapter);
+
+        setStadiumImageAdapter();
         prepareStadiumData();
     }
 
     ArrayList<AvailabilityModel> availabilityModels = new ArrayList<>();
+
+    private void setStadiumImageAdapter() {
+        stadiumImagesRecyclerView.setLayoutManager(new LinearLayoutManager(AddStadiumActivity.this, LinearLayoutManager.HORIZONTAL, false));
+        addPitchImageAdapter = new AddImagesAdapter(this, imagesEncodedList, "");
+        stadiumImagesRecyclerView.setAdapter(addPitchImageAdapter);
+    }
 
     private void prepareStadiumData() {
         availabilityModels.clear();
@@ -151,7 +151,7 @@ public class AddStadiumActivity extends AppCompatActivity {
             availabilityModel.setTime(Api.timingArray[k]);
             availabilityModels.add(availabilityModel);
         }
-        stadiumOpeningAdapter = new StadiumOpeningAdapter(AddStadiumActivity.this, availabilityModels);
+        stadiumOpeningAdapter = new StadiumOpeningAdapter(AddStadiumActivity.this, availabilityModels, "editView");
         availabilityRecyclerView.setLayoutManager(new GridLayoutManager(AddStadiumActivity.this, 3));
         availabilityRecyclerView.setAdapter(stadiumOpeningAdapter);
         stadiumOpeningAdapter.notifyDataSetChanged();
@@ -164,108 +164,7 @@ public class AddStadiumActivity extends AppCompatActivity {
 
     @OnClick(R.id.stadiumAddress)
     void clickAddress() {
-        stadiumAddress.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    makeAddressSuggestion(s.toString());
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-        stadiumAddress.setOnItemClickListener((parent, view, position, id) -> {
-            address = arrayListOfAddresses.get(position);
-            getLatLong(address);
-        });
-    }
-
-    private void getLatLong(String address) {
-        dialog.show();
-        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_getLatLng(address);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                dialog.cancel();
-                try {
-                    if (response.isSuccessful()) {
-                        String sResponse = response.body().string();
-
-                        JSONObject jsonObject = new JSONObject(sResponse);
-                        String status = jsonObject.getString("status");
-                        String message = jsonObject.getString("message");
-                        if (status.equalsIgnoreCase("true")) {
-                            JSONObject dataObject = jsonObject.getJSONObject("data");
-                            lat = dataObject.getString("lat");
-                            lng = dataObject.getString("lng");
-                        } else {
-                            Toast.makeText(AddStadiumActivity.this, message, Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(AddStadiumActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(AddStadiumActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
-                dialog.cancel();
-                Toast.makeText(AddStadiumActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private ArrayList<String> arrayListOfAddresses;
-    ArrayAdapter<String> adapter_ArrayListOfAddress;
-
-    private void makeAddressSuggestion(String query) {
-        arrayListOfAddresses = new ArrayList<>();
-        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_addressSuggestions(query);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-
-                try {
-                    if (response.isSuccessful()) {
-                        String sResponse = response.body().string();
-                        JSONObject jsonObject = new JSONObject(sResponse);
-                        JSONArray dataArray = jsonObject.getJSONArray("data");
-                        if (dataArray.length() > 0) {
-                            for (int k = 0; k < dataArray.length(); k++) {
-                                String getAddressString = dataArray.getString(k);
-                                arrayListOfAddresses.add(getAddressString);
-                                Log.i(">>index", "onSuccess: " + getAddressString);
-                            }
-                            Log.i(">>sie", "onSuccess: " + arrayListOfAddresses.size() + "");
-                            adapter_ArrayListOfAddress = new ArrayAdapter<String>(AddStadiumActivity.this, R.layout.auto_complete_text, R.id.text, arrayListOfAddresses);
-                            stadiumAddress.setThreshold(1);
-                            stadiumAddress.setAdapter(adapter_ArrayListOfAddress);
-                            adapter_ArrayListOfAddress.notifyDataSetChanged();
-                        }
-                    } else {
-                        Toast.makeText(AddStadiumActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(AddStadiumActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(AddStadiumActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        startActivityForResult(new Intent(AddStadiumActivity.this, SelectAddressLocation.class), 200);
     }
 
 
@@ -358,6 +257,12 @@ public class AddStadiumActivity extends AppCompatActivity {
                 }
 
                 break;
+            case 200:
+                lat = data.getStringExtra("lat");
+                lng = data.getStringExtra("lng");
+                Log.e(">>addressLat", "onActivityResult: " + lat + "\n" + lng);
+                stadiumAddress.setText(data.getStringExtra("addressSelected"));
+                break;
         }
     }
 
@@ -380,7 +285,6 @@ public class AddStadiumActivity extends AppCompatActivity {
             lng = Api.LNG + "";
         }
         try {
-            Log.e("size", "==" + files.size() + "==" + files.toString());
             dialog.show();
             ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
             MultipartBody.Part[] multipart_body = null;
@@ -456,7 +360,7 @@ public class AddStadiumActivity extends AppCompatActivity {
 
     private ArrayList<StadiumImagesModel> stadiumImagesDataArrayList;
 
-    private void fetchStadiumInfo(String stadiumID) {
+    private void fetchStadiumInfo() {
         stadiumImagesDataArrayList = new ArrayList<>();
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
@@ -489,11 +393,11 @@ public class AddStadiumActivity extends AppCompatActivity {
                             stadiumName.setText(stadium_name);
                             stadiumDescription.setText(description);
                             stadiumAddress.setText(address);
-                            JSONArray jsonArray = jsonObject.getJSONArray("stadium_gallery");
+                            JSONArray jsonArray = data.getJSONArray("stadium_gallery");
                             for (int k = 0; k < jsonArray.length(); k++) {
                                 JSONObject stadiumImages = jsonArray.getJSONObject(k);
                                 StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
-                                String imageId = stadiumImages.getString("stadium_image");
+                                String imageId = stadiumImages.getString("id");
                                 String stadiumImage = stadiumImages.getString("stadium_image");
                                 stadiumImagesModel.setImageId(imageId);
                                 stadiumImagesModel.setImageName(stadiumImage);
@@ -509,6 +413,7 @@ public class AddStadiumActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     Toast.makeText(AddStadiumActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(">>E", "onResponse: " + e.getMessage());
                 }
             }
 

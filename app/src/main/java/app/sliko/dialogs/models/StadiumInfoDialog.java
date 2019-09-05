@@ -11,7 +11,7 @@ import hyogeun.github.com.colorratingbarlib.ColorRatingBar;
 
 public class StadiumInfoDialog {
     private AlertDialog alertDialog;
-    private FrameLayout sd_stadiumSeeDetails;
+    private LinearLayout sd_stadiumSeeDetails;
     private ImageView sd_stadiumImage;
     private ProgressBar sd_stadiumProgressDialog;
     private TextView sd_stadiumName;
@@ -21,7 +21,7 @@ public class StadiumInfoDialog {
     private TextView SD_stadiumAddress;
     private LinearLayout sd_stadiumCloseButton;
 
-    public StadiumInfoDialog(AlertDialog alertDialog, FrameLayout sd_stadiumSeeDetails,
+    public StadiumInfoDialog(AlertDialog alertDialog, LinearLayout sd_stadiumSeeDetails,
                              ImageView sd_stadiumImage, ProgressBar sd_stadiumProgressDialog,
                              TextView sd_stadiumName, TextView sd_stadiumPrice, ColorRatingBar sd_stadiumRating,
                              TextView sd_stadiumReviews, LinearLayout sd_stadiumCloseButton,
@@ -46,7 +46,7 @@ public class StadiumInfoDialog {
         return alertDialog;
     }
 
-    public FrameLayout getSd_stadiumSeeDetails() {
+    public LinearLayout getSd_stadiumSeeDetails() {
         return sd_stadiumSeeDetails;
     }
 

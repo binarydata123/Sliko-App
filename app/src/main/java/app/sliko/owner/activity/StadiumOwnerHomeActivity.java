@@ -29,6 +29,9 @@ import org.json.JSONObject;
 
 import app.sliko.EditProfileActivity;
 import app.sliko.R;
+import app.sliko.activity.LoginActivity;
+import app.sliko.dialogs.DialogMethodCaller;
+import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.owner.events.StadiumExistEventOrNot;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.owner.fragment.AllReviewsFragment;
@@ -182,7 +185,59 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
                 handleTransition(AddPitchActivity.class));
         editProfileLayout.setOnClickListener(view ->
                 startActivity(new Intent(StadiumOwnerHomeActivity.this, EditProfileActivity.class).putExtra("typeOfProfile", "user")));
+        signOutLayout.setOnClickListener(view -> {
+            dialogConfirmation = DialogMethodCaller.openDialogConfirmation(StadiumOwnerHomeActivity.this, R.layout.dialog_confirmation, false);
+            dialogConfirmation.getDialog_error().show();
+            dialogConfirmation.getDialogConfirmationMessage().setText(getString(R.string.doYouWantToSignOut));
+            dialogConfirmation.getDialogConfirmationTitle().setText(getString(R.string.signout));
+            dialogConfirmation.getCloseButton().setOnClickListener(view12 -> dialogConfirmation.getDialog_error().dismiss());
+            dialogConfirmation.getOkButton().setOnClickListener(view1 -> {
+                dialogConfirmation.getDialog_error().dismiss();
+                logoutApi();
+            });
+        });
     }
+
+    private void logoutApi() {
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_logout(M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id"));
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+                            Prefs.clearUserData(StadiumOwnerHomeActivity.this);
+                            Toast.makeText(StadiumOwnerHomeActivity.this, message, Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(StadiumOwnerHomeActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(StadiumOwnerHomeActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(StadiumOwnerHomeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Log.i(">>error", "onResponse: " + e.getMessage());
+                    Toast.makeText(StadiumOwnerHomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(StadiumOwnerHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    DialogConfirmation dialogConfirmation;
 
     private void handleTransition(Class<?> navigateTo) {
         mDrawerLayout.closeDrawer(GravityCompat.START);

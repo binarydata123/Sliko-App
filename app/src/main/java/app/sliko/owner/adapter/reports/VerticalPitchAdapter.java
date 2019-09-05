@@ -13,13 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.booking.VerticalPitchModel;
 
 public class VerticalPitchAdapter extends RecyclerView.Adapter<VerticalPitchAdapter.MyViewHolder> {
 
     private Context context;
-    private ArrayList<String> verticalPitchArrayList;
+    private ArrayList<VerticalPitchModel> verticalPitchArrayList;
 
-    public VerticalPitchAdapter(Context context, ArrayList<String> verticalPitchArrayList) {
+    public VerticalPitchAdapter(Context context, ArrayList<VerticalPitchModel> verticalPitchArrayList) {
         this.context = context;
         this.verticalPitchArrayList = verticalPitchArrayList;
     }
@@ -34,7 +35,7 @@ public class VerticalPitchAdapter extends RecyclerView.Adapter<VerticalPitchAdap
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
-        myViewHolder.pitchName.setText(verticalPitchArrayList.get(position));
+        myViewHolder.pitchName.setText(verticalPitchArrayList.get(position).getPitchName());
     }
 
     @Override

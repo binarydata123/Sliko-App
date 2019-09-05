@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
@@ -38,11 +37,9 @@
                 app:textColor="@color/black"
                 app:selectedItem_textColor="@color/white"
                 app:todayItem_textColor="@color/white"
-                app:todayItem_background="@drawable/circle_white_solid_background"
-                app:selectedItem_background="@drawable/circle_white_solid_background"
-                app:buttonLeft_drawableTintColor="@color/black"
-                app:buttonRight_drawableTintColor="@color/black"
-                app:expandIconColor="@color/black">
+                app:buttonLeft_drawableTintColor="@color/lightGreen"
+                app:buttonRight_drawableTintColor="@color/lightGreen"
+                app:expandIconColor="@color/lightGreen">
             </com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar>
 
         </LinearLayout>
@@ -62,101 +59,100 @@
 
 
 
-    <androidx.cardview.widget.CardView
-        android:elevation="0dp"
-        app:cardElevation="0dp"
-        android:layout_width="match_parent"
-        app:cardCornerRadius="5dp"
-        android:layout_marginTop="10dp"
-        app:cardBackgroundColor="@color/white"
-        android:layout_height="wrap_content">
-        <androidx.core.widget.NestedScrollView
+        <androidx.cardview.widget.CardView
+            android:elevation="0dp"
+            app:cardElevation="0dp"
             android:layout_width="match_parent"
-            android:fillViewport="true"
-            android:background="@android:color/transparent"
+            app:cardCornerRadius="5dp"
+            android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@color/white"
             android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:background="@color/white"
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:orientation="vertical"
+                android:fillViewport="true"
+                android:background="@android:color/transparent"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:text="Pitch Availability"
-                    android:padding="16dp"
-                    android:visibility="gone"
-                    android:layout_height="wrap_content"/>
+
                 <LinearLayout
+                    android:background="@color/white"
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center_vertical"
-                        android:layout_height="match_parent">
-                        <TextView
-                            android:visibility="invisible"
-                            android:drawablePadding="5dp"
-                            android:drawableLeft="@drawable/ic_down_arrow"
-                            android:padding="10dp"
-                            android:layout_width="wrap_content"
-                            android:text="Pitch"
-                            android:textSize="11sp"
-                            android:gravity="center"
-                            android:background="@drawable/edit_bg_green"
-                            android:textColor="@color/white"
-                            android:layout_height="wrap_content"/>
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height=".5dp"
-                            android:alpha=".3"
-                            android:background="#000" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/pitchVerticalRecyclerView"
-                            android:nestedScrollingEnabled="false"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-
-                    </LinearLayout>
-
                     <TextView
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:alpha=".3"
-                        android:background="#000" />
+                        android:layout_width="wrap_content"
+                        android:text="Pitch Availability"
+                        android:padding="16dp"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"/>
                     <LinearLayout
-                        android:gravity="center_vertical"
-
                         android:layout_width="match_parent"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:layout_height="wrap_content">
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:nestedScrollingEnabled="false"
-                            android:id="@+id/originalTimingForStadium"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center_vertical"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:visibility="invisible"
+                                android:drawablePadding="5dp"
+                                android:drawableLeft="@drawable/ic_down_arrow"
+                                android:padding="10dp"
+                                android:layout_width="wrap_content"
+                                android:text="Pitch"
+                                android:textSize="11sp"
+                                android:gravity="center"
+                                android:background="@drawable/edit_bg_green"
+                                android:textColor="@color/white"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height=".5dp"
+                                android:alpha=".3"
+                                android:background="#000" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/pitchVerticalRecyclerView"
+                                android:nestedScrollingEnabled="false"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                        </LinearLayout>
+
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height=".5dp"
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
                             android:alpha=".3"
                             android:background="#000" />
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:nestedScrollingEnabled="false"
-                            android:id="@+id/timingVerticalRecyclerView"
+                        <LinearLayout
+                            android:gravity="center_vertical"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:nestedScrollingEnabled="false"
+                                android:id="@+id/originalTimingForStadium"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height=".5dp"
+                                android:alpha=".3"
+                                android:background="#000" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:nestedScrollingEnabled="false"
+                                android:id="@+id/timingVerticalRecyclerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
-
                 </LinearLayout>
-            </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
-    </androidx.cardview.widget.CardView>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.cardview.widget.CardView>
 
 
     </LinearLayout>

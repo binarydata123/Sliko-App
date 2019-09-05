@@ -192,6 +192,7 @@ public class StadiumDetailsFragment extends Fragment {
                         pitchModel.setComplete_booking(pitchObject.getString("complete_booking"));
                         pitchModel.setPitch_review_avg(pitchObject.getString("pitch_review_avg"));
                         pitchModel.setId(pitchObject.getString("id"));
+                        pitchModel.setPrice(pitchObject.getString("price"));
                         pitchModel.setStadium_id(pitchObject.getString("stadium_id"));
                         pitchModel.setUser_id(pitchObject.getString("user_id"));
                         pitchGalleryStringArrayList = new ArrayList<>();
@@ -201,7 +202,7 @@ public class StadiumDetailsFragment extends Fragment {
                         pitchModel.setPitch_gallery(pitchGalleryStringArrayList);
                         pitchModelArrayList.add(pitchModel);
                     }
-                    pitchAdapterOwner.notifyDataSetChanged();
+                    setAdapter();
                     noPitchLayout.setVisibility(View.GONE);
                 } else {
                     pitchesRecyclerView.setVisibility(View.GONE);
@@ -222,6 +223,7 @@ public class StadiumDetailsFragment extends Fragment {
             }
         } catch (Exception e) {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e(">>E", "onResponse: "+e.getMessage());
         }
     }
 
@@ -231,6 +233,7 @@ public class StadiumDetailsFragment extends Fragment {
         pitchAdapterOwner = new PitchAdapterOwner(getActivity(), pitchModelArrayList);
         pitchesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         pitchesRecyclerView.setAdapter(pitchAdapterOwner);
+        pitchAdapterOwner.notifyDataSetChanged();
 
     }
 
@@ -293,7 +296,7 @@ public class StadiumDetailsFragment extends Fragment {
                 noStadiumLayout.setVisibility(View.GONE);
                 stadiumLayout.setVisibility(View.VISIBLE);
                 fetchStadiumInfo(stadiumExistEventOrNot.getReponse());
-                setAdapter();
+
             } else {
                 noStadiumLayout.setVisibility(View.VISIBLE);
                 stadiumLayout.setVisibility(View.GONE);

@@ -41,19 +41,19 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
-        Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.reviewPitchImage);
-//        Picasso.get().load(pitchReviewList.get(i).getPitch_image()).into(myViewHolder.reviewPitchImage);
-//        myViewHolder.reviewPitchName.setText(pitchReviewList.get(i).getPitch_name());
-//        myViewHolder.reviewPitchUserName.setText(pitchReviewList.get(i).getFullname());
-//        myViewHolder.reviewDateGiven.setText(pitchReviewList.get(i).getCreated_at());
-//        myViewHolder.reviewMessage.setText(pitchReviewList.get(i).getMessage());
-//        myViewHolder.pitchRating.setRating(Float.parseFloat(pitchReviewList.get(i).getRating()));
+        //Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.reviewPitchImage);
+        Picasso.get().load(pitchReviewList.get(i).getPitch_image()).into(myViewHolder.reviewPitchImage);
+        myViewHolder.reviewPitchName.setText(pitchReviewList.get(i).getPitch_name());
+        myViewHolder.reviewPitchUserName.setText(pitchReviewList.get(i).getFullname());
+        myViewHolder.reviewDateGiven.setText(pitchReviewList.get(i).getCreated_at());
+        myViewHolder.reviewMessage.setText(pitchReviewList.get(i).getMessage());
+        myViewHolder.pitchRating.setRating(Float.parseFloat(pitchReviewList.get(i).getRating()));
     }
 
 
     @Override
     public int getItemCount() {
-        return pitchReviewList.size() == 0 ? 4 : pitchReviewList.size();
+        return pitchReviewList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

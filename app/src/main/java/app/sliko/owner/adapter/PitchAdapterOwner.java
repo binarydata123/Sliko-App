@@ -10,29 +10,34 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
-import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import app.sliko.R;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.DialogConfirmation;
-import app.sliko.owner.activity.EditPitchActivity;
+import app.sliko.owner.activity.AddPitchActivity;
 import app.sliko.owner.activity.OwnerPitchBookingActivity;
 import app.sliko.owner.activity.PitchDetailActivity;
-import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.owner.model.PitchModel;
 import app.sliko.utills.M;
-import app.sliko.web.Api;
+import app.sliko.web.ApiInterface;
+import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hyogeun.github.com.colorratingbarlib.ColorRatingBar;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.MyViewHolder> {
@@ -54,48 +59,68 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
-//        myViewHolder.pitchName.setText(context.getString(R.string.pitchName) + ": " + pitchModelArrayList.get(i).getPitch_name());
-//        myViewHolder.pitchPrice.setText(context.getString(R.string.price) + ": " + pitchModelArrayList.get(i).getPrice());
-//        myViewHolder.totalBookingOrders.setText(Integer.parseInt(pitchModelArrayList.get(i).getProcess_booking()) + Integer.parseInt(pitchModelArrayList.get(i).getComplete_booking()));
-//
-        Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.pitchImage);
-//        Picasso.get().load(pitchModelArrayList.get(i).getPitch_gallery().get(0)).into(myViewHolder.pitchImage);
-//        myViewHolder.pitchRating.setRating(Float.parseFloat(pitchModelArrayList.get(i).getPitch_review_avg()));
+        myViewHolder.pitchName.setText(context.getString(R.string.pitchName) + ": " + pitchModelArrayList.get(i).getPitch_name());
+        myViewHolder.pitchPrice.setText(context.getString(R.string.price) + ": " + pitchModelArrayList.get(i).getPrice());
+        myViewHolder.totalBookingOrders.setText(context.getString(R.string.totalBooking) + (Integer.parseInt(pitchModelArrayList.get(i).getProcess_booking()) + Integer.parseInt(pitchModelArrayList.get(i).getComplete_booking())) + "");
+
+        Picasso.get().load(pitchModelArrayList.get(i).getPitch_gallery().get(0)).into(myViewHolder.pitchImage);
+        myViewHolder.pitchRating.setRating(M.actAccordinglyWithJson(pitchModelArrayList.get(i).getPitch_review_avg()));
         myViewHolder.editLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((Activity) context).startActivity(new Intent(context, EditPitchActivity.class));
+                ((Activity) context).startActivity(new Intent(context, AddPitchActivity.class)
+                        .putExtra("pitch_id",pitchModelArrayList.get(i).getId())
+                        .putExtra("stadium_id" , pitchModelArrayList.get(i).getStadium_id()));
             }
         });
 
-        Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.pitchImage);
-        myViewHolder.viewBookingDetailsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((Activity) context).startActivity(new Intent(context, OwnerPitchBookingActivity.class));
-            }
-        });
-        myViewHolder.viewDetailsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ((Activity) context).startActivity(new Intent(context, PitchDetailActivity.class));
-            }
-        });
-        myViewHolder.btn_remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialogConfirmation = DialogMethodCaller.openDialogConfirmation(context, R.layout.dialog_confirmation, false);
-                dialogConfirmation.getDialog_error().show();
-                dialogConfirmation.getDialogConfirmationTitle().setText(context.getString(R.string.deleteStadium));
-                dialogConfirmation.getDialogConfirmationMessage().setText(context.getString(R.string.sureDeleteThisStadium));
-                dialogConfirmation.getOkButton().setOnClickListener(view12 -> {
-                    dialogConfirmation.getDialog_error().cancel();
-                    M.updateTrivialInfo(context, Api.IS_STADIUM, Api.STADIUM_REMOVE);
-                    EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
+        myViewHolder.viewBookingDetailsButton.setOnClickListener(view -> ((Activity) context).startActivity(new Intent(context, OwnerPitchBookingActivity.class)));
+        myViewHolder.viewDetailsButton.setOnClickListener(view ->
+                ((Activity) context)
+                .startActivity(new Intent(context, PitchDetailActivity.class)
+                        .putExtra("pitch_id",pitchModelArrayList.get(i).getId())
+                        .putExtra("stadium_id" , pitchModelArrayList.get(i).getStadium_id())));
+        myViewHolder.btn_remove.setOnClickListener(view -> {
+            dialogConfirmation = DialogMethodCaller.openDialogConfirmation(context, R.layout.dialog_confirmation, false);
+            dialogConfirmation.getDialog_error().show();
+            dialogConfirmation.getDialogConfirmationTitle().setText(context.getString(R.string.deletePitch));
+            dialogConfirmation.getDialogConfirmationMessage().setText(context.getString(R.string.sureDeleteThisPitch));
+            dialogConfirmation.getOkButton().setText(context.getString(R.string.yes));
+            dialogConfirmation.getOkButton().setOnClickListener(view12 -> {
+                dialogConfirmation.getDialog_error().cancel();
+                ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+                Call<ResponseBody> call = service.ep_deletePitch(pitchModelArrayList.get(i).getId(), pitchModelArrayList.get(i).getStadium_id());
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        try {
+                            if (response.isSuccessful()) {
+                                String sResponse = response.body().string();
+                                JSONObject jsonObject = new JSONObject(sResponse);
+                                String status = jsonObject.getString("status");
+                                String message = jsonObject.getString("message");
+                                if (status.equalsIgnoreCase("true")) {
+                                    pitchModelArrayList.remove(i);
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                    }
                 });
-                dialogConfirmation.getCloseButton().setOnClickListener(view1 -> dialogConfirmation.getDialog_error().cancel());
+            });
+            dialogConfirmation.getCloseButton().setOnClickListener(view1 -> dialogConfirmation.getDialog_error().cancel());
 
-            }
         });
     }
 

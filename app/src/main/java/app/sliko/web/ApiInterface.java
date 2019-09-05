@@ -13,7 +13,7 @@ import retrofit2.http.Part;
 
 public interface ApiInterface {
     @FormUrlEncoded
-    @POST("register")
+    @POST("user_register")
     Call<ResponseBody> ep_register(@Field("fullname") String fullname,
                                    @Field("email") String email,
                                    @Field("phone") String phone_number,
@@ -38,10 +38,20 @@ public interface ApiInterface {
     @POST("stadium/single_detail")
     Call<ResponseBody> ep_stadium_detail(@Field("user_id") String user_id);
 
+
+    @FormUrlEncoded
+    @POST("pitch/single_detail")
+    Call<ResponseBody> ep_pitchDetail(@Field("id") String id);
+
     @FormUrlEncoded
     @POST("stadium/delete")
     Call<ResponseBody> ep_deleteStadium(@Field("id") String id,
                                         @Field("user_id") String user_id);
+
+    @FormUrlEncoded
+    @POST("pitch/delete")
+    Call<ResponseBody> ep_deletePitch(@Field("id") String id,
+                                      @Field("stadium_id") String stadium_id);
 
     @GET("playPostionList")
     Call<ResponseBody> ep_playerPosition();
@@ -77,7 +87,14 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("pitchreview/getReviews")
-    Call<ResponseBody> ep_allReviews(@Field("user_id") String user_id);
+    Call<ResponseBody> ep_reviewsForPitch(@Field("user_id") String user_id,
+                                          @Field("stadium_id") String stadium_id,
+                                          @Field("pitch_id") String pitch_id);
+
+    @FormUrlEncoded
+    @POST("pitchreview/getReviews")
+    Call<ResponseBody> ep_reviewsAll(@Field("user_id") String user_id,
+                                            @Field("stadium_id") String stadium_id);
 
     @Multipart
     @POST("stadium/create")
@@ -113,11 +130,29 @@ public interface ApiInterface {
             @Part("price") RequestBody price
     );
 
+    @Multipart
+    @POST("pitch/update")
+    Call<ResponseBody> updatePitch(
+            @Part MultipartBody.Part[] pitchMultipleImages,
+            @Part("id") RequestBody id,
+            @Part("stadium_id") RequestBody stadium_id,
+            @Part("pitch_name") RequestBody pitch_name,
+            @Part("description") RequestBody description,
+            @Part("price") RequestBody price
+    );
+
 
     @FormUrlEncoded
-    @POST("resetpassword")
+    @POST("pitchbooking/lists")
     Call<ResponseBody> ep_bookingList(@Field("user_id") String user_id,
-                                      @Field("stadium_id") String stadium_id);
+                                      @Field("stadium_id") String stadium_id,
+                                      @Field("pitch_id") String pitch_id);
+
+    @FormUrlEncoded
+    @POST("pitchbooking/getAllPitchBookedlist")
+    Call<ResponseBody> ep_userPitchBooking(@Field("user_id") String user_id,
+                                      @Field("stadium_id") String stadium_id,
+                                      @Field("booking_date") String booking_date);
 
     @FormUrlEncoded
     @POST("resetpassword")

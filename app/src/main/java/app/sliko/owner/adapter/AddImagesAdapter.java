@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -41,16 +42,21 @@ public class AddImagesAdapter extends RecyclerView.Adapter<AddImagesAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
 
-        Glide.with(context).load(imagesModelArrayList.get(i).getImageName()).into(myViewHolder.imageViewDocument);
+        Picasso.get().load(imagesModelArrayList.get(i).getImageName()).into(myViewHolder.imageViewDocument);
         myViewHolder.deleteImage.setOnClickListener(v -> {
             if (imagesModelArrayList.get(i).getImageId().equalsIgnoreCase("")) {
+                //remove normally from list
                 imagesModelArrayList.remove(i);
-
             } else {
                 //delete Image from server
             }
             AddImagesAdapter.this.notifyDataSetChanged();
         });
+        if(type.equalsIgnoreCase("1")){
+            myViewHolder.deleteImage.setVisibility(View.VISIBLE);
+        }else{
+            myViewHolder.deleteImage.setVisibility(View.GONE);
+        }
 
     }
 

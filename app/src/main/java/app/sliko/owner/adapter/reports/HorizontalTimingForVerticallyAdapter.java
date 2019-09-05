@@ -9,18 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.booking.model.UserBookingModel;
 
 
 public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<HorizontalTimingForVerticallyAdapter.MyViewHolder> {
 
     private Context context;
-    private ArrayList<String> verticalPitchArrayList;
+    private ArrayList<UserBookingModel> verticalPitchArrayList;
 
-    public HorizontalTimingForVerticallyAdapter(Context context, ArrayList<String> verticalPitchArrayList) {
+    public HorizontalTimingForVerticallyAdapter(Context context, ArrayList<UserBookingModel> verticalPitchArrayList) {
         this.context = context;
         this.verticalPitchArrayList = verticalPitchArrayList;
     }
@@ -35,15 +35,15 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
-        myViewHolder.timingView.setText(verticalPitchArrayList.get(position));
-        if (position == 2) {
-            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.greyColor));
-            myViewHolder.timingView.setText("Vacant");
-            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
-        } else if (position == 4) {
-            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
-            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
-        }
+        myViewHolder.timingView.setText(verticalPitchArrayList.get(position).getBooked_status());
+//        if (position == 2) {
+//            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.greyColor));
+//            myViewHolder.timingView.setText("Vacant");
+//            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
+//        } else if (position == 4) {
+//            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
+//            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
+//        }
     }
 
     @Override

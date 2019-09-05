@@ -47,6 +47,13 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
+
+                <TextView
+                    android:id="@+id/PB_name"
+                    android:textColor="@color/black_color"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pitch Name" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -71,26 +78,36 @@
 
                 </LinearLayout>
 
+
                 <TextView
+                    android:layout_marginTop="5dp"
                     android:textColor="@color/lightGreen"
-                    android:id="@+id/PB_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pitch Name" />
-
-                <TextView
-                    android:id="@+id/PB_cost"
-                    android:textColor="@color/black"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cost" />
-
+                    android:text="Booked by" />
                 <TextView
                     android:textColor="@color/black"
                     android:id="@+id/PB_userName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="User Name" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:textColor="@color/black"
+                        android:id="@+id/PB_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="User Phone" />
+
+
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -99,7 +116,7 @@
                     android:orientation="horizontal">
 
                     <hyogeun.github.com.colorratingbarlib.ColorRatingBar
-                        android:id="@+id/SD_stadiumRating"
+                        android:id="@+id/PB_pitchReview"
                         style="?android:ratingBarStyleSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -120,23 +137,14 @@
 
 
             </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:layout_gravity="end"
+                android:id="@+id/PB_cost"
+                android:textColor="@color/black"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:gravity="end"
-                android:orientation="vertical">
+                android:text="Cost" />
 
-                <TextView
-                    android:textColor="@color/black"
-                    android:id="@+id/PB_phone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="User Phone" />
-
-
-            </LinearLayout>
         </FrameLayout>
 
     </LinearLayout>

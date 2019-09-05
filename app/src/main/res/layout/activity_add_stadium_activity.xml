@@ -143,14 +143,14 @@
                                 android:orientation="horizontal">
 
 
-                                <AutoCompleteTextView
+                                <TextView
+                                    android:gravity="center_vertical"
                                     android:id="@+id/stadiumAddress"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:background="@android:color/transparent"
                                     android:ellipsize="end"
                                     android:hint="@string/Enter_Address"
-                                    android:imeOptions="actionDone"
                                     android:paddingLeft="16dp"
                                     android:paddingRight="16dp"
                                     android:singleLine="true"

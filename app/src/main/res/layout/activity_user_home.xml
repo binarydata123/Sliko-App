@@ -23,7 +23,7 @@
 
                 <fragment
                     android:id="@+id/mapfragment"
-                    class="com.here.android.mpa.mapping.SupportMapFragment"
+                    class="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent" />
             </FrameLayout>

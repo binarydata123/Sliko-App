@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:padding="16dp"
+                android:orientation="vertical"
+                android:id="@+id/backImage"
+                android:gravity="center"
+                android:layout_height="wrap_content">
+                <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/back_arrow_white" />
+
+            </LinearLayout>
+
+
+            <EditText
+                android:singleLine="true"
+                android:ems="2"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:id="@+id/searchQuery"
+                android:background="@android:color/transparent"                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Search address"
+                android:textColor="@color/white"
+                android:paddingLeft="10dp"
+                android:textColorHint="@color/white"
+                android:paddingRight="10dp" />
+
+        </LinearLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:id="@+id/searchedAddressRecyclerView"
+        android:layout_height="match_parent"/>
+</LinearLayout>

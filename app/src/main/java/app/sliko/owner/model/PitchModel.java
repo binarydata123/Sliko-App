@@ -21,7 +21,16 @@ public class PitchModel {
     private String booking_status = "";
     private String process_booking = "0";
     private String complete_booking = "0";
+    private String pitch_id = "0";
     private ArrayList<String> pitch_gallery = null;
+
+    public String getPitch_id() {
+        return pitch_id;
+    }
+
+    public void setPitch_id(String pitch_id) {
+        this.pitch_id = pitch_id;
+    }
 
     public String getProcess_booking() {
         return process_booking;

@@ -4,46 +4,37 @@
     android:id="@+id/IW_bottomSheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/transparent"
+    android:background="@drawable/stadium_info_bg"
     android:gravity="center"
-    android:orientation="vertical"
-    app:behavior_hideable="true"
-    app:behavior_peekHeight="0dp"
-    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
-
-    <FrameLayout
-        android:id="@+id/SD_stadiumSeeDetails"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="@drawable/stadium_info_bg">
+    android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/SD_stadiumSeeDetails"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="120dp"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_weight="1.4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center">
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
                     android:gravity="center_vertical">
 
                     <androidx.cardview.widget.CardView
                         app:cardCornerRadius="5dp"
-                        android:layout_width="140dp"
-                        android:layout_height="100dp">
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
                         <ImageView
                             android:scaleType="centerCrop"
                             android:id="@+id/SD_stadiumImage"
-                            android:layout_width="140dp"
-                            android:layout_height="100dp" />
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
 
                     </androidx.cardview.widget.CardView>
 
@@ -58,89 +49,106 @@
 
             <FrameLayout
                 android:padding="5dp"
+                android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <hyogeun.github.com.colorratingbarlib.ColorRatingBar
-                        android:id="@+id/SD_stadiumRating"
-                        style="?android:ratingBarStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:rating="3"
-                        app:changeable="false"
-                        app:empty_color="@color/emptyColor"
-                        app:half_color="@color/lightGreen"
-                        app:progress_color="@color/lightGreen" />
-
-                    <TextView
-                        android:id="@+id/SD_stadiumReviews"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/reviews"
-                        android:textSize="10sp"
-                        android:textColor="@color/black" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
                     <LinearLayout
                         android:id="@+id/IW_seeMore"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
+                        android:layout_height="match_parent"
                         android:orientation="vertical">
 
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:background="@drawable/ic_stadium_black_small"
+                                android:layout_height="wrap_content"/>
+                            <TextView
+                                android:singleLine="true"
+                                android:ellipsize="marquee"
+                                android:paddingLeft="5dp"
+                                android:id="@+id/SD_stadiumName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stadiumNameBigText"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="16sp" />
+
+                        </LinearLayout>
                         <TextView
-                            android:id="@+id/SD_stadiumName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/stadiumNameBigText"
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="16sp" />
-                        <TextView
+                            android:drawableLeft="@drawable/ic_location"
+                            android:drawablePadding="5dp"
                             android:textSize="14sp"
                             android:id="@+id/SD_stadiumAddress"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
 
                         <TextView
+                            android:layout_marginTop="5dp"
+                            android:drawableLeft="@drawable/ic_tag"
+                            android:drawablePadding="5dp"
                             android:text="Lowest pitch Price: 100K/hr"
                             android:id="@+id/SD_stadiumPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/black"
                             android:textSize="14sp" />
+                        <LinearLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <hyogeun.github.com.colorratingbarlib.ColorRatingBar
+                                android:id="@+id/SD_stadiumRating"
+                                style="?android:ratingBarStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:rating="3"
+                                app:changeable="false"
+                                app:empty_color="@color/emptyColor"
+                                app:half_color="@color/lightGreen"
+                                app:progress_color="@color/lightGreen" />
+
+                            <TextView
+                                android:gravity="center_vertical"
+                                android:id="@+id/SD_stadiumReviews"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/reviews"
+                                android:textSize="11sp"
+                                android:textColor="@color/black" />
+                        </LinearLayout>
+
                     </LinearLayout>
+
                 </LinearLayout>
+                <LinearLayout
+                    android:visibility="gone"
+                    android:id="@+id/SD_stadiumCloseButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:gravity="center"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:background="@drawable/ic_cross" />
+                </LinearLayout>
+
             </FrameLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/SD_stadiumCloseButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:gravity="center"
-            android:padding="8dp">
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:background="@drawable/ic_cross" />
-        </LinearLayout>
-
-    </FrameLayout>
-
-
 </LinearLayout>

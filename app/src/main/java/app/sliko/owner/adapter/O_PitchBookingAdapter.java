@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,10 +16,11 @@ import java.util.ArrayList;
 
 import app.sliko.R;
 import app.sliko.owner.model.BookingModel;
-import app.sliko.owner.model.PitchModel;
+import app.sliko.utills.M;
 import app.sliko.web.Api;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import hyogeun.github.com.colorratingbarlib.ColorRatingBar;
 
 
 public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAdapter.MyViewHolder> {
@@ -42,17 +42,19 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
 
     @Override
     public void onBindViewHolder(@NonNull final O_PitchBookingAdapter.MyViewHolder myViewHolder, final int i) {
-//        myViewHolder.pitchName.setText(context.getString(R.string.pitchName) + ": " + pitchModelArrayList.get(i).getName());
-//        myViewHolder.pitchPrice.setText(context.getString(R.string.price) + ": " + pitchModelArrayList.get(i).getPrice());
-//        myViewHolder.pitchPrice.setText(context.getString(R.string.price) + ": " + pitchModelArrayList.get(i).getPrice());
+        myViewHolder.PB_name.setText(context.getString(R.string.pitchName) + ": " + pitchModelArrayList.get(i).getPitch_name());
+        myViewHolder.PB_cost.setText(context.getString(R.string.price) + ": " + pitchModelArrayList.get(i).getPrice());
+        myViewHolder.PB_userName.setText(pitchModelArrayList.get(i).getFullname());
+        myViewHolder.PB_phone.setText(pitchModelArrayList.get(i).getPhone());
+        myViewHolder.PB_date.setText(M.formateDateTimeBoth(pitchModelArrayList.get(i).getCreated_at()));
+        myViewHolder.PB_pitchReview.setRating(M.actAccordinglyWithJson(pitchModelArrayList.get(i).getPitch_review_avg()));
         Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.pitchImage);
-
     }
 
 
     @Override
     public int getItemCount() {
-        return pitchModelArrayList.size() == 0 ? 5 : pitchModelArrayList.size();
+        return pitchModelArrayList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -70,6 +72,8 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
         TextView PB_time;
         @BindView(R.id.PB_userName)
         TextView PB_userName;
+        @BindView(R.id.PB_pitchReview)
+        ColorRatingBar PB_pitchReview;
 
 
         private MyViewHolder(@NonNull View itemView) {

@@ -23,7 +23,7 @@ public class DialogMethodCaller {
         final View viewError = LayoutInflater.from(context).inflate(layoutId, null);
         AlertDialog dialog_error = makeDialog(context, viewError);
         dialog_error.setCancelable(isCancellable);
-        FrameLayout SD_stadiumSeeDetails = viewError.findViewById(R.id.SD_stadiumSeeDetails);
+        LinearLayout SD_stadiumSeeDetails = viewError.findViewById(R.id.SD_stadiumSeeDetails);
         ImageView SD_stadiumImage = viewError.findViewById(R.id.SD_stadiumImage);
         ProgressBar SD_stadiumProgressDialog = viewError.findViewById(R.id.SD_stadiumProgressDialog);
         TextView SD_stadiumName = viewError.findViewById(R.id.SD_stadiumName);

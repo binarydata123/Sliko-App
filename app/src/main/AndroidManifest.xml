@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="app.sliko">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon"
@@ -12,7 +19,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".activity.BookingActivity"
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
@@ -44,6 +51,10 @@
             android:name=".activity.StadiumDetailActivity"
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden" />
+<!--        <activity-->
+<!--            android:name=".activity.BookingActivity"-->
+<!--            android:theme="@style/Radio.Theme"-->
+<!--            android:windowSoftInputMode="stateAlwaysHidden" />-->
 
         <activity
             android:name=".activity.AfterPayConfirmActivity"
@@ -75,12 +86,12 @@
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".owner.activity.EditPitchActivity"
+            android:name=".EditProfileActivity"
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".EditProfileActivity"
-            android:theme="@style/Splash.Theme"
+            android:name=".location.SelectAddressLocation"
+            android:theme="@style/Radio.Theme"
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
@@ -89,19 +100,12 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
 
         <meta-data
-            android:name="com.here.android.maps.appid"
-            android:value="owoBGfD55oi1azvTYGmV" />
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <meta-data
-            android:name="com.here.android.maps.apptoken"
-            android:value="km25Osrehe0yLjxBIlQOhA" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_map_key" />
     </application>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 </manifest>
