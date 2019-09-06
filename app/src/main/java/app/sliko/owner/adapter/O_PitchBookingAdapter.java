@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,17 +25,19 @@ import hyogeun.github.com.colorratingbarlib.ColorRatingBar;
 
 
 public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAdapter.MyViewHolder> {
+    private String type;
     private Context context;
     private ArrayList<BookingModel> pitchModelArrayList;
 
-    public O_PitchBookingAdapter(Context context, ArrayList<BookingModel> pitchModelArrayList) {
+    public O_PitchBookingAdapter(Context context, ArrayList<BookingModel> pitchModelArrayList, String type) {
         this.context = context;
         this.pitchModelArrayList = pitchModelArrayList;
+        this.type = type;
     }
 
     @NonNull
     @Override
-    public O_PitchBookingAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public O_PitchBookingAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_item_booking, viewGroup, false);
         return new O_PitchBookingAdapter.MyViewHolder(itemView);
     }
@@ -49,6 +52,9 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
         myViewHolder.PB_date.setText(M.formateDateTimeBoth(pitchModelArrayList.get(i).getCreated_at()));
         myViewHolder.PB_pitchReview.setRating(M.actAccordinglyWithJson(pitchModelArrayList.get(i).getPitch_review_avg()));
         Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.pitchImage);
+        if (!type.equalsIgnoreCase("owner")) {
+            myViewHolder.userDetailsLayout.setVisibility(View.GONE);
+        }
     }
 
 
@@ -74,6 +80,8 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
         TextView PB_userName;
         @BindView(R.id.PB_pitchReview)
         ColorRatingBar PB_pitchReview;
+        @BindView(R.id.userDetailsLayout)
+        LinearLayout userDetailsLayout;
 
 
         private MyViewHolder(@NonNull View itemView) {

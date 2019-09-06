@@ -43,10 +43,7 @@
             android:name=".activity.UserHomeActivity"
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".activity.UserBookingListActivity"
-            android:theme="@style/Splash.Theme"
-            android:windowSoftInputMode="stateAlwaysHidden" />
+
         <activity
             android:name=".activity.StadiumDetailActivity"
             android:theme="@style/Splash.Theme"
@@ -83,6 +80,10 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".owner.activity.AddPitchActivity"
+            android:theme="@style/Splash.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name=".activity.UserBookingActivity"
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity

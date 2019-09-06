@@ -123,6 +123,7 @@ public class BookingActivity extends AppCompatActivity {
 
             }
         });
+
         prepareDataForResponse();
 
     }
@@ -181,7 +182,6 @@ public class BookingActivity extends AppCompatActivity {
                             timingData = new HashMap<>();
                             JSONArray pitchArray = data.getJSONArray("pitch_listing");
                             for (int k = 0; k < pitchArray.length(); k++) {
-
                                 timeListInside = new ArrayList<>();
                                 JSONObject pitchObject = pitchArray.getJSONObject(k);
                                 VerticalPitchModel verticalPitchModel = new VerticalPitchModel();
@@ -194,7 +194,7 @@ public class BookingActivity extends AppCompatActivity {
                                 for (int m = 0; m < bookedDataArray.length(); m++) {
                                     JSONObject object = bookedDataArray.getJSONObject(m);
                                     UserBookingModel userBookingModel = new UserBookingModel();
-                                    userBookingModel.setId(object.getString("id"));
+                                    userBookingModel.setId("");
                                     userBookingModel.setBooked_status(object.getString("booked_status"));
                                     userBookingModel.setTime(object.getString("time"));
                                     timeListInside.add(userBookingModel);
@@ -203,6 +203,7 @@ public class BookingActivity extends AppCompatActivity {
                             }
 
 
+                            Log.e(">>sizes", "onResponse: " + verticalPitchArrayList.size() + "\nTop Header Size" + availabilityModels.size() + "\nBooking Slot" + timingData.size());
                             verticalPitchAdapter = new VerticalPitchAdapter(BookingActivity.this, verticalPitchArrayList);
                             pitchVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(BookingActivity.this));
                             pitchVerticalRecyclerView.setAdapter(verticalPitchAdapter);
@@ -218,6 +219,10 @@ public class BookingActivity extends AppCompatActivity {
                             timingVerticalRecyclerView.setAdapter(verticalTimingAdapter);
                             verticalTimingAdapter.notifyDataSetChanged();
 
+                            for(int k = 0 ; k < timingData.size() ; k++){
+                                Log.e(">>slotSize", "onResponse: " + timingData.get(k).size() );
+                            }
+
                         } else {
                             handleBooking(message);
                         }
@@ -228,6 +233,7 @@ public class BookingActivity extends AppCompatActivity {
                     handleBooking(e.getMessage());
                 }
             }
+
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
@@ -238,7 +244,7 @@ public class BookingActivity extends AppCompatActivity {
 
     private void handleBooking(String messs) {
         noDataLayout.setVisibility(View.VISIBLE);
-        text.setText(messs.equalsIgnoreCase("")?getString(R.string.noBookingAvailable):messs);
+        text.setText(messs.equalsIgnoreCase("") ? getString(R.string.noBookingAvailable) : messs);
         image.setBackgroundResource(R.drawable.ic_booking);
     }
 

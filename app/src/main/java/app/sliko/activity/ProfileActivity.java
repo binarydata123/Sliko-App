@@ -1,6 +1,7 @@
 package app.sliko.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import app.sliko.EditProfileActivity;
 import app.sliko.R;
 import app.sliko.utills.M;
 import app.sliko.web.ApiInterface;
@@ -77,9 +79,18 @@ public class ProfileActivity extends AppCompatActivity {
             finish();
         });
         fetchProfileInfo();
+        setListener();
     }
 
+    private String profileResponse = "";
 
+    private void setListener() {
+        editProfileButton.setOnClickListener(view -> {
+                startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
+        });
+    }
+
+    boolean isProfileLoaded = false;
     private void fetchProfileInfo() {
         dialog.show();
         String userID = M.fetchUserTrivialInfo(ProfileActivity.this, "id");
@@ -92,8 +103,10 @@ public class ProfileActivity extends AppCompatActivity {
                 dialog.cancel();
                 try {
                     if (response.isSuccessful()) {
+                        isProfileLoaded = true;
                         String sResponse = response.body().string();
                         JSONObject jsonObject = new JSONObject(sResponse);
+                        profileResponse = jsonObject.toString();
                         String message = jsonObject.getString("message");
                         String status = jsonObject.getString("status");
                         if (status.equalsIgnoreCase("true")) {
@@ -138,6 +151,4 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

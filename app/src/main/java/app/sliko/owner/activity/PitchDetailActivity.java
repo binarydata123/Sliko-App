@@ -1,6 +1,7 @@
 package app.sliko.owner.activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.activity.BookingActivity;
 import app.sliko.adapter.StadiumImagesAdapter;
 import app.sliko.owner.adapter.ReviewsAdapter;
 import app.sliko.owner.model.ReviewModel;
@@ -104,12 +106,10 @@ public class PitchDetailActivity extends AppCompatActivity {
         Log.e(">>pitchDetailId", "onCreate: " + pitch_id + "\n" + stadium_id);
         backButton.setOnClickListener(view -> finish());
         getSinglePitchDetail();
-        bookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        bookButton.setOnClickListener(view -> startActivity(new Intent(PitchDetailActivity.this, BookingActivity.class)
+                .putExtra("pitch_id", pitch_id)
+                .putExtra("user_id", user_id)
+                .putExtra("stadium_id", stadium_id)));
         new LoadReviews(weakReference).execute();
     }
 

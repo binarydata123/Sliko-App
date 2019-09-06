@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import app.sliko.R;
 import app.sliko.utills.M;
+import app.sliko.utills.Prefs;
 import app.sliko.web.Api;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
@@ -204,6 +205,7 @@ public class RegisterActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
+                        Prefs.savePlayerPositionData(jsonObject.toString() , RegisterActivity.this);
                         if (status.equalsIgnoreCase("true")) {
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
                             for (int l = 0; l < jsonArray.length(); l++) {

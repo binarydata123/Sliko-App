@@ -35,7 +35,6 @@ public class VerticalTimingAdapter extends RecyclerView.Adapter<VerticalTimingAd
         return new MyViewHolder(itemView);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
         if(timingArrayList.get(position).size()>0){
@@ -47,7 +46,6 @@ public class VerticalTimingAdapter extends RecyclerView.Adapter<VerticalTimingAd
         }else{
             myViewHolder.noBookingLayout.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override

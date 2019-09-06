@@ -94,7 +94,7 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("pitchreview/getReviews")
     Call<ResponseBody> ep_reviewsAll(@Field("user_id") String user_id,
-                                            @Field("stadium_id") String stadium_id);
+                                     @Field("stadium_id") String stadium_id);
 
     @Multipart
     @POST("stadium/create")
@@ -116,6 +116,39 @@ public interface ApiInterface {
             @Part("check_fri") RequestBody check_fri,
             @Part("check_sat") RequestBody check_sat,
             @Part("check_sun") RequestBody check_sun
+    );
+
+    @Multipart
+    @POST("user/edit_profile")
+    Call<ResponseBody> editProfile(
+            @Part MultipartBody.Part multipleStadiumImages,
+            @Part("user_id") RequestBody user_id,
+            @Part("fullname") RequestBody fullname,
+            @Part("address") RequestBody address,
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("phone") RequestBody phone,
+            @Part("height") RequestBody height,
+            @Part("weight") RequestBody weight,
+            @Part("favourite_team") RequestBody favourite_team,
+            @Part("play_position") RequestBody play_position,
+            @Part("footedness") RequestBody footedness
+    );
+
+    @Multipart
+    @POST("user/edit_profile")
+    Call<ResponseBody> editProfileWithoutImage(
+            @Part("user_id") RequestBody user_id,
+            @Part("fullname") RequestBody fullname,
+            @Part("address") RequestBody address,
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("phone") RequestBody phone,
+            @Part("height") RequestBody height,
+            @Part("weight") RequestBody weight,
+            @Part("favourite_team") RequestBody favourite_team,
+            @Part("play_position") RequestBody play_position,
+            @Part("footedness") RequestBody footedness
     );
 
 
@@ -151,8 +184,8 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("pitchbooking/getAllPitchBookedlist")
     Call<ResponseBody> ep_userPitchBooking(@Field("user_id") String user_id,
-                                      @Field("stadium_id") String stadium_id,
-                                      @Field("booking_date") String booking_date);
+                                           @Field("stadium_id") String stadium_id,
+                                           @Field("booking_date") String booking_date);
 
     @FormUrlEncoded
     @POST("resetpassword")

@@ -46,6 +46,8 @@
 
     </androidx.cardview.widget.CardView>
     <FrameLayout
+        android:layout_marginTop="5dp"
+        android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -53,15 +55,6 @@
             android:gravity="center_vertical"
             android:orientation="vertical"
             android:layout_height="wrap_content">
-            <TextView
-                android:padding="10dp"
-                android:textColor="@color/black"
-                android:layout_width="wrap_content"
-                android:text="Pitch Availability"
-                android:layout_height="wrap_content"/>
-
-
-
             <androidx.cardview.widget.CardView
                 android:elevation="0dp"
                 app:cardElevation="0dp"
@@ -82,30 +75,33 @@
                         android:orientation="vertical"
                         android:layout_height="wrap_content">
                         <TextView
+                            android:padding="10dp"
+                            android:textColor="@color/black_color"
                             android:layout_width="wrap_content"
-                            android:text="Pitch Availability"
-                            android:padding="16dp"
-                            android:visibility="gone"
+                            android:text="@string/pickSlotForBooking"
                             android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_marginTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/semi_black_color"
+                            android:alpha=".2"/>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:orientation="horizontal"
                             android:layout_height="wrap_content">
                             <LinearLayout
-                                android:layout_width="wrap_content"
+                                android:layout_width="100dp"
                                 android:orientation="vertical"
                                 android:gravity="center_vertical"
                                 android:layout_height="wrap_content">
                                 <TextView
-                                    android:visibility="invisible"
-                                    android:drawablePadding="5dp"
-                                    android:drawableLeft="@drawable/ic_down_arrow"
                                     android:padding="10dp"
-                                    android:layout_width="wrap_content"
-                                    android:text="Pitch"
+                                    android:layout_width="match_parent"
+                                    android:text="@string/pitchAndSlots"
                                     android:textSize="11sp"
                                     android:gravity="center"
-                                    android:background="@drawable/edit_bg_green"
+                                    android:background="@color/lightGreen"
                                     android:textColor="@color/white"
                                     android:layout_height="wrap_content"/>
                                 <TextView
@@ -128,7 +124,7 @@
                                 android:alpha=".3"
                                 android:background="#000" />
                             <LinearLayout
-                                android:gravity="center_vertical"
+                                android:gravity="center"
                                 android:layout_width="match_parent"
                                 android:orientation="vertical"
                                 android:layout_height="wrap_content">

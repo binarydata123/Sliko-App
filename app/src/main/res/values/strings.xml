@@ -15,7 +15,7 @@
     <string name="pitches">Pitches</string>
     <string name="thankYouMessage">Cảm ơn bạn đã chọn Ứng dụng Sliko, Tiếp tục đặt phòng</string>
     <string name="price">Price: ₫&#160;</string>
-    <string name="myBookings">Đặt chỗ của tôi</string>
+    <string name="myBookings">My Bookings</string>
     <string name="notifications">Thông báo</string>
     <string name="editProfile">Edit Profile</string>
     <string name="profile">Profile</string>
@@ -91,7 +91,7 @@
     <string name="cancel">Cancel</string>
     <string name="appRequiresPermission">App needs permission enable them in settings</string>
     <string name="bookingDetail">Booking Detail</string>
-    <string name="pitchName">Sân cỏ</string>
+    <string name="pitchName">Pitch:&#160;</string>
     <string name="bookingOrder">Tổng số đơn đặt hàng</string>
     <string name="menu_rating">All Reviews</string>
     <string name="singOut">SignOut</string>
@@ -144,4 +144,10 @@
     <string name="description">Description:&#160;</string>
     <string name="bookPitch">Book Pitch</string>
     <string name="noBookingAvailable">No pitch available for booking</string>
+    <string name="noBookingAvailableUSer">No booking record found</string>
+    <string name="couldNotLoadProfile">Could not load profile</string>
+    <string name="saveProfile">Save</string>
+    <string name="enablePermission">Enable Permissions</string>
+    <string name="pickSlotForBooking">Pick slot for booking</string>
+    <string name="pitchAndSlots">Pitch &amp; slots</string>
 </resources>

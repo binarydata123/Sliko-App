@@ -16,7 +16,9 @@ public class Prefs {
     private static String lat = "lat";
     private static String lng = "lng";
     private static String stadiumID = "stadiumID";
+    private static String playerPosition = "playerPosition";
     private static String APP_KEY = "APP_KEY";
+
 
     public static void saveUserData(String value, Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
@@ -70,6 +72,18 @@ public class Prefs {
     public static String getStadiumId(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
         return preferences.getString(stadiumID, "");
+    }
+
+    public static void savePlayerPositionData(String value, Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(playerPosition, value);
+        editor.apply();
+    }
+
+    public static String getPlayerPositionData(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString(playerPosition, "");
     }
 
 }

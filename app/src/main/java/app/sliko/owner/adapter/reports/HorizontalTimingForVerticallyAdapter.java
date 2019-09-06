@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import app.sliko.R;
 import app.sliko.booking.model.UserBookingModel;
+import app.sliko.web.Api;
 
 
 public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<HorizontalTimingForVerticallyAdapter.MyViewHolder> {
@@ -36,14 +37,28 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
         myViewHolder.timingView.setText(verticalPitchArrayList.get(position).getBooked_status());
-//        if (position == 2) {
-//            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.greyColor));
-//            myViewHolder.timingView.setText("Vacant");
-//            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
-//        } else if (position == 4) {
-//            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
-//            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
-//        }
+        if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.BOOKED)) {
+            myViewHolder.timingView.setText("Booked");
+            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
+            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
+        } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.TIME_UP)) {
+            myViewHolder.timingView.setText("Time UP");
+            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
+            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.toolbarColor));
+        } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.PLAYING)) {
+            myViewHolder.timingView.setText("Playing");
+            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
+            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
+        } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.MIN_TO_GO_15)) {
+            myViewHolder.timingView.setText("15 min remaining");
+            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
+            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.orange));
+        } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase("") ||
+                verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACCANT)) {
+            myViewHolder.timingView.setText("Vacant");
+            myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
+            myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.bit_dark_grey));
+        }
     }
 
     @Override

@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,10 +50,13 @@ import org.json.JSONObject;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import app.sliko.EditProfileActivity;
 import app.sliko.R;
 import app.sliko.dialogs.DialogMethodCaller;
+import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.models.HomeStadiumListModel;
 import app.sliko.utills.M;
+import app.sliko.utills.Prefs;
 import app.sliko.web.Api;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
@@ -90,6 +94,35 @@ public class UserHomeActivity extends AppCompatActivity implements LocationListe
     Dialog dialog;
     LatLng customMarkerLocation;
     ArrayList<LatLng> latlngarraylist = new ArrayList<>();
+
+    @BindView(R.id.etName)
+    TextView etName;
+    @BindView(R.id.etEmail)
+    TextView etEmail;
+    @BindView(R.id.etPhone)
+    TextView etPhone;
+    @BindView(R.id.signOutLayout)
+    LinearLayout signOutLayout;
+    @BindView(R.id.etUserBookingLayout)
+    LinearLayout etUserBookingLayout;
+
+    private void setUpLayout() {
+        Log.e(">>id", "setUpLayout: " + M.fetchUserTrivialInfo(UserHomeActivity.this, "id"));
+        if (M.fetchUserTrivialInfo(UserHomeActivity.this, "profilepic").equalsIgnoreCase("")) {
+            Picasso.get().load(Api.DUMMY_PROFILE).into(ivUserImage);
+        } else {
+            Picasso.get().load(Api.DUMMY_PROFILE).into(ivUserImage);
+        }
+        etEmail.setText(M.actAccordingly(UserHomeActivity.this, "email"));
+        etName.setText(M.actAccordingly(UserHomeActivity.this, "fullname"));
+        etPhone.setText(M.actAccordingly(UserHomeActivity.this, "phone"));
+
+    }
+
+    @BindView(R.id.profileLayout)
+    LinearLayout profileLayout;
+    @BindView(R.id.editProfileLayout)
+    LinearLayout editProfileLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,7 +178,79 @@ public class UserHomeActivity extends AppCompatActivity implements LocationListe
                 }
             }
         });
+        setUpLayout();
+
+        setListeners();
     }
+
+    DialogConfirmation dialogConfirmation;
+
+    private void setListeners() {
+        signOutLayout.setOnClickListener(view -> {
+            dialogConfirmation = DialogMethodCaller.openDialogConfirmation(UserHomeActivity.this, R.layout.dialog_confirmation, false);
+            dialogConfirmation.getDialog_error().show();
+            dialogConfirmation.getDialogConfirmationMessage().setText(getString(R.string.doYouWantToSignOut));
+            dialogConfirmation.getDialogConfirmationTitle().setText(getString(R.string.signout));
+            dialogConfirmation.getCloseButton().setOnClickListener(view12 -> dialogConfirmation.getDialog_error().dismiss());
+            dialogConfirmation.getOkButton().setOnClickListener(view1 -> {
+                dialogConfirmation.getDialog_error().dismiss();
+                logoutApi();
+            });
+        });
+
+        profileLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(UserHomeActivity.this, ProfileActivity.class));
+            }
+        });
+        editProfileLayout.setOnClickListener(view -> {
+            startActivity(new Intent(UserHomeActivity.this, EditProfileActivity.class));
+        });
+        etUserBookingLayout.setOnClickListener(view -> {
+            startActivity(new Intent(UserHomeActivity.this, UserBookingActivity.class));
+        });
+    }
+
+    private void logoutApi() {
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_logout(M.fetchUserTrivialInfo(UserHomeActivity.this, "id"));
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+                            Prefs.clearUserData(UserHomeActivity.this);
+                            Toast.makeText(UserHomeActivity.this, message, Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(UserHomeActivity.this, LoginActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(UserHomeActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(UserHomeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Log.i(">>error", "onResponse: " + e.getMessage());
+                    Toast.makeText(UserHomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(UserHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private void inflateDialogForBubbleInfo(int index) {
         stadiumInfoDialog = DialogMethodCaller.openStadiumInfoDialog(UserHomeActivity.this, R.layout.dilaog_stadium_info, true);
@@ -189,7 +294,7 @@ public class UserHomeActivity extends AppCompatActivity implements LocationListe
                 startActivity(new Intent(UserHomeActivity.this, StadiumDetailActivity.class)
                         .putExtra("stadium_id", homeStadiumListModelArrayList.get(index).getId())
                         .putExtra("user_id", homeStadiumListModelArrayList.get(index).getUser_id())
-                .putExtra("lowestPrice", homeStadiumListModelArrayList.get(index).getPrice()));
+                        .putExtra("lowestPrice", homeStadiumListModelArrayList.get(index).getPrice()));
             }
         });
         stadiumInfoDialog.getSd_stadiumCloseButton().setOnClickListener(new View.OnClickListener() {
@@ -198,6 +303,8 @@ public class UserHomeActivity extends AppCompatActivity implements LocationListe
                 stadiumInfoDialog.getAlertDialog().cancel();
             }
         });
+
+
     }
 
 

@@ -23,8 +23,8 @@ import java.util.ArrayList;
 
 import app.sliko.R;
 import app.sliko.adapter.PitchAdapterUser;
+import app.sliko.adapter.StadiumDetailOpeningAdapter;
 import app.sliko.adapter.StadiumImagesAdapter;
-import app.sliko.owner.adapter.StadiumOpeningAdapter;
 import app.sliko.owner.model.AvailabilityModel;
 import app.sliko.utills.M;
 import app.sliko.web.ApiInterface;
@@ -95,12 +95,12 @@ public class StadiumDetailActivity extends AppCompatActivity {
         reviewsModelArrayList.clear();
         backButton.setOnClickListener(view -> finish());
         fetchStadiumInfo(user_id);
-        Log.e(">>idInStadiumDetails", "onCreate: " + user_id+"\n"+stadium_id
+        Log.e(">>idInStadiumDetails", "onCreate: " + user_id + "\n" + stadium_id
         );
     }
 
     ArrayList<AvailabilityModel> availabilityModelArrayList = new ArrayList<>();
-    StadiumOpeningAdapter stadiumOpeningAdapter;
+    StadiumDetailOpeningAdapter stadiumOpeningAdapter;
 
     private void fetchStadiumInfo(String user_id) {
         dialog.show();
@@ -187,8 +187,8 @@ public class StadiumDetailActivity extends AppCompatActivity {
                                 availabilityModelArrayList.add(availabilityModel);
                             }
                             if (availabilityModelArrayList.size() > 0) {
-                                stadiumOpeningAdapter = new StadiumOpeningAdapter(StadiumDetailActivity.this, availabilityModelArrayList, "detailView");
-                                stadiumAvailabilityRecyclerView.setLayoutManager(new GridLayoutManager(StadiumDetailActivity.this, 3));
+                                stadiumOpeningAdapter = new StadiumDetailOpeningAdapter(StadiumDetailActivity.this, availabilityModelArrayList, "detailView");
+                                stadiumAvailabilityRecyclerView.setLayoutManager(new GridLayoutManager(StadiumDetailActivity.this,3));
                                 stadiumAvailabilityRecyclerView.setAdapter(stadiumOpeningAdapter);
                                 stadiumOpeningAdapter.notifyDataSetChanged();
                             } else {

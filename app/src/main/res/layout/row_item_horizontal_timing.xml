@@ -4,24 +4,22 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/insideTimingRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-<LinearLayout
-    android:layout_gravity="center"
-    android:layout_width="match_parent"
-    android:gravity="center"
-    android:visibility="gone"
-    android:orientation="vertical"
-    android:id="@+id/noBookingLayout"
-    android:layout_height="match_parent">
-    <TextView
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:layout_width="wrap_content"
-        android:text="No bookings availale"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+        android:layout_height="match_parent" />
+    <LinearLayout
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:id="@+id/noBookingLayout"
+        android:layout_height="match_parent">
+        <TextView
+            android:padding="10dp"
+            android:textColor="@color/black_color"
+            android:layout_width="wrap_content"
+            android:text="@string/noBookingAvailable"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </FrameLayout>

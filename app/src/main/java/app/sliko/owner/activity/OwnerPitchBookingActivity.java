@@ -140,7 +140,7 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
 
 
     private void setAdapter() {
-        o_pitchBookingAdapter = new O_PitchBookingAdapter(OwnerPitchBookingActivity.this, bookingModelArrayList);
+        o_pitchBookingAdapter = new O_PitchBookingAdapter(OwnerPitchBookingActivity.this, bookingModelArrayList, "owner");
         pitchBookingRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         pitchBookingRecyclerView.setAdapter(o_pitchBookingAdapter);
         o_pitchBookingAdapter.notifyDataSetChanged();
