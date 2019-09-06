@@ -143,4 +143,5 @@
     <string name="PitchInfo">Pitch Info</string>
     <string name="description">Description:&#160;</string>
     <string name="bookPitch">Book Pitch</string>
+    <string name="noBookingAvailable">No pitch available for booking</string>
 </resources>

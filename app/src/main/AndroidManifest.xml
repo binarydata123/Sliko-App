@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".activity.BookingActivity"
+            android:name=".activity.SplashActivity"
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
@@ -51,10 +51,10 @@
             android:name=".activity.StadiumDetailActivity"
             android:theme="@style/Splash.Theme"
             android:windowSoftInputMode="stateAlwaysHidden" />
-<!--        <activity-->
-<!--            android:name=".activity.BookingActivity"-->
-<!--            android:theme="@style/Radio.Theme"-->
-<!--            android:windowSoftInputMode="stateAlwaysHidden" />-->
+        <activity
+            android:name=".activity.BookingActivity"
+            android:theme="@style/Radio.Theme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
 
         <activity
             android:name=".activity.AfterPayConfirmActivity"

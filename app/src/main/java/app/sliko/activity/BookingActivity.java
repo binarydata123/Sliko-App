@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +56,12 @@ public class BookingActivity extends AppCompatActivity {
     RecyclerView headerRecyclerViewForTimeSlot;
     @BindView(R.id.calendarView)
     CollapsibleCalendar calendarView;
+    @BindView(R.id.noDataLayout)
+    LinearLayout noDataLayout;
+    @BindView(R.id.image)
+    ImageView image;
+    @BindView(R.id.text)
+    TextView text;
 
 
     String pitch_id;
@@ -211,22 +219,27 @@ public class BookingActivity extends AppCompatActivity {
                             verticalTimingAdapter.notifyDataSetChanged();
 
                         } else {
-                            Toast.makeText(BookingActivity.this, message, Toast.LENGTH_SHORT).show();
+                            handleBooking(message);
                         }
                     } else {
-                        Toast.makeText(BookingActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                        handleBooking(response.message());
                     }
                 } catch (Exception e) {
-                    Toast.makeText(BookingActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    handleBooking(e.getMessage());
                 }
             }
-
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
                 Toast.makeText(BookingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void handleBooking(String messs) {
+        noDataLayout.setVisibility(View.VISIBLE);
+        text.setText(messs.equalsIgnoreCase("")?getString(R.string.noBookingAvailable):messs);
+        image.setBackgroundResource(R.drawable.ic_booking);
     }
 
 }
