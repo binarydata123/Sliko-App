@@ -35,9 +35,9 @@ import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.owner.events.StadiumExistEventOrNot;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.owner.fragment.AllReviewsFragment;
-import app.sliko.owner.fragment.BookingFragment;
-import app.sliko.owner.fragment.ProfileFragment;
 import app.sliko.owner.fragment.ReportsFragment;
+import app.sliko.owner.fragment.BookingManagementFragment;
+import app.sliko.owner.fragment.ProfileFragment;
 import app.sliko.owner.fragment.StadiumDetailsFragment;
 import app.sliko.utills.M;
 import app.sliko.utills.Prefs;
@@ -160,11 +160,11 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
                     return true;
                 case R.id.action_overview:
                     toolbarTitle.setText(getString(R.string.reports));
-                    swapContentFragment(ReportsFragment.newInstance(), true, R.id.frameContainer);
+                    swapContentFragment(BookingManagementFragment.newInstance(), true, R.id.frameContainer);
                     return true;
                 case R.id.action_bookings:
                     toolbarTitle.setText(getString(R.string.menu_bookings));
-                    swapContentFragment(BookingFragment.newInstance(), true, R.id.frameContainer);
+                    swapContentFragment(ReportsFragment.newInstance(), true, R.id.frameContainer);
                     return true;
                 case R.id.action_all_reviews:
                     toolbarTitle.setText(getString(R.string.reviews));

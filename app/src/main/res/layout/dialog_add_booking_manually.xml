@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/edit_bg_green_round"
+        android:background="@drawable/edit_bg_green"
         android:paddingLeft="20dp"
         android:paddingTop="3dp"
         android:paddingRight="20dp"
@@ -60,6 +60,37 @@
         android:paddingRight="16dp">
 
         <ImageView
+            android:layout_width="22dp"
+            android:layout_height="16dp"
+            android:background="@drawable/email" />
+
+        <TextView
+            android:layout_width="8dp"
+            android:layout_height="match_parent" />
+
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:hint="Enter Phone number"
+            android:imeOptions="actionNext"
+            android:inputType="textEmailAddress"
+            android:singleLine="true"
+            android:textSize="14sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit_bg_grey"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <ImageView
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:background="@drawable/ic_call_answer" />
@@ -91,7 +122,7 @@
         <Button
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:background="@drawable/edit_bg_dark_grey"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
@@ -105,7 +136,7 @@
         <Button
             android:id="@+id/bookButtonLayout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:background="@drawable/edit_bg_green"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"

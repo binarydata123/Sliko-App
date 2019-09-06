@@ -1,5 +1,6 @@
 package app.sliko.activity;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import app.sliko.R;
 import app.sliko.dialogs.DialogMethodCaller;
@@ -65,7 +67,10 @@ public class UserBookingActivity extends AppCompatActivity {
     TextView toolbarTitle;
     @BindView(R.id.text)
     TextView text;
-
+    @BindView(R.id.startDateText)
+    TextView startDateText;
+    @BindView(R.id.endDateText)
+    TextView endDateText;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +81,9 @@ public class UserBookingActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.back_arrow_white);
         toolbar.setNavigationOnClickListener(view -> finish());
         setListeners();
-        getAllBookingData();
-        setAdapter();
+        getBookingForUser();
+
+        addBookingButton.setVisibility(View.GONE);
         bookingRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -97,13 +103,13 @@ public class UserBookingActivity extends AppCompatActivity {
 
     private Dialog dialog;
 
-    private void getAllBookingData() {
+    private void getBookingForUser() {
         dialog.show();
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_bookingList(M.fetchUserTrivialInfo(UserBookingActivity.this, "id"),
-                "", "");
-        Log.e(">>stadiumId", "getAllBookingData: " + Prefs.getStadiumId(UserBookingActivity.this));
+                "", "",start_date,end_date);
+        Log.e(">>stadiumId", "getBookingForUser: " + Prefs.getStadiumId(UserBookingActivity.this));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -136,6 +142,7 @@ public class UserBookingActivity extends AppCompatActivity {
                                     bookingModel.setTime(dataObject.getString("time"));
                                     bookingModel.setUser_id(dataObject.getString("user_id"));
                                 }
+                                setAdapter();
                                 o_pitchBookingAdapter.notifyDataSetChanged();
                                 noDataLayout.setVisibility(View.GONE);
                                 text.setText(getString(R.string.noBookingAvailableUSer));
@@ -166,19 +173,46 @@ public class UserBookingActivity extends AppCompatActivity {
 
 
     }
+    private String start_date = "", end_date = "";
 
+    private void getDate(TextView et, int whichDate) {
+        Calendar mcurrentDate = Calendar.getInstance();
+        int mYear = mcurrentDate.get(Calendar.YEAR);
+        int mMonth = mcurrentDate.get(Calendar.MONTH);
+        int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog mDatePicker;
+        mDatePicker = new DatePickerDialog(UserBookingActivity.this, R.style.DialogTheme, (datepicker, selectedyear, selectedmonth, selectedday) -> {
+            selectedmonth = selectedmonth + 1;
+            et.setText("" + selectedyear + "-" + selectedmonth + "-" + selectedday);
+            if (whichDate == 0) {
+                start_date = et.getText().toString();
+            } else {
+                end_date = et.getText().toString();
+            }
+        }, mYear, mMonth, mDay);
+        mDatePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        mDatePicker.setTitle(whichDate == 0 ? "Pick Start Date" : "Pick End Date");
+        mDatePicker.show();
+    }
     private BookPitchMauallyDialog bookPitchMauallyDialog;
 
     private void setListeners() {
         searchButton.setOnClickListener(view -> {
-
+            if (startDateText.getText().toString().length() == 0) {
+                Toast.makeText(UserBookingActivity.this, getString(R.string.pleaseSelectStartDate), Toast.LENGTH_SHORT).show();
+            } else if (endDateText.getText().toString().length() == 0) {
+                Toast.makeText(UserBookingActivity.this, getString(R.string.pleaseSelectEndDate), Toast.LENGTH_SHORT).show();
+            } else {
+                getBookingForUser();
+            }
         });
-        pickEndDate.setOnClickListener(view -> {
-
-        });
-        pickStartDate.setOnClickListener(view -> {
-
-        });
+        pickEndDate.setOnClickListener(view ->
+                getDate(startDateText, 1)
+        );
+        pickStartDate.setOnClickListener(view ->
+                getDate(endDateText, 0)
+        );
         addBookingButton.setOnClickListener(view -> {
             bookPitchMauallyDialog = DialogMethodCaller.openBookPitchMauallyDialog(UserBookingActivity.this, R.layout.dialog_add_booking_manually, false);
             bookPitchMauallyDialog.getDialog_error().show();
@@ -187,7 +221,7 @@ public class UserBookingActivity extends AppCompatActivity {
     }
 
     private void setAdapter() {
-        o_pitchBookingAdapter = new O_PitchBookingAdapter(UserBookingActivity.this, bookingModelArrayList,"user");
+        o_pitchBookingAdapter = new O_PitchBookingAdapter(UserBookingActivity.this, bookingModelArrayList, "user");
         bookingRecyclerView.setLayoutManager(new LinearLayoutManager(UserBookingActivity.this));
         bookingRecyclerView.setAdapter(o_pitchBookingAdapter);
         bookingRecyclerView.setNestedScrollingEnabled(false);

@@ -1,10 +1,16 @@
 package app.sliko.owner.fragment;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,34 +18,60 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Calendar;
+import java.util.UUID;
 
 import app.sliko.R;
-import app.sliko.owner.adapter.reports.HeaderTimingAdapter;
-import app.sliko.owner.adapter.reports.VerticalPitchAdapter;
-import app.sliko.owner.adapter.reports.VerticalTimingAdapter;
-import app.sliko.owner.model.AvailabilityModel;
+import app.sliko.dialogs.DialogMethodCaller;
+import app.sliko.dialogs.models.BookPitchMauallyDialog;
+import app.sliko.owner.adapter.O_PitchBookingAdapter;
+import app.sliko.owner.model.BookingModel;
+import app.sliko.utills.M;
+import app.sliko.utills.Prefs;
 import app.sliko.web.Api;
+import app.sliko.web.ApiInterface;
+import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ReportsFragment extends Fragment {
-    private View view;
+    View view;
+    @BindView(R.id.bookingRecyclerView)
+    RecyclerView bookingRecyclerView;
+    O_PitchBookingAdapter o_pitchBookingAdapter;
+    ArrayList<BookingModel> bookingModelArrayList = new ArrayList<>();
 
-    @BindView(R.id.timingVerticalRecyclerView)
-    RecyclerView timingVerticalRecyclerView;
-    @BindView(R.id.pitchVerticalRecyclerView)
-    RecyclerView pitchVerticalRecyclerView;
-    @BindView(R.id.originalTimingForStadium)
-    RecyclerView originalTimingForStadium;    @BindView(R.id.calendarView)
-    CollapsibleCalendar calendarView;
+
+    @BindView(R.id.pickStartDate)
+    LinearLayout pickStartDate;
+    @BindView(R.id.addBookingButton)
+    FloatingActionButton addBookingButton;
+    @BindView(R.id.pickEndDate)
+    LinearLayout pickEndDate;
+    @BindView(R.id.searchButton)
+    LinearLayout searchButton;
+    @BindView(R.id.noDataLayout)
+    LinearLayout noDataLayout;
+    @BindView(R.id.image)
+    ImageView image;
+    @BindView(R.id.startDateText)
+    TextView startDateText;
+    @BindView(R.id.endDateText)
+    TextView endDateText;
 
     public static ReportsFragment newInstance() {
-        ReportsFragment fragment = new ReportsFragment();
         Bundle args = new Bundle();
+        ReportsFragment fragment = new ReportsFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,82 +79,218 @@ public class ReportsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_reports, container, false);
+        view = inflater.inflate(R.layout.fragment_bookings, container, false);
         ButterKnife.bind(ReportsFragment.this, view);
+        dialog = M.showDialog(getActivity(), "", false);
+        setListeners();
+        getAllBookings();
 
-        verticalPitchArrayList.add("Pitch 1");
-        verticalPitchArrayList.add("Pitch 2");
-        verticalPitchArrayList.add("Pitch 3");
-        verticalPitchArrayList.add("Pitch 4");
-        verticalPitchArrayList.add("Pitch 5");
-        setPitchAdapter();
-        prepareData();
-        setTimingAdapter();
-        prepareDataForOriginalList();
-        timingVerticalRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        bookingRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                originalTimingForStadium.scrollBy(dx, dy);
+                if (dy > 0 || dy < 0 && addBookingButton.isShown())
+                    addBookingButton.hide();
+            }
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                    addBookingButton.show();
+                super.onScrollStateChanged(recyclerView, newState);
             }
         });
         return view;
     }
 
-    Dialog dialog;
+    private Dialog dialog;
 
-    private VerticalPitchAdapter verticalPitchAdapter;
-    private ArrayList<String> verticalPitchArrayList = new ArrayList<>();
-    private VerticalTimingAdapter verticalTimingAdapter;
-
-    ArrayList<AvailabilityModel> availabilityModels = new ArrayList<>();
-    ArrayList<String> timeListInside;
-    HashMap<Integer, ArrayList<String>> timingData;
-    HeaderTimingAdapter headerTimingAdapter;
-
-    private void prepareDataForOriginalList() {
-        availabilityModels.clear();
-        for (int k = 0; k < Api.timingArray.length; k++) {
-            AvailabilityModel availabilityModel = new AvailabilityModel();
-            availabilityModel.setPicked(false);
-            availabilityModel.setTime(Api.timingArray[k]);
-            availabilityModels.add(availabilityModel);
-        }
-        headerTimingAdapter = new HeaderTimingAdapter(getActivity(), availabilityModels);
-        originalTimingForStadium.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        originalTimingForStadium.setAdapter(headerTimingAdapter);
-        headerTimingAdapter.notifyDataSetChanged();
-    }
-
-
-    private void prepareData() {
-
-        timingData = new HashMap<>();
-        for (int k = 0; k < verticalPitchArrayList.size(); k++) {
-            timeListInside = new ArrayList<>();
-            for (int l = 0; l < 5; l++) {
-                if (k == 2) {
-                    timeListInside.add("Team Name");
-                } else {
-                    timeListInside.add("Closed");
+    private void getAllBookings() {
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_bookingList(M.fetchUserTrivialInfo(getActivity(), "id"),
+                Prefs.getStadiumId(getActivity()), "", start_date, end_date);
+        Log.e(">>stadiumId", "getAllBookings: " + Prefs.getStadiumId(getActivity()));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+                            JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("data");
+                            if (jsonArray.length() > 0) {
+                                for (int k = 0; k < jsonArray.length(); k++) {
+                                    BookingModel bookingModel = new BookingModel();
+                                    JSONObject dataObject = jsonArray.getJSONObject(k);
+                                    bookingModel.setFullname(dataObject.getString("fullname"));
+                                    bookingModel.setPhone(dataObject.getString("phone"));
+                                    bookingModel.setStadium_name(dataObject.getString("stadium_name"));
+                                    bookingModel.setStadium_address(dataObject.getString("stadium_address"));
+                                    bookingModel.setPitch_name(dataObject.getString("pitch_name"));
+                                    bookingModel.setPrice(dataObject.getString("price"));
+                                    bookingModel.setCost(dataObject.getString("cost"));
+                                    bookingModel.setPitch_review_avg(dataObject.getString("pitch_review_avg"));
+                                    bookingModel.setId(dataObject.getString("id"));
+                                    bookingModel.setStadium_id(dataObject.getString("stadium_id"));
+                                    bookingModel.setPitch_id(dataObject.getString("pitch_id"));
+                                    bookingModel.setStart_date(dataObject.getString("start_date"));
+                                    bookingModel.setEnd_date(dataObject.getString("end_date"));
+                                    bookingModel.setTime(dataObject.getString("time"));
+                                    bookingModel.setUser_id(dataObject.getString("user_id"));
+                                }
+                                setAdapter();
+                                o_pitchBookingAdapter.notifyDataSetChanged();
+                                noDataLayout.setVisibility(View.GONE);
+                                image.setBackgroundResource(R.drawable.ic_booking);
+                            } else {
+                                noDataLayout.setVisibility(View.VISIBLE);
+                            }
+                        } else {
+                            noDataLayout.setVisibility(View.GONE);
+                            image.setBackgroundResource(R.drawable.ic_booking);
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
-            timingData.put(k, timeListInside);
-        }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
-    private void setTimingAdapter() {
-//        verticalTimingAdapter = new VerticalTimingAdapter(getActivity(), timingData);
-//        timingVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-//        timingVerticalRecyclerView.setAdapter(verticalTimingAdapter);
-//        verticalTimingAdapter.notifyDataSetChanged();
+    private String start_date = "", end_date = "";
+
+    private void getDate(TextView et, int whichDate) {
+        Calendar mcurrentDate = Calendar.getInstance();
+        int mYear = mcurrentDate.get(Calendar.YEAR);
+        int mMonth = mcurrentDate.get(Calendar.MONTH);
+        int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog mDatePicker;
+        mDatePicker = new DatePickerDialog(getActivity(), R.style.DialogTheme, (datepicker, selectedyear, selectedmonth, selectedday) -> {
+            selectedmonth = selectedmonth + 1;
+            et.setText("" + selectedyear + "-" + selectedmonth + "-" + selectedday);
+            if (whichDate == 0) {
+                start_date = et.getText().toString();
+            } else {
+                end_date = et.getText().toString();
+            }
+        }, mYear, mMonth, mDay);
+        mDatePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        mDatePicker.setTitle(whichDate == 0 ? "Pick Start Date" : "Pick End Date");
+        mDatePicker.show();
     }
 
-    private void setPitchAdapter() {
-//        verticalPitchAdapter = new VerticalPitchAdapter(getActivity(), verticalPitchArrayList);
-//        pitchVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        pitchVerticalRecyclerView.setAdapter(verticalPitchAdapter);
-//        verticalPitchAdapter.notifyDataSetChanged();
+
+    private BookPitchMauallyDialog bookPitchMauallyDialog;
+
+    private void setListeners() {
+        searchButton.setOnClickListener(view -> {
+            if (startDateText.getText().toString().length() == 0) {
+                Toast.makeText(getActivity(), getString(R.string.pleaseSelectStartDate), Toast.LENGTH_SHORT).show();
+            } else if (endDateText.getText().toString().length() == 0) {
+                Toast.makeText(getActivity(), getString(R.string.pleaseSelectEndDate), Toast.LENGTH_SHORT).show();
+            } else {
+                getAllBookings();
+            }
+        });
+        pickEndDate.setOnClickListener(view ->
+                getDate(startDateText, 1)
+        );
+        pickStartDate.setOnClickListener(view ->
+                getDate(endDateText, 2)
+        );
+        addBookingButton.setOnClickListener(view -> {
+            bookPitchMauallyDialog = DialogMethodCaller.openBookPitchMauallyDialog(getActivity(), R.layout.dialog_add_booking_manually, false);
+            bookPitchMauallyDialog.getDialog_error().show();
+            bookPitchMauallyDialog.getBookButtonLayout().setOnClickListener(view12 -> {
+
+                if (M.matchValidation(bookPitchMauallyDialog.getEtName())) {
+                    Toast.makeText(getActivity(), getString(R.string.please_enter_username), Toast.LENGTH_SHORT).show();
+                } else if (M.matchValidation(bookPitchMauallyDialog.getEtPhone())) {
+                    Toast.makeText(getActivity(), getString(R.string.please_enter_phone), Toast.LENGTH_SHORT).show();
+
+                } else if ((bookPitchMauallyDialog.getEtPhone().length() > 15)) {
+                    Toast.makeText(getActivity(), getString(R.string.please_enter_valid_phone), Toast.LENGTH_SHORT).show();
+
+                } else if (M.matchValidation(bookPitchMauallyDialog.getEtEmail())) {
+                    Toast.makeText(getActivity(), getString(R.string.please_enter_email), Toast.LENGTH_SHORT).show();
+
+                } else if (!M.validateEmail(bookPitchMauallyDialog.getEtEmail().getText().toString())) {
+                    Toast.makeText(getActivity(), getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
+
+                } else {
+                    bookPitchMauallyDialog.getDialog_error().cancel();
+                    registerUserManually(bookPitchMauallyDialog.getEtName().getText().toString(),
+                            bookPitchMauallyDialog.getEtPhone().getText().toString(),
+                            bookPitchMauallyDialog.getEtEmail().getText().toString(), UUID.randomUUID() + "");
+                }
+            });
+            bookPitchMauallyDialog.getCancelButton().setOnClickListener(view1 -> bookPitchMauallyDialog.getDialog_error().cancel());
+        });
     }
 
+    private void registerUserManually(String name, String phone, String email, String password) {
+        String role = Api.USER;
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        String social_id = "";
+        String fcmToken = "";
+        Call<ResponseBody> call = service.ep_register(name,
+                email, phone, password, role, social_id, fcmToken,
+                "", "", "",
+                "", "");
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        Log.e(">>data", "onResponse: " + jsonObject.toString());
+                        if (status.equalsIgnoreCase("true")) {
+                            Toast.makeText(getActivity(), getString(R.string.bookingCreatedSuccessfully), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void setAdapter() {
+        o_pitchBookingAdapter = new O_PitchBookingAdapter(getActivity(), bookingModelArrayList, "owner");
+        bookingRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        bookingRecyclerView.setAdapter(o_pitchBookingAdapter);
+        bookingRecyclerView.setNestedScrollingEnabled(false);
+
+    }
 }

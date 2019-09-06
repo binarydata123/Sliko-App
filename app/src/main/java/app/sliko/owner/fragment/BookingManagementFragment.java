@@ -1,9 +1,11 @@
-package app.sliko.activity;
+package app.sliko.owner.fragment;
 
 import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -11,8 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import app.sliko.R;
+import app.sliko.activity.BookingActivity;
 import app.sliko.booking.VerticalPitchModel;
 import app.sliko.booking.model.UserBookingModel;
 import app.sliko.owner.adapter.reports.HeaderTimingAdapter;
@@ -32,6 +35,7 @@ import app.sliko.owner.adapter.reports.VerticalPitchAdapter;
 import app.sliko.owner.adapter.reports.VerticalTimingAdapter;
 import app.sliko.owner.model.AvailabilityModel;
 import app.sliko.utills.M;
+import app.sliko.web.Api;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
@@ -41,15 +45,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BookingActivity extends AppCompatActivity {
+public class BookingManagementFragment extends Fragment {
     private View view;
 
     @BindView(R.id.timingVerticalRecyclerView)
     RecyclerView timingVerticalRecyclerView;
-    @BindView(R.id.toolbarTitle)
-    TextView toolbarTitle;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.pitchVerticalRecyclerView)
     RecyclerView pitchVerticalRecyclerView;
     @BindView(R.id.originalTimingForStadium)
@@ -73,18 +73,39 @@ public class BookingActivity extends AppCompatActivity {
     int SELECTED_MONTH;
     int SELECTED_YEAR;
 
+    public static BookingManagementFragment newInstance() {
+        BookingManagementFragment fragment = new BookingManagementFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+    private void prepareDataForResponse() {
+        SELECTED_MONTH = calendarView.getMonth();
+        SELECTED_YEAR = calendarView.getYear();
+        SELECTED_DAY = calendarView.getSelectedDay().getDay();
+        Log.e(">>date", "onCreate: " + calendarView.getMonth() + "\n" +
+                calendarView.getYear() + "\n" +
+                calendarView.getSelectedDay().getDay());
+        bookingDate = SELECTED_DAY + "-" + (SELECTED_MONTH < 10 ? "0" + SELECTED_MONTH : SELECTED_MONTH) + "-" + SELECTED_YEAR;
+        Log.e(">>params", "prepareDataForResponse: " + user_id + "\n" + stadium_id + "\n" + bookingDate);
+        fetchBookingData(bookingDate);
+    }
+    private VerticalPitchAdapter verticalPitchAdapter;
+    private ArrayList<VerticalPitchModel> verticalPitchArrayList;
+    private VerticalTimingAdapter verticalTimingAdapter;
+
+    ArrayList<AvailabilityModel> availabilityModels = new ArrayList<>();
+    ArrayList<UserBookingModel> timeListInside;
+    HashMap<Integer, ArrayList<UserBookingModel>> timingData;
+    HeaderTimingAdapter headerTimingAdapter;
+
+    @Nullable
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_booking);
-        ButterKnife.bind(BookingActivity.this);
-        toolbar.setNavigationOnClickListener(view -> finish());
-        toolbar.setNavigationIcon(R.drawable.back_arrow_white);
-        toolbarTitle.setText(getString(R.string.bookPitch));
-        pitch_id = getIntent().getStringExtra("pitch_id");
-        stadium_id = getIntent().getStringExtra("stadium_id");
-        user_id = getIntent().getStringExtra("user_id");
-        dialog = M.showDialog(BookingActivity.this, "", false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_reports, container, false);
+        ButterKnife.bind(BookingManagementFragment.this, view);
+
+        dialog = M.showDialog(getActivity(), "", false);
 
         timingVerticalRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -125,31 +146,11 @@ public class BookingActivity extends AppCompatActivity {
         });
 
         prepareDataForResponse();
-
+        return view;
     }
 
+    private Dialog dialog;
 
-    private void prepareDataForResponse() {
-        SELECTED_MONTH = calendarView.getMonth();
-        SELECTED_YEAR = calendarView.getYear();
-        SELECTED_DAY = calendarView.getSelectedDay().getDay();
-        Log.e(">>date", "onCreate: " + calendarView.getMonth() + "\n" +
-                calendarView.getYear() + "\n" +
-                calendarView.getSelectedDay().getDay());
-        bookingDate = SELECTED_DAY + "-" + (SELECTED_MONTH < 10 ? "0" + SELECTED_MONTH : SELECTED_MONTH) + "-" + SELECTED_YEAR;
-        Log.e(">>params", "prepareDataForResponse: " + user_id + "\n" + stadium_id + "\n" + bookingDate);
-        fetchBookingData(bookingDate);
-    }
-
-    Dialog dialog;
-    private VerticalPitchAdapter verticalPitchAdapter;
-    private ArrayList<VerticalPitchModel> verticalPitchArrayList;
-    private VerticalTimingAdapter verticalTimingAdapter;
-
-    ArrayList<AvailabilityModel> availabilityModels = new ArrayList<>();
-    ArrayList<UserBookingModel> timeListInside;
-    HashMap<Integer, ArrayList<UserBookingModel>> timingData;
-    HeaderTimingAdapter headerTimingAdapter;
 
     private void fetchBookingData(String bookingDate) {
         verticalPitchArrayList = new ArrayList<>();
@@ -200,17 +201,17 @@ public class BookingActivity extends AppCompatActivity {
                                 }
                                 timingData.put(k, timeListInside);
                             }
-                            verticalPitchAdapter = new VerticalPitchAdapter(BookingActivity.this, verticalPitchArrayList);
-                            pitchVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(BookingActivity.this));
+                            verticalPitchAdapter = new VerticalPitchAdapter(getActivity(), verticalPitchArrayList);
+                            pitchVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                             pitchVerticalRecyclerView.setAdapter(verticalPitchAdapter);
                             verticalPitchAdapter.notifyDataSetChanged();
 
-                            headerTimingAdapter = new HeaderTimingAdapter(BookingActivity.this, availabilityModels);
-                            headerRecyclerViewForTimeSlot.setLayoutManager(new LinearLayoutManager(BookingActivity.this, LinearLayoutManager.HORIZONTAL, false));
+                            headerTimingAdapter = new HeaderTimingAdapter(getActivity(), availabilityModels);
+                            headerRecyclerViewForTimeSlot.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                             headerRecyclerViewForTimeSlot.setAdapter(headerTimingAdapter);
                             headerTimingAdapter.notifyDataSetChanged();
-                            verticalTimingAdapter = new VerticalTimingAdapter(BookingActivity.this, timingData);
-                            timingVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(BookingActivity.this));
+                            verticalTimingAdapter = new VerticalTimingAdapter(getActivity(), timingData);
+                            timingVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                             timingVerticalRecyclerView.setAdapter(verticalTimingAdapter);
                             verticalTimingAdapter.notifyDataSetChanged();
                         } else {
@@ -227,7 +228,7 @@ public class BookingActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
-                Toast.makeText(BookingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -237,5 +238,4 @@ public class BookingActivity extends AppCompatActivity {
         text.setText(messs.equalsIgnoreCase("") ? getString(R.string.noBookingAvailable) : messs);
         image.setBackgroundResource(R.drawable.ic_booking);
     }
-
 }

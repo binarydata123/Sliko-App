@@ -179,7 +179,10 @@ public interface ApiInterface {
     @POST("pitchbooking/lists")
     Call<ResponseBody> ep_bookingList(@Field("user_id") String user_id,
                                       @Field("stadium_id") String stadium_id,
-                                      @Field("pitch_id") String pitch_id);
+                                      @Field("pitch_id") String pitch_id,
+                                      @Field("start_date") String start_date,
+                                      @Field("end_date") String end_date
+    );
 
     @FormUrlEncoded
     @POST("pitchbooking/getAllPitchBookedlist")
@@ -187,8 +190,4 @@ public interface ApiInterface {
                                            @Field("stadium_id") String stadium_id,
                                            @Field("booking_date") String booking_date);
 
-    @FormUrlEncoded
-    @POST("resetpassword")
-    Call<ResponseBody> ep_ownerBookingList(@Field("email") String email,
-                                           @Field("new_password") String new_password);
 }

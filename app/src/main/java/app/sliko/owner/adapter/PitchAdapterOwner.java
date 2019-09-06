@@ -69,17 +69,21 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
             @Override
             public void onClick(View view) {
                 ((Activity) context).startActivity(new Intent(context, AddPitchActivity.class)
-                        .putExtra("pitch_id",pitchModelArrayList.get(i).getId())
-                        .putExtra("stadium_id" , pitchModelArrayList.get(i).getStadium_id()));
+                        .putExtra("pitch_id", pitchModelArrayList.get(i).getId())
+                        .putExtra("stadium_id", pitchModelArrayList.get(i).getStadium_id()));
             }
         });
 
-        myViewHolder.viewBookingDetailsButton.setOnClickListener(view -> ((Activity) context).startActivity(new Intent(context, OwnerPitchBookingActivity.class)));
+        myViewHolder.viewBookingDetailsButton.setOnClickListener(view ->
+                ((Activity) context).startActivity(new Intent(context, OwnerPitchBookingActivity.class)
+                        .putExtra("pitch_id", pitchModelArrayList.get(i).getId())
+                        .putExtra("stadium_id", pitchModelArrayList.get(i).getStadium_id()))
+        );
         myViewHolder.viewDetailsButton.setOnClickListener(view ->
                 ((Activity) context)
-                .startActivity(new Intent(context, PitchDetailActivity.class)
-                        .putExtra("pitch_id",pitchModelArrayList.get(i).getId())
-                        .putExtra("stadium_id" , pitchModelArrayList.get(i).getStadium_id())));
+                        .startActivity(new Intent(context, PitchDetailActivity.class)
+                                .putExtra("pitch_id", pitchModelArrayList.get(i).getId())
+                                .putExtra("stadium_id", pitchModelArrayList.get(i).getStadium_id())));
         myViewHolder.btn_remove.setOnClickListener(view -> {
             dialogConfirmation = DialogMethodCaller.openDialogConfirmation(context, R.layout.dialog_confirmation, false);
             dialogConfirmation.getDialog_error().show();

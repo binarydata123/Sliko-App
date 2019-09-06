@@ -150,4 +150,7 @@
     <string name="enablePermission">Enable Permissions</string>
     <string name="pickSlotForBooking">Pick slot for booking</string>
     <string name="pitchAndSlots">Pitch &amp; slots</string>
+    <string name="bookingCreatedSuccessfully">Manual Booking Successful</string>
+    <string name="pleaseSelectStartDate">Please select start dtae</string>
+    <string name="pleaseSelectEndDate">Please select end date</string>
 </resources>

@@ -5,7 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -51,11 +51,12 @@ public class DialogMethodCaller {
         final View viewError = LayoutInflater.from(context).inflate(layoutId, null);
         AlertDialog dialog_error = makeDialog(context, viewError);
         dialog_error.setCancelable(isCancellable);
-        TextView etName = viewError.findViewById(R.id.etName);
-        TextView etPhone = viewError.findViewById(R.id.etPhone);
+        EditText etName = viewError.findViewById(R.id.etName);
+        EditText etEmail = viewError.findViewById(R.id.etEmail);
+        EditText etPhone = viewError.findViewById(R.id.etPhone);
         Button bookButtonLayout = viewError.findViewById(R.id.bookButtonLayout);
         Button cancelButton = viewError.findViewById(R.id.cancelButton);
-        return new BookPitchMauallyDialog(dialog_error, etName, etPhone, bookButtonLayout,cancelButton);
+        return new BookPitchMauallyDialog(dialog_error, etName, etEmail,etPhone, bookButtonLayout,cancelButton);
     }
 
     public static DialogConfirmation openDialogConfirmation(final Context context, int layoutId, boolean isCancellable) {
