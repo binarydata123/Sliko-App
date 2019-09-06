@@ -46,17 +46,25 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
     @Override
     public void onBindViewHolder(@NonNull final O_PitchBookingAdapter.MyViewHolder myViewHolder, final int i) {
         myViewHolder.PB_name.setText(context.getString(R.string.pitchName) + ": " + pitchModelArrayList.get(i).getPitch_name());
-        myViewHolder.PB_cost.setText(context.getString(R.string.price) + ": " + pitchModelArrayList.get(i).getPrice());
+        myViewHolder.PB_cost.setText(context.getString(R.string.paid) + ": " + pitchModelArrayList.get(i).getPrice());
         myViewHolder.PB_userName.setText(pitchModelArrayList.get(i).getFullname());
         myViewHolder.PB_phone.setText(pitchModelArrayList.get(i).getPhone());
-        myViewHolder.PB_date.setText(M.formateDateTimeBoth(pitchModelArrayList.get(i).getCreated_at()));
+        myViewHolder.PB_date.setText(M.returnDateOnly(pitchModelArrayList.get(i).getBooking_date()));
+        myViewHolder.PB_time.setText(" Time: (" + pitchModelArrayList.get(i).getTime() + ") ");
         myViewHolder.PB_pitchReview.setRating(M.actAccordinglyWithJson(pitchModelArrayList.get(i).getPitch_review_avg()));
         Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.pitchImage);
         if (!type.equalsIgnoreCase("owner")) {
             myViewHolder.userDetailsLayout.setVisibility(View.GONE);
         }
+        if (pitchModelArrayList.get(i).getPitch_review_avg().equalsIgnoreCase("null") ||
+                pitchModelArrayList.get(i).getPitch_review_avg().equalsIgnoreCase("")) {
+            myViewHolder.pitchReviewCount.setText(context.getString(R.string.noReviews));
+            myViewHolder.PB_pitchReview.setRating(0);
+        } else {
+            myViewHolder.pitchReviewCount.setText(pitchModelArrayList.get(i).getPitch_review_avg());
+            myViewHolder.PB_pitchReview.setRating(Float.parseFloat(pitchModelArrayList.get(i).getPitch_review_avg()));
+        }
     }
-
 
     @Override
     public int getItemCount() {
@@ -80,6 +88,8 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
         TextView PB_userName;
         @BindView(R.id.PB_pitchReview)
         ColorRatingBar PB_pitchReview;
+        @BindView(R.id.pitchReviewCount)
+        TextView pitchReviewCount;
         @BindView(R.id.userDetailsLayout)
         LinearLayout userDetailsLayout;
 

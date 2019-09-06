@@ -83,8 +83,8 @@ public class ReportsFragment extends Fragment {
         ButterKnife.bind(ReportsFragment.this, view);
         dialog = M.showDialog(getActivity(), "", false);
         setListeners();
-        getAllBookings();
 
+        getAllBookings();
         bookingRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -106,6 +106,7 @@ public class ReportsFragment extends Fragment {
 
     private void getAllBookings() {
         dialog.show();
+        Log.i(">>stadiumId", "getAllBookings: " + Prefs.getStadiumId(getActivity()) );
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_bookingList(M.fetchUserTrivialInfo(getActivity(), "id"),
                 Prefs.getStadiumId(getActivity()), "", start_date, end_date);
@@ -120,6 +121,7 @@ public class ReportsFragment extends Fragment {
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
+                        Log.e(">>reports", "onResponse: " + jsonObject.toString());
                         if (status.equalsIgnoreCase("true")) {
                             JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("data");
                             if (jsonArray.length() > 0) {
@@ -137,21 +139,19 @@ public class ReportsFragment extends Fragment {
                                     bookingModel.setId(dataObject.getString("id"));
                                     bookingModel.setStadium_id(dataObject.getString("stadium_id"));
                                     bookingModel.setPitch_id(dataObject.getString("pitch_id"));
-                                    bookingModel.setStart_date(dataObject.getString("start_date"));
-                                    bookingModel.setEnd_date(dataObject.getString("end_date"));
+                                    bookingModel.setBooking_date(dataObject.getString("booking_date"));
                                     bookingModel.setTime(dataObject.getString("time"));
                                     bookingModel.setUser_id(dataObject.getString("user_id"));
+                                    bookingModelArrayList.add(bookingModel);
                                 }
                                 setAdapter();
-                                o_pitchBookingAdapter.notifyDataSetChanged();
                                 noDataLayout.setVisibility(View.GONE);
                                 image.setBackgroundResource(R.drawable.ic_booking);
                             } else {
-                                noDataLayout.setVisibility(View.VISIBLE);
+                                handleNoData();
                             }
                         } else {
-                            noDataLayout.setVisibility(View.GONE);
-                            image.setBackgroundResource(R.drawable.ic_booking);
+                            handleNoData();
                         }
                     } else {
                         Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
@@ -169,6 +169,11 @@ public class ReportsFragment extends Fragment {
         });
 
 
+    }
+
+    private void handleNoData() {
+        noDataLayout.setVisibility(View.VISIBLE);
+        image.setBackgroundResource(R.drawable.ic_booking);
     }
 
     private String start_date = "", end_date = "";
@@ -291,6 +296,6 @@ public class ReportsFragment extends Fragment {
         bookingRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         bookingRecyclerView.setAdapter(o_pitchBookingAdapter);
         bookingRecyclerView.setNestedScrollingEnabled(false);
-
+        o_pitchBookingAdapter.notifyDataSetChanged();
     }
 }

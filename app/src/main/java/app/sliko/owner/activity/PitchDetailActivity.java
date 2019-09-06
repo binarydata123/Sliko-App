@@ -87,6 +87,7 @@ public class PitchDetailActivity extends AppCompatActivity {
     String pitch_id = "";
     String stadium_id = "";
     String user_id = "";
+    String type = "";
     StadiumImagesAdapter stadiumImagesAdapter;
     ArrayList<String> pitchImagesArrayList = new ArrayList<>();
     ArrayList<ReviewModel> reviewModelArrayList = new ArrayList<>();
@@ -98,18 +99,26 @@ public class PitchDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         weakReference = new WeakReference<>(PitchDetailActivity.this);
 
+
         totalBookingLayout.setVisibility(View.GONE);
         dialog = M.showDialog(this, "", false);
         pitch_id = getIntent().getStringExtra("pitch_id");
         stadium_id = getIntent().getStringExtra("stadium_id");
         user_id = getIntent().getStringExtra("user_id");
+        type = getIntent().getStringExtra("type");
         Log.e(">>pitchDetailId", "onCreate: " + pitch_id + "\n" + stadium_id);
         backButton.setOnClickListener(view -> finish());
         getSinglePitchDetail();
-        bookButton.setOnClickListener(view -> startActivity(new Intent(PitchDetailActivity.this, BookingActivity.class)
-                .putExtra("pitch_id", pitch_id)
-                .putExtra("user_id", user_id)
-                .putExtra("stadium_id", stadium_id)));
+        if(type.equalsIgnoreCase("user")){
+            bookButton.setVisibility(View.VISIBLE);
+            bookButton.setOnClickListener(view -> startActivity(new Intent(PitchDetailActivity.this, BookingActivity.class)
+                    .putExtra("pitch_id", pitch_id)
+                    .putExtra("user_id", user_id)
+                    .putExtra("stadium_id", stadium_id)));
+        }else{
+            bookButton.setVisibility(View.GONE);
+        }
+
         new LoadReviews(weakReference).execute();
     }
 

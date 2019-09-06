@@ -82,6 +82,7 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
         myViewHolder.viewDetailsButton.setOnClickListener(view ->
                 ((Activity) context)
                         .startActivity(new Intent(context, PitchDetailActivity.class)
+                                .putExtra("type","owner")
                                 .putExtra("pitch_id", pitchModelArrayList.get(i).getId())
                                 .putExtra("stadium_id", pitchModelArrayList.get(i).getStadium_id())));
         myViewHolder.btn_remove.setOnClickListener(view -> {

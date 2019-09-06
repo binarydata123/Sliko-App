@@ -39,7 +39,7 @@ public class VerticalTimingAdapter extends RecyclerView.Adapter<VerticalTimingAd
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
         if(timingArrayList.get(position).size()>0){
             myViewHolder.noBookingLayout.setVisibility(View.GONE);
-            horizontalTimingForVerticallyAdapter = new HorizontalTimingForVerticallyAdapter(context, timingArrayList.get(position));
+            horizontalTimingForVerticallyAdapter = new HorizontalTimingForVerticallyAdapter(context, timingArrayList.get(position) , position);
             myViewHolder.insideTimingRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             myViewHolder.insideTimingRecyclerView.setAdapter(horizontalTimingForVerticallyAdapter);
             horizontalTimingForVerticallyAdapter.notifyDataSetChanged();

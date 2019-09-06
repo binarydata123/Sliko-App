@@ -13,11 +13,13 @@
         android:paddingLeft="16dp"
         android:paddingTop="8dp"
         android:paddingRight="16dp"
+        android:textSize="16sp"
         android:paddingBottom="8dp"
-        android:text="@string/bookStadium"
+        android:text="@string/bookPitch"
         android:textColor="@color/white" />
 
     <LinearLayout
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -29,20 +31,86 @@
             android:orientation="vertical">
 
             <TextView
+                android:layout_width="wrap_content"
+                android:text="Stadium Info"
+                android:textColor="@color/black_color"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/stadiumName"
                 android:textFontWeight="1" />
 
             <TextView
+                android:id="@+id/stadiumAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/stadiumLocation"
+                android:text="@string/Address"
                 android:textFontWeight="1" />
+
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:text="Pitch Info"
+                android:textColor="@color/lightGreen"
+                android:textSize="16sp"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/pitchName"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pitchName"/>
+
+            <TextView
+                android:id="@+id/pitchCost"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cost" />
+            <TextView
+                android:id="@+id/pitchTimeSlot"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pitch Time slot" />
+            <TextView
+                android:id="@+id/pitchbookingDate"
+                android:textColor="@color/black"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Booking Date" />
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:gravity="end"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:text="Amount to be paid"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:id="@+id/amountTobePaid"
+                    android:text="200"
+                    android:textColor="@color/lightGreen"
+                    android:textSize="14sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp">
@@ -124,6 +192,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp">
@@ -152,28 +221,28 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginTop="25dp"
+            android:gravity="end"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end">
+            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/closeButton"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:background="@drawable/edit_bg_grey"
                 android:text="@string/close"
                 android:textColor="@color/black" />
 
             <TextView
-                android:layout_width="15dp"
-                android:layout_height="wrap_content" />
-
+                android:layout_width="10dp"
+                android:layout_height="match_parent"/>
             <Button
                 android:id="@+id/payNowButton"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:background="@drawable/edit_bg_green"
                 android:text="@string/payNow"
                 android:textColor="@color/white" />

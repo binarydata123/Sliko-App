@@ -8,13 +8,14 @@
     <string name="stadiumNameBigText">Giá sân vận động vGiá sân vận động </string>
     <string name="stadiumLocation">Lords Pitch cho đầu tiên</string>
     <string name="bookStadium">Sân vận động sách</string>
-    <string name="payNow">Thanh toán ngay</string>
-    <string name="close">Gần</string>
+    <string name="payNow">Proceed to pay</string>
+    <string name="close">Close</string>
     <string name="reviews">Pitch Reviews</string>
     <string name="stadiumInfo">Stadium Info</string>
     <string name="pitches">Pitches</string>
     <string name="thankYouMessage">Cảm ơn bạn đã chọn Ứng dụng Sliko, Tiếp tục đặt phòng</string>
     <string name="price">Price: ₫&#160;</string>
+    <string name="paid">Paid: ₫&#160;</string>
     <string name="myBookings">My Bookings</string>
     <string name="notifications">Thông báo</string>
     <string name="editProfile">Edit Profile</string>
@@ -153,4 +154,6 @@
     <string name="bookingCreatedSuccessfully">Manual Booking Successful</string>
     <string name="pleaseSelectStartDate">Please select start dtae</string>
     <string name="pleaseSelectEndDate">Please select end date</string>
+    <string name="bookNow">Book Now</string>
+    <string name="pleaseSelectSomeOtherPitch">Please select some other pitch</string>
 </resources>

@@ -4,15 +4,20 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
 import app.sliko.R;
 import app.sliko.booking.model.UserBookingModel;
+import app.sliko.events.PayingForPitchEvent;
 import app.sliko.web.Api;
 
 
@@ -20,10 +25,12 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
 
     private Context context;
     private ArrayList<UserBookingModel> verticalPitchArrayList;
+    int withThisGetPitchPosition;
 
-    public HorizontalTimingForVerticallyAdapter(Context context, ArrayList<UserBookingModel> verticalPitchArrayList) {
+    public HorizontalTimingForVerticallyAdapter(Context context, ArrayList<UserBookingModel> verticalPitchArrayList, int position) {
         this.context = context;
         this.verticalPitchArrayList = verticalPitchArrayList;
+        this.withThisGetPitchPosition = withThisGetPitchPosition;
     }
 
     @NonNull
@@ -34,6 +41,8 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
     }
 
 
+    /**getId() will
+     return null**/
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
         myViewHolder.timingView.setText(verticalPitchArrayList.get(position).getBooked_status());
@@ -59,6 +68,15 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
             myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
             myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.bit_dark_grey));
         }
+
+        myViewHolder.bookPitchAction.setOnClickListener(view -> {
+            if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase("") ||
+                    verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACCANT)) {
+                EventBus.getDefault().postSticky(new PayingForPitchEvent(verticalPitchArrayList.get(position).getTime()  , withThisGetPitchPosition));
+            }else{
+                Toast.makeText(context, context.getString(R.string.pleaseSelectSomeOtherPitch), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -69,10 +87,12 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView timingView;
+        LinearLayout bookPitchAction;
 
         private MyViewHolder(@NonNull View itemView) {
             super(itemView);
             timingView = itemView.findViewById(R.id.timingView);
+            bookPitchAction = itemView.findViewById(R.id.bookPitchAction);
         }
     }
 }

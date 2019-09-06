@@ -140,7 +140,7 @@
             android:background="@drawable/edit_bg_green"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:text="Book Pitch"
+            android:text="@string/bookNow"
             android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>

@@ -190,4 +190,13 @@ public interface ApiInterface {
                                            @Field("stadium_id") String stadium_id,
                                            @Field("booking_date") String booking_date);
 
+    @FormUrlEncoded
+    @POST("pitchbooking/create")
+    Call<ResponseBody> ep_createBooking(@Field("user_id") String user_id,
+                                           @Field("cost") String cost,
+                                           @Field("booking_date") String booking_date,
+                                           @Field("time") String time,
+                                           @Field("stadium_id") String stadium_id,
+                                           @Field("pitch_id") String pitch_ida
+    );
 }

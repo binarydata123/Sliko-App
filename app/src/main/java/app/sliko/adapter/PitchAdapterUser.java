@@ -57,14 +57,11 @@ public class PitchAdapterUser extends RecyclerView.Adapter<PitchAdapterUser.MyVi
                             .putExtra("pitch_id", notificationModelArrayList.get(position).getId())
                             .putExtra("user_id", notificationModelArrayList.get(position).getUser_id())
                             .putExtra("stadium_id", notificationModelArrayList.get(position).getStadium_id()));
-
-//            MyDialogFragment bottomSheetFragment = new MyDialogFragment("pitchBookingDialogFragment");
-//            bottomSheetFragment.show(((AppCompatActivity) context).getSupportFragmentManager(), bottomSheetFragment.getTag());
-
         });
         myViewHolder.tap.setOnClickListener(view -> {
             ((Activity) context)
                     .startActivity(new Intent(context, PitchDetailActivity.class)
+                            .putExtra("type","user")
                             .putExtra("pitch_id", notificationModelArrayList.get(position).getId())
                             .putExtra("user_id", notificationModelArrayList.get(position).getUser_id())
                             .putExtra("stadium_id", notificationModelArrayList.get(position).getStadium_id()));

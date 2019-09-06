@@ -3,6 +3,7 @@ package app.sliko.owner.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -35,9 +36,9 @@ import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.owner.events.StadiumExistEventOrNot;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.owner.fragment.AllReviewsFragment;
-import app.sliko.owner.fragment.ReportsFragment;
 import app.sliko.owner.fragment.BookingManagementFragment;
 import app.sliko.owner.fragment.ProfileFragment;
+import app.sliko.owner.fragment.ReportsFragment;
 import app.sliko.owner.fragment.StadiumDetailsFragment;
 import app.sliko.utills.M;
 import app.sliko.utills.Prefs;
@@ -198,44 +199,58 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
         });
     }
 
+    Handler handler;
+    Runnable runnable;
+
     private void logoutApi() {
         dialog.show();
-        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_logout(M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id"));
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                dialog.cancel();
-                try {
-                    if (response.isSuccessful()) {
-                        String sResponse = response.body().string();
-                        JSONObject jsonObject = new JSONObject(sResponse);
-                        String status = jsonObject.getString("status");
-                        String message = jsonObject.getString("message");
-                        if (status.equalsIgnoreCase("true")) {
-                            Prefs.clearUserData(StadiumOwnerHomeActivity.this);
-                            Toast.makeText(StadiumOwnerHomeActivity.this, message, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(StadiumOwnerHomeActivity.this, LoginActivity.class));
-                            finish();
-                        } else {
-                            Toast.makeText(StadiumOwnerHomeActivity.this, message, Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(StadiumOwnerHomeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    Log.i(">>error", "onResponse: " + e.getMessage());
-                    Toast.makeText(StadiumOwnerHomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
-                dialog.cancel();
-                Toast.makeText(StadiumOwnerHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        handler = new Handler();
+        runnable = () -> {
+            dialog.cancel();
+            Prefs.clearUserData(StadiumOwnerHomeActivity.this);
+            startActivity(new Intent(StadiumOwnerHomeActivity.this, LoginActivity.class));
+            finish();
+        };
+        handler.postDelayed(runnable, 500);
     }
+//    private void logoutApi() {
+//        dialog.show();
+//        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+//        Call<ResponseBody> call = service.ep_logout(M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id"));
+//        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+//                dialog.cancel();
+//                try {
+//                    if (response.isSuccessful()) {
+//                        String sResponse = response.body().string();
+//                        JSONObject jsonObject = new JSONObject(sResponse);
+//                        String status = jsonObject.getString("status");
+//                        String message = jsonObject.getString("message");
+//                        if (status.equalsIgnoreCase("true")) {
+//                            Prefs.clearUserData(StadiumOwnerHomeActivity.this);
+//                            Toast.makeText(StadiumOwnerHomeActivity.this, message, Toast.LENGTH_SHORT).show();
+//                            startActivity(new Intent(StadiumOwnerHomeActivity.this, LoginActivity.class));
+//                            finish();
+//                        } else {
+//                            Toast.makeText(StadiumOwnerHomeActivity.this, message, Toast.LENGTH_SHORT).show();
+//                        }
+//                    } else {
+//                        Toast.makeText(StadiumOwnerHomeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+//                    }
+//                } catch (Exception e) {
+//                    Log.i(">>error", "onResponse: " + e.getMessage());
+//                    Toast.makeText(StadiumOwnerHomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+//                dialog.cancel();
+//                Toast.makeText(StadiumOwnerHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
     DialogConfirmation dialogConfirmation;
 
@@ -260,6 +275,7 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
+                        Log.e(">>stadium_data", "onResponse: " + jsonObject.toString());
                         if (status.equalsIgnoreCase("true")) {
                             JSONObject data = jsonObject.getJSONObject("data");
                             stadiumId = data.getString("id");

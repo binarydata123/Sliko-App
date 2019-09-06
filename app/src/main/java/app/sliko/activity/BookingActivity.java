@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -27,6 +29,7 @@ import java.util.HashMap;
 import app.sliko.R;
 import app.sliko.booking.VerticalPitchModel;
 import app.sliko.booking.model.UserBookingModel;
+import app.sliko.events.PayingForPitchEvent;
 import app.sliko.owner.adapter.reports.HeaderTimingAdapter;
 import app.sliko.owner.adapter.reports.VerticalPitchAdapter;
 import app.sliko.owner.adapter.reports.VerticalTimingAdapter;
@@ -209,6 +212,7 @@ public class BookingActivity extends AppCompatActivity {
                             headerRecyclerViewForTimeSlot.setLayoutManager(new LinearLayoutManager(BookingActivity.this, LinearLayoutManager.HORIZONTAL, false));
                             headerRecyclerViewForTimeSlot.setAdapter(headerTimingAdapter);
                             headerTimingAdapter.notifyDataSetChanged();
+
                             verticalTimingAdapter = new VerticalTimingAdapter(BookingActivity.this, timingData);
                             timingVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(BookingActivity.this));
                             timingVerticalRecyclerView.setAdapter(verticalTimingAdapter);
@@ -236,6 +240,11 @@ public class BookingActivity extends AppCompatActivity {
         noDataLayout.setVisibility(View.VISIBLE);
         text.setText(messs.equalsIgnoreCase("") ? getString(R.string.noBookingAvailable) : messs);
         image.setBackgroundResource(R.drawable.ic_booking);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(PayingForPitchEvent payingForPitchEvent){
+
     }
 
 }

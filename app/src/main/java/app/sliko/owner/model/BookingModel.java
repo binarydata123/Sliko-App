@@ -22,6 +22,15 @@ public class BookingModel {
     private String isdeleted= "";
     private String created_at= "";
     private String updated_at= "";
+    private String booking_date= "";
+
+    public String getBooking_date() {
+        return booking_date;
+    }
+
+    public void setBooking_date(String booking_date) {
+        this.booking_date = booking_date;
+    }
 
     public String getFullname() {
         return fullname;

@@ -170,17 +170,16 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
                                     bookingModel.setCost(dataObject.getString("cost"));
                                     bookingModel.setPitch_review_avg(dataObject.getString("pitch_review_avg"));
                                     bookingModel.setId(dataObject.getString("id"));
+                                    bookingModel.setBooking_date(dataObject.getString("booking_date"));
                                     bookingModel.setStadium_id(dataObject.getString("stadium_id"));
                                     bookingModel.setPitch_id(dataObject.getString("pitch_id"));
-                                    bookingModel.setStart_date(dataObject.getString("start_date"));
-                                    bookingModel.setEnd_date(dataObject.getString("end_date"));
                                     bookingModel.setTime(dataObject.getString("time"));
                                     bookingModel.setUser_id(dataObject.getString("user_id"));
+                                    bookingModelArrayList.add(bookingModel);
                                 }
                                 setAdapter();
                                 o_pitchBookingAdapter.notifyDataSetChanged();
                                 noDataLayout.setVisibility(View.GONE);
-                                text.setText(getString(R.string.noBookingAvailableUSer));
                             } else {
                                 noDataLayout.setVisibility(View.VISIBLE);
                                 image.setBackgroundResource(R.drawable.ic_booking);
@@ -205,8 +204,6 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
                 Toast.makeText(OwnerPitchBookingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
 

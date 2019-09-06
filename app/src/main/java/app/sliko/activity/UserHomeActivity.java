@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -212,44 +213,58 @@ public class UserHomeActivity extends AppCompatActivity implements LocationListe
         });
     }
 
+    Handler handler;
+    Runnable runnable;
+
     private void logoutApi() {
         dialog.show();
-        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_logout(M.fetchUserTrivialInfo(UserHomeActivity.this, "id"));
-        call.enqueue(new retrofit2.Callback<ResponseBody>() {
-            @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                dialog.cancel();
-                try {
-                    if (response.isSuccessful()) {
-                        String sResponse = response.body().string();
-                        JSONObject jsonObject = new JSONObject(sResponse);
-                        String status = jsonObject.getString("status");
-                        String message = jsonObject.getString("message");
-                        if (status.equalsIgnoreCase("true")) {
-                            Prefs.clearUserData(UserHomeActivity.this);
-                            Toast.makeText(UserHomeActivity.this, message, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(UserHomeActivity.this, LoginActivity.class));
-                            finish();
-                        } else {
-                            Toast.makeText(UserHomeActivity.this, message, Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(UserHomeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    Log.i(">>error", "onResponse: " + e.getMessage());
-                    Toast.makeText(UserHomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
-                dialog.cancel();
-                Toast.makeText(UserHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        handler = new Handler();
+        runnable = () -> {
+            dialog.cancel();
+            Prefs.clearUserData(UserHomeActivity.this);
+            startActivity(new Intent(UserHomeActivity.this, LoginActivity.class));
+            finish();
+        };
+        handler.postDelayed(runnable, 500);
     }
+//    private void logoutApi() {
+//        dialog.show();
+//        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+//        Call<ResponseBody> call = service.ep_logout(M.fetchUserTrivialInfo(UserHomeActivity.this, "id"));
+//        call.enqueue(new retrofit2.Callback<ResponseBody>() {
+//            @Override
+//            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+//                dialog.cancel();
+//                try {
+//                    if (response.isSuccessful()) {
+//                        String sResponse = response.body().string();
+//                        JSONObject jsonObject = new JSONObject(sResponse);
+//                        String status = jsonObject.getString("status");
+//                        String message = jsonObject.getString("message");
+//                        if (status.equalsIgnoreCase("true")) {
+//                            Prefs.clearUserData(UserHomeActivity.this);
+//                            Toast.makeText(UserHomeActivity.this, message, Toast.LENGTH_SHORT).show();
+//                            startActivity(new Intent(UserHomeActivity.this, LoginActivity.class));
+//                            finish();
+//                        } else {
+//                            Toast.makeText(UserHomeActivity.this, message, Toast.LENGTH_SHORT).show();
+//                        }
+//                    } else {
+//                        Toast.makeText(UserHomeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+//                    }
+//                } catch (Exception e) {
+//                    Log.i(">>error", "onResponse: " + e.getMessage());
+//                    Toast.makeText(UserHomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+//                dialog.cancel();
+//                Toast.makeText(UserHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
 
 
     private void inflateDialogForBubbleInfo(int index) {

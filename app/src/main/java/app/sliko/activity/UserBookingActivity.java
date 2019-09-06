@@ -137,15 +137,14 @@ public class UserBookingActivity extends AppCompatActivity {
                                     bookingModel.setId(dataObject.getString("id"));
                                     bookingModel.setStadium_id(dataObject.getString("stadium_id"));
                                     bookingModel.setPitch_id(dataObject.getString("pitch_id"));
-                                    bookingModel.setStart_date(dataObject.getString("start_date"));
-                                    bookingModel.setEnd_date(dataObject.getString("end_date"));
-                                    bookingModel.setTime(dataObject.getString("time"));
+                                    bookingModel.setBooking_date(dataObject.getString("booking_date"));
+                                   bookingModel.setTime(dataObject.getString("time"));
                                     bookingModel.setUser_id(dataObject.getString("user_id"));
+                                    bookingModelArrayList.add(bookingModel);
                                 }
                                 setAdapter();
                                 o_pitchBookingAdapter.notifyDataSetChanged();
                                 noDataLayout.setVisibility(View.GONE);
-                                text.setText(getString(R.string.noBookingAvailableUSer));
                             } else {
                                 noDataLayout.setVisibility(View.VISIBLE);
                                 image.setBackgroundResource(R.drawable.ic_booking);
