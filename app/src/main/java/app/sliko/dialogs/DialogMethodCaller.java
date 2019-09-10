@@ -40,11 +40,12 @@ public class DialogMethodCaller {
         final View viewError = LayoutInflater.from(context).inflate(layoutId, null);
         AlertDialog dialog_error = makeDialog(context, viewError);
         dialog_error.setCancelable(isCancellable);
-        TextView etUserEmail = viewError.findViewById(R.id.etUserEmail);
-        TextView etPassword = viewError.findViewById(R.id.etPassword);
+        EditText etEmail = viewError.findViewById(R.id.etEmail);
+        EditText etOldPassword = viewError.findViewById(R.id.etOldPassword);
+        EditText etNewPassword = viewError.findViewById(R.id.etNewPassword);
         Button cancelButton = viewError.findViewById(R.id.cancelButton);
         Button sendButton = viewError.findViewById(R.id.sendButton);
-        return new ChangePasswordDialog(dialog_error, etUserEmail, etPassword, cancelButton, sendButton);
+        return new ChangePasswordDialog(dialog_error, etEmail, etOldPassword, etNewPassword,cancelButton, sendButton);
     }
 
     public static BookPitchMauallyDialog openBookPitchMauallyDialog(final Context context, int layoutId, boolean isCancellable) {

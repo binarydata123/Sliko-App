@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClientInstance {
 
     private static Retrofit retrofit;
-    // private static final String BASE_URL = "http://www.iebasketball.com/sliko_sk/api/";
+    //private static final String BASE_URL = "http://www.iebasketball.com/sliko_sk/api/";
     private static final String BASE_URL = "http://www.slikosoccer.com/api/";
 
     public static Retrofit getRetrofitInstance() {

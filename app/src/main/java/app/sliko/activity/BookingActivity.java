@@ -18,18 +18,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import app.sliko.R;
 import app.sliko.booking.VerticalPitchModel;
 import app.sliko.booking.model.UserBookingModel;
 import app.sliko.events.PayingForPitchEvent;
+import app.sliko.fragment.MyDialogFragment;
 import app.sliko.owner.adapter.reports.HeaderTimingAdapter;
 import app.sliko.owner.adapter.reports.VerticalPitchAdapter;
 import app.sliko.owner.adapter.reports.VerticalTimingAdapter;
@@ -77,10 +81,19 @@ public class BookingActivity extends AppCompatActivity {
     int SELECTED_YEAR;
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_booking);
         ButterKnife.bind(BookingActivity.this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         toolbar.setNavigationOnClickListener(view -> finish());
         toolbar.setNavigationIcon(R.drawable.back_arrow_white);
         toolbarTitle.setText(getString(R.string.bookPitch));
@@ -89,11 +102,11 @@ public class BookingActivity extends AppCompatActivity {
         user_id = getIntent().getStringExtra("user_id");
         dialog = M.showDialog(BookingActivity.this, "", false);
 
-        timingVerticalRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        headerRecyclerViewForTimeSlot.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                headerRecyclerViewForTimeSlot.scrollBy(dx, dy);
+                timingVerticalRecyclerView.scrollBy(dx, dy);
             }
         });
 
@@ -154,6 +167,10 @@ public class BookingActivity extends AppCompatActivity {
     HashMap<Integer, ArrayList<UserBookingModel>> timingData;
     HeaderTimingAdapter headerTimingAdapter;
 
+    String stadiumName;
+    String stadium_description;
+    String stadium_address;
+
     private void fetchBookingData(String bookingDate) {
         verticalPitchArrayList = new ArrayList<>();
 
@@ -173,6 +190,9 @@ public class BookingActivity extends AppCompatActivity {
                         Log.e(">>bookingResponse", "onResponse: " + jsonObject.toString());
                         if (status.equalsIgnoreCase("true")) {
                             JSONObject data = jsonObject.getJSONObject("data");
+                            stadiumName = data.getString("stadium_name");
+                            stadium_description = data.getString("stadium_description");
+                            stadium_address = data.getString("stadium_address");
                             String stadiumSlot = data.getString("stadium_slot");
                             JSONArray stadiumSlotArray = new JSONArray(stadiumSlot);
                             for (int l = 0; l < stadiumSlotArray.length(); l++) {
@@ -189,6 +209,7 @@ public class BookingActivity extends AppCompatActivity {
                                 VerticalPitchModel verticalPitchModel = new VerticalPitchModel();
                                 verticalPitchModel.setPitchName(pitchObject.getString("pitch_name"));
                                 verticalPitchModel.setPitchId(pitchObject.getString("id"));
+                                verticalPitchModel.setPitchPrice(pitchObject.getString("price"));
                                 verticalPitchModel.setStadiumId(pitchObject.getString("stadium_id"));
                                 verticalPitchModel.setUserId(pitchObject.getString("user_id"));
                                 verticalPitchArrayList.add(verticalPitchModel);
@@ -196,7 +217,7 @@ public class BookingActivity extends AppCompatActivity {
                                 for (int m = 0; m < bookedDataArray.length(); m++) {
                                     JSONObject object = bookedDataArray.getJSONObject(m);
                                     UserBookingModel userBookingModel = new UserBookingModel();
-                                    userBookingModel.setId("");
+                                    userBookingModel.setShow_slot(object.getString("show_slot"));
                                     userBookingModel.setBooked_status(object.getString("booked_status"));
                                     userBookingModel.setTime(object.getString("time"));
                                     timeListInside.add(userBookingModel);
@@ -213,7 +234,7 @@ public class BookingActivity extends AppCompatActivity {
                             headerRecyclerViewForTimeSlot.setAdapter(headerTimingAdapter);
                             headerTimingAdapter.notifyDataSetChanged();
 
-                            verticalTimingAdapter = new VerticalTimingAdapter(BookingActivity.this, timingData);
+                            verticalTimingAdapter = new VerticalTimingAdapter(BookingActivity.this, timingData, "userView");
                             timingVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(BookingActivity.this));
                             timingVerticalRecyclerView.setAdapter(verticalTimingAdapter);
                             verticalTimingAdapter.notifyDataSetChanged();
@@ -242,9 +263,52 @@ public class BookingActivity extends AppCompatActivity {
         image.setBackgroundResource(R.drawable.ic_booking);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void onEvent(PayingForPitchEvent payingForPitchEvent){
+    SimpleDateFormat df, sdf;
+    Date getSelectedDate, getCurrentDate;
+    String cost, time, pitchIdReceivedForBooking, stadiumIdReceivedForBooking, userIdToBeSent, pitchName;
 
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(PayingForPitchEvent payingForPitchEvent) {
+        if (payingForPitchEvent != null) {
+            if (payingForPitchEvent.isStatus()) {
+//                try {
+//                    sdf = new SimpleDateFormat("dd-MM-yyyy");
+//                    getSelectedDate = sdf.parse(bookingDate);
+//                    Date c = Calendar.getInstance().getTime();
+//                    df = new SimpleDateFormat("dd-MM-yyyy");
+//                    String formattedDate = df.format(c);
+//                    getCurrentDate = sdf.parse(formattedDate);
+//                    assert getCurrentDate != null;
+//                    if (!(getCurrentDate.after(getSelectedDate))) {
+                time = payingForPitchEvent.getTime();
+                cost = verticalPitchArrayList.get(payingForPitchEvent.getWithThisGetPitchPosition()).getPitchPrice();
+                pitchIdReceivedForBooking = verticalPitchArrayList.get(payingForPitchEvent.getWithThisGetPitchPosition()).getPitchId();
+                stadiumIdReceivedForBooking = verticalPitchArrayList.get(payingForPitchEvent.getWithThisGetPitchPosition()).getStadiumId();
+                pitchName = verticalPitchArrayList.get(payingForPitchEvent.getWithThisGetPitchPosition()).getPitchName();
+                userIdToBeSent = M.fetchUserTrivialInfo(BookingActivity.this, "id");
+                Log.e(">>bookingDetails", "onEvent: " + time + "\n" +
+                        cost + "\n" + pitchIdReceivedForBooking + "\n" + stadiumIdReceivedForBooking + "\n" + userIdToBeSent);
+                HashMap<String, String> deleverables = new HashMap<>();
+                deleverables.put("time", time);
+                deleverables.put("cost", cost);
+                deleverables.put("pitchIdReceivedForBooking", pitchIdReceivedForBooking);
+                deleverables.put("stadiumIdReceivedForBooking", stadiumIdReceivedForBooking);
+                deleverables.put("userIdToBeSent", userIdToBeSent);
+                deleverables.put("pitchName", pitchName);
+                deleverables.put("stadiumName", stadiumName);
+                deleverables.put("stadium_description", stadium_description);
+                deleverables.put("stadium_address", stadium_address);
+                deleverables.put("bookingDate", bookingDate);
+                MyDialogFragment bottomSheetFragment = new MyDialogFragment(deleverables);
+                bottomSheetFragment.show(getSupportFragmentManager(), "pitchBookingDialogFragment");
+            } else {
+                Toast.makeText(this, getString(R.string.pleaseSelectDifferentDate), Toast.LENGTH_SHORT).show();
+            }
+//                } catch (Exception e) {
+//                    Log.e(">>Exception", "onEvent: " + e.getMessage());
+//                }
+        }
+// }
     }
 
 }

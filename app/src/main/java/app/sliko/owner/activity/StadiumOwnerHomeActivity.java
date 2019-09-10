@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import app.sliko.EditProfileActivity;
 import app.sliko.R;
 import app.sliko.activity.LoginActivity;
+import app.sliko.activity.SettingActivity;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.owner.events.StadiumExistEventOrNot;
@@ -81,7 +82,8 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
     @BindView(R.id.editProfileLayout)
     LinearLayout editProfileLayout;
     @BindView(R.id.stadiumRelatedLayout)
-    LinearLayout stadiumRelatedLayout;
+    LinearLayout stadiumRelatedLayout;    @BindView(R.id.settingLayout)
+    LinearLayout settingLayout;
     Dialog dialog;
 
     @Override
@@ -121,6 +123,7 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
                 temp += slot;
             }
         }
+
         setUpLayout();
         if (!M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id").equalsIgnoreCase("")) {
             fetchStadiumInfo();
@@ -178,6 +181,7 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
             }
             return false;
         });
+
         editStadiumLayout.setOnClickListener(view ->
                 startActivity(new Intent(StadiumOwnerHomeActivity.this, AddStadiumActivity.class)
                         .putExtra("stadiumType", "edit")
@@ -197,6 +201,8 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
                 logoutApi();
             });
         });
+
+        settingLayout.setOnClickListener(view -> startActivity(new Intent(StadiumOwnerHomeActivity.this, SettingActivity.class)));
     }
 
     Handler handler;

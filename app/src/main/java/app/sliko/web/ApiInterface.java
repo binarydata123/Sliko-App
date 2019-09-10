@@ -78,7 +78,9 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("resetpassword")
-    Call<ResponseBody> ep_resetPassword(@Field("email") String email,
+    Call<ResponseBody> ep_resetPassword(@Field("user_id") String user_id,
+            @Field("email") String email,
+                                        @Field("old_password") String old_password,
                                         @Field("new_password") String new_password);
 
     @FormUrlEncoded
@@ -151,7 +153,6 @@ public interface ApiInterface {
             @Part("footedness") RequestBody footedness
     );
 
-
     @Multipart
     @POST("pitch/create")
     Call<ResponseBody> createPitch(
@@ -174,7 +175,6 @@ public interface ApiInterface {
             @Part("price") RequestBody price
     );
 
-
     @FormUrlEncoded
     @POST("pitchbooking/lists")
     Call<ResponseBody> ep_bookingList(@Field("user_id") String user_id,
@@ -193,10 +193,10 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("pitchbooking/create")
     Call<ResponseBody> ep_createBooking(@Field("user_id") String user_id,
-                                           @Field("cost") String cost,
-                                           @Field("booking_date") String booking_date,
-                                           @Field("time") String time,
-                                           @Field("stadium_id") String stadium_id,
-                                           @Field("pitch_id") String pitch_ida
+                                        @Field("cost") String cost,
+                                        @Field("booking_date") String booking_date,
+                                        @Field("time") String time,
+                                        @Field("stadium_id") String stadium_id,
+                                        @Field("pitch_id") String pitch_ida
     );
 }

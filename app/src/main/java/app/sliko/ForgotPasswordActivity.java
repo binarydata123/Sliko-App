@@ -99,7 +99,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private void changePasswordRequest() {
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_resetPassword(etUserEmail.getText().toString(), "");
+        Call<ResponseBody> call = service.ep_forgetpassword(etUserEmail.getText().toString());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

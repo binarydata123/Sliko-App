@@ -49,41 +49,34 @@ public class Prefs {
         SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
         return preferences.getString(lat, "");
     }
-
     public static void saveLng(String value, Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(lng, value);
         editor.apply();
     }
-
     public static String getLng(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
         return preferences.getString(lng, "");
     }
-
     public static void saveStadiumId(String value, Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(stadiumID, value);
         editor.apply();
     }
-
     public static String getStadiumId(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
         return preferences.getString(stadiumID, "");
     }
-
     public static void savePlayerPositionData(String value, Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(playerPosition, value);
         editor.apply();
     }
-
     public static String getPlayerPositionData(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
         return preferences.getString(playerPosition, "");
     }
-
 }

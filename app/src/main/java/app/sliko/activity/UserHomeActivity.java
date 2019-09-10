@@ -106,6 +106,8 @@ public class UserHomeActivity extends AppCompatActivity implements LocationListe
     LinearLayout signOutLayout;
     @BindView(R.id.etUserBookingLayout)
     LinearLayout etUserBookingLayout;
+    @BindView(R.id.settingLayout)
+    LinearLayout settingLayout;
 
     private void setUpLayout() {
         Log.e(">>id", "setUpLayout: " + M.fetchUserTrivialInfo(UserHomeActivity.this, "id"));
@@ -203,6 +205,12 @@ public class UserHomeActivity extends AppCompatActivity implements LocationListe
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(UserHomeActivity.this, ProfileActivity.class));
+            }
+        });
+        settingLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(UserHomeActivity.this, SettingActivity.class));
             }
         });
         editProfileLayout.setOnClickListener(view -> {

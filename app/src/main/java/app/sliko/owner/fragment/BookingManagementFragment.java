@@ -194,7 +194,7 @@ public class BookingManagementFragment extends Fragment {
                                 for (int m = 0; m < bookedDataArray.length(); m++) {
                                     JSONObject object = bookedDataArray.getJSONObject(m);
                                     UserBookingModel userBookingModel = new UserBookingModel();
-                                    userBookingModel.setId("");
+                                    userBookingModel.setShow_slot(object.getString("show_slot"));
                                     userBookingModel.setBooked_status(object.getString("booked_status"));
                                     userBookingModel.setTime(object.getString("time"));
                                     timeListInside.add(userBookingModel);
@@ -210,7 +210,7 @@ public class BookingManagementFragment extends Fragment {
                             headerRecyclerViewForTimeSlot.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                             headerRecyclerViewForTimeSlot.setAdapter(headerTimingAdapter);
                             headerTimingAdapter.notifyDataSetChanged();
-                            verticalTimingAdapter = new VerticalTimingAdapter(getActivity(), timingData);
+                            verticalTimingAdapter = new VerticalTimingAdapter(getActivity(), timingData , "ownerView");
                             timingVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                             timingVerticalRecyclerView.setAdapter(verticalTimingAdapter);
                             verticalTimingAdapter.notifyDataSetChanged();

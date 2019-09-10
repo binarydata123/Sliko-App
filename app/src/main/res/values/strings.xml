@@ -156,4 +156,8 @@
     <string name="pleaseSelectEndDate">Please select end date</string>
     <string name="bookNow">Book Now</string>
     <string name="pleaseSelectSomeOtherPitch">Please select some other pitch</string>
+    <string name="pleaseSelectDifferentDate">Please select different date</string>
+    <string name="bookingDate">Booking Date:&#160;</string>
+    <string name="bookingTime">Booking Time:&#160;</string>
+    <string name="setting">Setting</string>
 </resources>

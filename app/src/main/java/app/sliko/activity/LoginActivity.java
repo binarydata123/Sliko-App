@@ -60,13 +60,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setListeners() {
         loginbtn.setOnClickListener(view -> {
-//           if(checkOwner.isChecked()){
-//               startActivity(new Intent(LoginActivity.this, StadiumOwnerHomeActivity.class));
-//               finish();
-//           }else{
-//               startActivity(new Intent(LoginActivity.this, UserHomeActivity.class));
-//               finish();
-//           }
             if ((etUserEmail.length() == 0 || etUserEmail.getText().toString().trim().length() == 0)) {
                 Toast.makeText(LoginActivity.this, getString(R.string.please_enter_email), Toast.LENGTH_SHORT).show();
 

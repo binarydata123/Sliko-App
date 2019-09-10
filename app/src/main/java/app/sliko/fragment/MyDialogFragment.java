@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import app.sliko.R;
@@ -42,9 +43,15 @@ public class MyDialogFragment extends BottomSheetDialogFragment {
     @BindView(R.id.closeButton)
     Button closeButton;
 
-    public MyDialogFragment(String val) {
-        this.val = val;
+    private HashMap<String, String> deleverables;
+
+    public MyDialogFragment(HashMap<String, String> deleverables) {
+        this.deleverables = deleverables;
     }
+
+    String pitchIdReceivedForBooking;
+    String stadiumIdReceivedForBooking;
+    String userIdToBeSent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,9 +61,25 @@ public class MyDialogFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         view = inflater.inflate(R.layout.fragment_pay_for_pitch, container, false);
         ButterKnife.bind(MyDialogFragment.this, view);
+        if (getActivity() != null) {
+            stadiumName.setText(deleverables.get("stadiumName"));
+            stadiumAddress.setText(deleverables.get("stadium_address"));
+            pitchName.setText(deleverables.get("pitchName"));
+            pitchTimeSlot.setText(getActivity().getResources().getString(R.string.bookingTime) + "" + deleverables.get("time"));
+            pitchCost.setText(getActivity().getResources().getString(R.string.price) + "" + deleverables.get("cost"));
+            amountTobePaid.setText(getActivity().getResources().getString(R.string.price) + "" + deleverables.get("cost"));
+            pitchbookingDate.setText(getActivity().getResources().getString(R.string.bookingDate) + "" + deleverables.get("bookingDate"));
+            pitchIdReceivedForBooking = deleverables.get("pitchIdReceivedForBooking");
+            userIdToBeSent = deleverables.get("userIdToBeSent");
+            stadiumIdReceivedForBooking = deleverables.get("stadiumIdReceivedForBooking");
+
+            Log.e(">>bookingReceivedParams", "onEvent: " + pitchIdReceivedForBooking + "\n" +
+                    stadiumIdReceivedForBooking + "\n" + userIdToBeSent);
+
+        }
+
         return view;
     }
 
@@ -66,6 +89,7 @@ public class MyDialogFragment extends BottomSheetDialogFragment {
         payNowButton.setOnClickListener(view1 -> {
 
         });
+
 
         closeButton.setOnClickListener(view12 -> dismissBottomDialog());
     }
@@ -77,6 +101,4 @@ public class MyDialogFragment extends BottomSheetDialogFragment {
             df.dismiss();
         }
     }
-
-
 }

@@ -109,13 +109,13 @@ public class PitchDetailActivity extends AppCompatActivity {
         Log.e(">>pitchDetailId", "onCreate: " + pitch_id + "\n" + stadium_id);
         backButton.setOnClickListener(view -> finish());
         getSinglePitchDetail();
-        if(type.equalsIgnoreCase("user")){
+        if (type.equalsIgnoreCase("user")) {
             bookButton.setVisibility(View.VISIBLE);
             bookButton.setOnClickListener(view -> startActivity(new Intent(PitchDetailActivity.this, BookingActivity.class)
                     .putExtra("pitch_id", pitch_id)
                     .putExtra("user_id", user_id)
                     .putExtra("stadium_id", stadium_id)));
-        }else{
+        } else {
             bookButton.setVisibility(View.GONE);
         }
 
@@ -230,6 +230,7 @@ public class PitchDetailActivity extends AppCompatActivity {
         reviewModelArrayList = new ArrayList<>();
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Log.e(">>Data", "getReviewsListing: " + user_id + "\n" + stadium_id + "\n" + pitch_id);
         Call<ResponseBody> call = service.ep_reviewsForPitch(user_id, stadium_id, pitch_id);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -241,6 +242,7 @@ public class PitchDetailActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
+                        Log.e(">>Data", "onResponse: " + "\n" + jsonObject.toString());
                         if (status.equalsIgnoreCase("true")) {
                             JSONArray reviewArray = jsonObject.getJSONArray("data");
                             if (reviewArray.length() > 0) {
@@ -264,9 +266,11 @@ public class PitchDetailActivity extends AppCompatActivity {
                             handleNoRecord();
                         }
                     } else {
+                        Log.e(">>Data", "onResponse: " + "\n" + response.message());
                         Toast.makeText(PitchDetailActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
+                    Log.e(">>Data", "onResponse: " + "\n" + e.getMessage());
                     Toast.makeText(PitchDetailActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -274,11 +278,11 @@ public class PitchDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
+                Log.e(">>Data", "onResponse: " + "\n" + t.getMessage());
                 Toast.makeText(PitchDetailActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
     private void handleNoRecord() {
         noDataLayout.setVisibility(View.VISIBLE);
     }
