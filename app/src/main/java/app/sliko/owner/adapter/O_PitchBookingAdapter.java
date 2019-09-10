@@ -64,6 +64,13 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
             myViewHolder.pitchReviewCount.setText(pitchModelArrayList.get(i).getPitch_review_avg());
             myViewHolder.PB_pitchReview.setRating(Float.parseFloat(pitchModelArrayList.get(i).getPitch_review_avg()));
         }
+        if(pitchModelArrayList.get(i).getBooking_status().equalsIgnoreCase("0")){
+            myViewHolder.statusOfBooking.setBackground(context.getResources().getDrawable(R.drawable.edit_bg_red));
+            myViewHolder.statusOfBookingText.setText("Processing");
+        }  else if(pitchModelArrayList.get(i).getBooking_status().equalsIgnoreCase("1")){
+            myViewHolder.statusOfBooking.setBackground(context.getResources().getDrawable(R.drawable.edit_bg_green));
+            myViewHolder.statusOfBookingText.setText("Complete");
+        }
     }
 
     @Override
@@ -92,6 +99,10 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
         TextView pitchReviewCount;
         @BindView(R.id.userDetailsLayout)
         LinearLayout userDetailsLayout;
+        @BindView(R.id.statusOfBookingText)
+        TextView statusOfBookingText;
+        @BindView(R.id.statusOfBooking)
+        LinearLayout statusOfBooking;
 
 
         private MyViewHolder(@NonNull View itemView) {

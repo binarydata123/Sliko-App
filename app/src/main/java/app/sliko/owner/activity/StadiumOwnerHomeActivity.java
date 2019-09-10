@@ -163,11 +163,11 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
                     swapContentFragment(StadiumDetailsFragment.newInstance(), true, R.id.frameContainer);
                     return true;
                 case R.id.action_overview:
-                    toolbarTitle.setText(getString(R.string.reports));
+                    toolbarTitle.setText(getString(R.string.bookingManagement));
                     swapContentFragment(BookingManagementFragment.newInstance(), true, R.id.frameContainer);
                     return true;
                 case R.id.action_bookings:
-                    toolbarTitle.setText(getString(R.string.menu_bookings));
+                    toolbarTitle.setText(getString(R.string.reports));
                     swapContentFragment(ReportsFragment.newInstance(), true, R.id.frameContainer);
                     return true;
                 case R.id.action_all_reviews:

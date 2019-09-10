@@ -35,6 +35,24 @@ public interface ApiInterface {
                                 @Field("role") String role);
 
     @FormUrlEncoded
+    @POST("setting/detail")
+    Call<ResponseBody> ep_settingGet(@Field("user_id") String user_id);
+
+
+    @FormUrlEncoded
+    @POST("setting/create")
+    Call<ResponseBody> ep_enableDisableNotification(@Field("user_id") String user_id,
+                                        @Field("stadium_id") String stadium_id,
+                                        @Field("check_notification") String check_notification
+    );
+    @FormUrlEncoded
+    @POST("setting/create")
+    Call<ResponseBody> ep_updateNotificationTime(@Field("user_id") String user_id,
+                                        @Field("stadium_id") String stadium_id,
+                                        @Field("notification_time") String notification_time
+    );
+
+    @FormUrlEncoded
     @POST("stadium/single_detail")
     Call<ResponseBody> ep_stadium_detail(@Field("user_id") String user_id);
 
@@ -79,7 +97,7 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("resetpassword")
     Call<ResponseBody> ep_resetPassword(@Field("user_id") String user_id,
-            @Field("email") String email,
+                                        @Field("email") String email,
                                         @Field("old_password") String old_password,
                                         @Field("new_password") String new_password);
 

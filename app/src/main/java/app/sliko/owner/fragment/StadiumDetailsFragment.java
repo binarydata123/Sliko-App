@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,6 +92,8 @@ public class StadiumDetailsFragment extends Fragment {
     LinearLayout changeStadiumLayout;
     @BindView(R.id.noPitchLayout)
     LinearLayout noPitchLayout;
+    @BindView(R.id.sortSpinner)
+    Spinner sortSpinner;
     private ArrayList<String> reviewsModelArrayList;
     private StadiumImagesAdapter stadiumImagesAdapter;
     private View view;
@@ -109,6 +112,7 @@ public class StadiumDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setListeners();
+        Log.e(">>user_id", "onViewCreated: " + M.fetchUserTrivialInfo(getActivity() , "id"));
     }
 
     @Override
@@ -128,6 +132,14 @@ public class StadiumDetailsFragment extends Fragment {
         }
         weakReference = new WeakReference<>(StadiumDetailsFragment.this);
         changeStadiumLayout.setVisibility(View.VISIBLE);
+        ArrayList<String> sortArrayList = new ArrayList<String>() {
+            {
+                add("Yesterday");
+                add("Last 7 days");
+                add("Last 30 days");
+            }
+        };
+        sortSpinner.setAdapter(M.makeSpinnerAdapterWhite(getActivity(), sortArrayList, sortSpinner));
         return view;
     }
 
@@ -223,7 +235,7 @@ public class StadiumDetailsFragment extends Fragment {
             }
         } catch (Exception e) {
             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e(">>E", "onResponse: "+e.getMessage());
+            Log.e(">>E", "onResponse: " + e.getMessage());
         }
     }
 

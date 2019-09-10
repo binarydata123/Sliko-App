@@ -173,6 +173,7 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
                                     bookingModel.setBooking_date(dataObject.getString("booking_date"));
                                     bookingModel.setStadium_id(dataObject.getString("stadium_id"));
                                     bookingModel.setPitch_id(dataObject.getString("pitch_id"));
+                                    bookingModel.setBooking_date(dataObject.getString("booking_date"));
                                     bookingModel.setTime(dataObject.getString("time"));
                                     bookingModel.setUser_id(dataObject.getString("user_id"));
                                     bookingModelArrayList.add(bookingModel);

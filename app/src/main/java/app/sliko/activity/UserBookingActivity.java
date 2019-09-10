@@ -135,6 +135,7 @@ public class UserBookingActivity extends AppCompatActivity {
                                     bookingModel.setCost(dataObject.getString("cost"));
                                     bookingModel.setPitch_review_avg(dataObject.getString("pitch_review_avg"));
                                     bookingModel.setId(dataObject.getString("id"));
+                                    bookingModel.setBooking_date(dataObject.getString("booking_date"));
                                     bookingModel.setStadium_id(dataObject.getString("stadium_id"));
                                     bookingModel.setPitch_id(dataObject.getString("pitch_id"));
                                     bookingModel.setBooking_date(dataObject.getString("booking_date"));

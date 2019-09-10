@@ -160,4 +160,7 @@
     <string name="bookingDate">Booking Date:&#160;</string>
     <string name="bookingTime">Booking Time:&#160;</string>
     <string name="setting">Setting</string>
+    <string name="totalEarnings">Total Earnings</string>
+    <string name="stadiumReport">Stadium Report</string>
+    <string name="please_enter_suitale_time">Please enter suitable time</string>
 </resources>
