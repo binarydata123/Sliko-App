@@ -58,7 +58,7 @@ public class M {
     }
 
     public static boolean matchValidation(EditText editText) {
-        return (editText.getText().toString().length() == 0 || editText.length() == 0);
+        return (editText.getText().toString().trim().length() == 0 || editText.length() == 0);
     }
 
 

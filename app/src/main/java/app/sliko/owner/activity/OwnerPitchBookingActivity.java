@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -73,6 +74,9 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
     String pitch_id = "";
     String stadium_id = "";
 
+    @BindView(R.id.backToBookings)
+    Button backToBookings;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +91,13 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
         stadium_id = getIntent().getStringExtra("stadium_id");
         setListeners();
         getBookingDataForPitch();
+        backToBookings.setText(getString(R.string.backToPitchBookings));
+        backToBookings.setOnClickListener(view -> {
+
+            start_date = "";
+            end_date = "";
+            getBookingDataForPitch();
+        });
     }
 
     BookPitchMauallyDialog bookPitchMauallyDialog;
@@ -104,33 +115,40 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
             selectedmonth = selectedmonth + 1;
             et.setText("" + selectedyear + "-" + selectedmonth + "-" + selectedday);
             if (whichDate == 0) {
-                start_date = et.getText().toString();
+
+                start_date = startDateText.getText().toString();
+
             } else {
-                end_date = et.getText().toString();
+                end_date = endDateText.getText().toString();
+
             }
         }, mYear, mMonth, mDay);
-        mDatePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-
-        mDatePicker.setTitle(whichDate == 0 ? "Pick Start Date" : "Pick End Date");
+        mDatePicker.setTitle("Pick Date");
         mDatePicker.show();
     }
 
     private void setListeners() {
+
+        pickEndDate.setOnClickListener(view ->
+                getDate(endDateText, 1)
+        );
+        pickStartDate.setOnClickListener(view ->
+                getDate(startDateText, 2)
+        );
+
+
         searchButton.setOnClickListener(view -> {
             if (startDateText.getText().toString().length() == 0) {
                 Toast.makeText(OwnerPitchBookingActivity.this, getString(R.string.pleaseSelectStartDate), Toast.LENGTH_SHORT).show();
             } else if (endDateText.getText().toString().length() == 0) {
                 Toast.makeText(OwnerPitchBookingActivity.this, getString(R.string.pleaseSelectEndDate), Toast.LENGTH_SHORT).show();
             } else {
+                start_date = startDateText.getText().toString();
+                end_date = endDateText.getText().toString();
                 getBookingDataForPitch();
             }
         });
-        pickEndDate.setOnClickListener(view ->
-                getDate(startDateText, 1)
-        );
-        pickStartDate.setOnClickListener(view ->
-                getDate(endDateText, 0)
-        );
+
         addBookingButton.setOnClickListener(view -> {
             bookPitchMauallyDialog = DialogMethodCaller.openBookPitchMauallyDialog(OwnerPitchBookingActivity.this, R.layout.dialog_add_booking_manually, false);
             bookPitchMauallyDialog.getDialog_error().show();
@@ -170,6 +188,7 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
                                     bookingModel.setCost(dataObject.getString("cost"));
                                     bookingModel.setPitch_review_avg(dataObject.getString("pitch_review_avg"));
                                     bookingModel.setId(dataObject.getString("id"));
+                                    bookingModel.setBooking_status(dataObject.getString("booking_status"));
                                     bookingModel.setBooking_date(dataObject.getString("booking_date"));
                                     bookingModel.setStadium_id(dataObject.getString("stadium_id"));
                                     bookingModel.setPitch_id(dataObject.getString("pitch_id"));
@@ -182,14 +201,10 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
                                 o_pitchBookingAdapter.notifyDataSetChanged();
                                 noDataLayout.setVisibility(View.GONE);
                             } else {
-                                noDataLayout.setVisibility(View.VISIBLE);
-                                image.setBackgroundResource(R.drawable.ic_booking);
-                                text.setText(getString(R.string.noBookingAvailableUSer));
+                                handleNoData();
                             }
                         } else {
-                            noDataLayout.setVisibility(View.GONE);
-                            image.setBackgroundResource(R.drawable.ic_booking);
-                            text.setText(getString(R.string.noBookingAvailableUSer));
+                            handleNoData();
                         }
                     } else {
                         Toast.makeText(OwnerPitchBookingActivity.this, response.message(), Toast.LENGTH_SHORT).show();
@@ -205,6 +220,20 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
                 Toast.makeText(OwnerPitchBookingActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    boolean isFirstTime = true;
+
+    private void handleNoData() {
+        noDataLayout.setVisibility(View.VISIBLE);
+        if (isFirstTime) {
+            isFirstTime = false;
+            backToBookings.setVisibility(View.GONE);
+        } else {
+
+            backToBookings.setVisibility(View.VISIBLE);
+        }
+        image.setBackgroundResource(R.drawable.ic_booking);
     }
 
 

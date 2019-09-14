@@ -105,7 +105,7 @@
                                     android:background="@android:color/transparent"
                                     android:hint="Enter Phone"
                                     android:imeOptions="actionNext"
-                                    android:inputType="textPassword"
+                                    android:inputType="number"
                                     android:singleLine="true"
                                     android:textSize="14sp" />
                             </LinearLayout>
@@ -198,7 +198,6 @@
                                     android:background="@android:color/transparent"
                                     android:hint="Enter Favourite team"
                                     android:imeOptions="actionNext"
-                                    android:inputType="textPassword"
                                     android:singleLine="true"
                                     android:textSize="14sp" />
                             </LinearLayout>

@@ -67,7 +67,7 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/Pitch_Name" />
+                                    android:text="@string/stadiumName" />
 
                                 <TextView
                                     android:layout_width="5dp"
@@ -247,6 +247,7 @@
 
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:id="@+id/pitchImageRecyclerView"
+                                    android:nestedScrollingEnabled="false"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp">

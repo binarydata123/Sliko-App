@@ -23,6 +23,18 @@
             android:gravity="center"
             android:text="@string/noBookingRecords"
             android:layout_height="wrap_content"/>
+        <Button
+            android:id="@+id/backToBookings"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:background="@drawable/edit_bg_green"
+            android:text="@string/goBack"
+            android:textColor="@color/white"/>
     </LinearLayout>
 
 </LinearLayout>

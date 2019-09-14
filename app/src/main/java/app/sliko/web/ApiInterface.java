@@ -35,6 +35,22 @@ public interface ApiInterface {
                                 @Field("role") String role);
 
     @FormUrlEncoded
+    @POST("pitch/galleryDelete")
+    Call<ResponseBody> ep_pitchGalleryDelete(@Field("id") String id);
+    @FormUrlEncoded
+    @POST("stadium/galleryDelete")
+    Call<ResponseBody> ep_stadiumGalleryDelete(@Field("id") String id);
+
+    @FormUrlEncoded
+    @POST("stadium/getStadiumBookingFillter")
+    Call<ResponseBody> ep_getStadiumRevenueDetails(@Field("user_id") String user_id,
+                                                   @Field("stadium_id") String stadium_id,
+                                                   @Field("pitch_id") String pitch_id,
+                                                   @Field("filter_days") String filter_days,
+                                                   @Field("filter_payment_type") String filter_payment_type
+    );
+
+    @FormUrlEncoded
     @POST("setting/detail")
     Call<ResponseBody> ep_settingGet(@Field("user_id") String user_id);
 
@@ -42,14 +58,14 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("setting/create")
     Call<ResponseBody> ep_enableDisableNotification(@Field("user_id") String user_id,
-                                        @Field("stadium_id") String stadium_id,
-                                        @Field("check_notification") String check_notification
+                                                    @Field("stadium_id") String stadium_id,
+                                                    @Field("check_notification") String check_notification
     );
     @FormUrlEncoded
     @POST("setting/create")
     Call<ResponseBody> ep_updateNotificationTime(@Field("user_id") String user_id,
-                                        @Field("stadium_id") String stadium_id,
-                                        @Field("notification_time") String notification_time
+                                                 @Field("stadium_id") String stadium_id,
+                                                 @Field("notification_time") String notification_time
     );
 
     @FormUrlEncoded
@@ -61,6 +77,10 @@ public interface ApiInterface {
     @POST("pitch/single_detail")
     Call<ResponseBody> ep_pitchDetail(@Field("id") String id);
 
+
+    @GET("pitch/playersLists")
+    Call<ResponseBody> ep_pitchPlayerType();
+
     @FormUrlEncoded
     @POST("stadium/delete")
     Call<ResponseBody> ep_deleteStadium(@Field("id") String id,
@@ -68,8 +88,7 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("pitch/delete")
-    Call<ResponseBody> ep_deletePitch(@Field("id") String id,
-                                      @Field("stadium_id") String stadium_id);
+    Call<ResponseBody> ep_deletePitch(@Field("id") String id);
 
     @GET("playPostionList")
     Call<ResponseBody> ep_playerPosition();
@@ -81,6 +100,10 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("logout")
     Call<ResponseBody> ep_logout(@Field("user_id") String user_id);
+    @FormUrlEncoded
+
+    @POST("logout")
+    Call<ResponseBody> ep_deactivateAccount(@Field("user_id") String user_id);
 
     @FormUrlEncoded
     @POST("stadium/getSuggestionsList")
@@ -100,7 +123,6 @@ public interface ApiInterface {
                                         @Field("email") String email,
                                         @Field("old_password") String old_password,
                                         @Field("new_password") String new_password);
-
     @FormUrlEncoded
     @POST("user/single_detail")
     Call<ResponseBody> ep_getUserProfile(@Field("user_id") String user_id);
@@ -120,6 +142,29 @@ public interface ApiInterface {
     @POST("stadium/create")
     Call<ResponseBody> createStadium(
             @Part MultipartBody.Part[] multipleStadiumImages,
+            @Part("stadium_name") RequestBody stadium_name,
+            @Part("user_id") RequestBody user_id,
+            @Part("description") RequestBody description,
+            @Part("address") RequestBody address,
+            @Part("lat") RequestBody lat,
+            @Part("lng") RequestBody lng,
+            @Part("slot_intervel") RequestBody slot_intervel,
+            @Part("open_time") RequestBody open_time,
+            @Part("close_time") RequestBody close_time,
+            @Part("check_mon") RequestBody check_mon,
+            @Part("check_tue") RequestBody check_tue,
+            @Part("check_wed") RequestBody check_wed,
+            @Part("check_thu") RequestBody check_thu,
+            @Part("check_fri") RequestBody check_fri,
+            @Part("check_sat") RequestBody check_sat,
+            @Part("check_sun") RequestBody check_sun
+    );
+
+    @Multipart
+    @POST("stadium/update")
+    Call<ResponseBody> updateStadium(
+            @Part MultipartBody.Part[] multipleStadiumImages,
+            @Part("id") RequestBody id,
             @Part("stadium_name") RequestBody stadium_name,
             @Part("user_id") RequestBody user_id,
             @Part("description") RequestBody description,
@@ -178,6 +223,7 @@ public interface ApiInterface {
             @Part("user_id") RequestBody user_id,
             @Part("stadium_id") RequestBody stadium_id,
             @Part("pitch_name") RequestBody pitch_name,
+            @Part("pitch_type") RequestBody pitch_type,
             @Part("description") RequestBody description,
             @Part("price") RequestBody price
     );
@@ -189,6 +235,7 @@ public interface ApiInterface {
             @Part("id") RequestBody id,
             @Part("stadium_id") RequestBody stadium_id,
             @Part("pitch_name") RequestBody pitch_name,
+            @Part("pitch_type") RequestBody pitch_type,
             @Part("description") RequestBody description,
             @Part("price") RequestBody price
     );

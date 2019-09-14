@@ -15,15 +15,19 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import app.sliko.EditProfileActivity;
-import app.sliko.ForgotPasswordActivity;
 import app.sliko.R;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.ChangePasswordDialog;
+import app.sliko.events.ProfileUploadedSuccessEvent;
 import app.sliko.utills.M;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
@@ -62,19 +66,39 @@ public class ProfileActivity extends AppCompatActivity {
     @BindView(R.id.etFootedness)
     TextView etFootedness;
     @BindView(R.id.editProfileButton)
-    Button editProfileButton; @BindView(R.id.changePasswordButton)
+    FloatingActionButton editProfileButton;
+    @BindView(R.id.changePasswordButton)
     Button changePasswordButton;
     @BindView(R.id.progressImage)
     ProgressBar progressImage;
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     private Dialog dialog;
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(ProfileUploadedSuccessEvent profileUploadedSuccessEvent) {
+        if (profileUploadedSuccessEvent != null) {
+            if (profileUploadedSuccessEvent.isStatus()) {
+                fetchProfileInfo();
+            }
+        }
+
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_profile);
         ButterKnife.bind(ProfileActivity.this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         dialog = M.showDialog(ProfileActivity.this, "", false);
 
         toolbar.setNavigationIcon(R.drawable.back_arrow_white);
@@ -92,11 +116,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setListener() {
         editProfileButton.setOnClickListener(view -> {
-                startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
+            startActivity(new Intent(ProfileActivity.this, EditProfileActivity.class));
 
         });
         changePasswordButton.setOnClickListener(view -> {
-            changePasswordDialog = DialogMethodCaller.openChangePasswordDialog(ProfileActivity.this, R.layout.dialog_change_password , false);
+            changePasswordDialog = DialogMethodCaller.openChangePasswordDialog(ProfileActivity.this, R.layout.dialog_change_password, false);
             changePasswordDialog.getDialog_error().show();
             changePasswordDialog.getCancelButton().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -107,18 +131,37 @@ public class ProfileActivity extends AppCompatActivity {
             changePasswordDialog.getSendButton().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    changePasswordDialog.getDialog_error().dismiss();
-                    hitResetPassword(changePasswordDialog.getEtUserEmail().getText().toString()
-                            , changePasswordDialog.getEtPassword().getText().toString(),changePasswordDialog.getEtNewPassword().getText().toString());
+                    if (M.matchValidation(changePasswordDialog.getEtUserEmail())) {
+                        Toast.makeText(ProfileActivity.this, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
+                    } else if (!M.validateEmail(changePasswordDialog.getEtUserEmail().getText().toString())) {
+                        Toast.makeText(ProfileActivity.this, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
+                    } else if (M.matchValidation(changePasswordDialog.getEtPassword())) {
+                        Toast.makeText(ProfileActivity.this, getString(R.string.please_enter_password), Toast.LENGTH_SHORT).show();
+
+                    } else if ((changePasswordDialog.getEtPassword().length() < 6)) {
+                        Toast.makeText(ProfileActivity.this, getString(R.string.password_should_big), Toast.LENGTH_SHORT).show();
+
+                    } else if (M.matchValidation(changePasswordDialog.getEtNewPassword())) {
+                        Toast.makeText(ProfileActivity.this, getString(R.string.please_enter_new_password), Toast.LENGTH_SHORT).show();
+
+                    } else if ((changePasswordDialog.getEtNewPassword().length() < 6)) {
+                        Toast.makeText(ProfileActivity.this, getString(R.string.password_should_big), Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        changePasswordDialog.getDialog_error().dismiss();
+                        hitResetPassword(changePasswordDialog.getEtUserEmail().getText().toString()
+                                , changePasswordDialog.getEtPassword().getText().toString(), changePasswordDialog.getEtNewPassword().getText().toString());
+
+                    }
                 }
             });
         });
     }
 
-    private void hitResetPassword(String email , String oldPassword  , String newPassword){
+    private void hitResetPassword(String email, String oldPassword, String newPassword) {
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_resetPassword(M.fetchUserTrivialInfo(ProfileActivity.this, "id"),email , oldPassword , newPassword);
+        Call<ResponseBody> call = service.ep_resetPassword(M.fetchUserTrivialInfo(ProfileActivity.this, "id"), email, oldPassword, newPassword);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -208,4 +251,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

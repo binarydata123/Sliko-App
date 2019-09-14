@@ -59,7 +59,6 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.bit_grey));
                 myViewHolder.timingView.setAlpha(.5f);
-
             }else{
                 if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase("") ||
                         verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACCANT)) {

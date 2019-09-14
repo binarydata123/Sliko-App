@@ -77,9 +77,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         if (status.equalsIgnoreCase("true")) {
                             startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
                             finish();
-                        } else {
-                            Toast.makeText(ForgotPasswordActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
+                        Toast.makeText(ForgotPasswordActivity.this, message, Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(ForgotPasswordActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                     }

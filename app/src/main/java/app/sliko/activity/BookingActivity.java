@@ -33,7 +33,7 @@ import app.sliko.R;
 import app.sliko.booking.VerticalPitchModel;
 import app.sliko.booking.model.UserBookingModel;
 import app.sliko.events.PayingForPitchEvent;
-import app.sliko.fragment.MyDialogFragment;
+import app.sliko.fragment.BookPitchPaymentFragment;
 import app.sliko.owner.adapter.reports.HeaderTimingAdapter;
 import app.sliko.owner.adapter.reports.VerticalPitchAdapter;
 import app.sliko.owner.adapter.reports.VerticalTimingAdapter;
@@ -299,7 +299,7 @@ public class BookingActivity extends AppCompatActivity {
                 deleverables.put("stadium_description", stadium_description);
                 deleverables.put("stadium_address", stadium_address);
                 deleverables.put("bookingDate", bookingDate);
-                MyDialogFragment bottomSheetFragment = new MyDialogFragment(deleverables);
+                BookPitchPaymentFragment bottomSheetFragment = new BookPitchPaymentFragment(deleverables);
                 bottomSheetFragment.show(getSupportFragmentManager(), "pitchBookingDialogFragment");
             } else {
                 Toast.makeText(this, getString(R.string.pleaseSelectDifferentDate), Toast.LENGTH_SHORT).show();

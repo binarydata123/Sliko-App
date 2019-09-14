@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -71,6 +72,11 @@ public class UserBookingActivity extends AppCompatActivity {
     TextView startDateText;
     @BindView(R.id.endDateText)
     TextView endDateText;
+    @BindView(R.id.backToBookings)
+    Button backToBookings;
+
+    boolean isFirstTime = true;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +104,14 @@ public class UserBookingActivity extends AppCompatActivity {
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
+        backToBookings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                start_date = "";
+                end_date = "";
+                getBookingForUser();
+            }
+        });
     }
 
 
@@ -105,10 +119,9 @@ public class UserBookingActivity extends AppCompatActivity {
 
     private void getBookingForUser() {
         dialog.show();
-        dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_bookingList(M.fetchUserTrivialInfo(UserBookingActivity.this, "id"),
-                "", "",start_date,end_date);
+                "", "", start_date, end_date);
         Log.e(">>stadiumId", "getBookingForUser: " + Prefs.getStadiumId(UserBookingActivity.this));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -135,11 +148,12 @@ public class UserBookingActivity extends AppCompatActivity {
                                     bookingModel.setCost(dataObject.getString("cost"));
                                     bookingModel.setPitch_review_avg(dataObject.getString("pitch_review_avg"));
                                     bookingModel.setId(dataObject.getString("id"));
+                                    bookingModel.setBooking_status(dataObject.getString("booking_status"));
                                     bookingModel.setBooking_date(dataObject.getString("booking_date"));
                                     bookingModel.setStadium_id(dataObject.getString("stadium_id"));
                                     bookingModel.setPitch_id(dataObject.getString("pitch_id"));
                                     bookingModel.setBooking_date(dataObject.getString("booking_date"));
-                                   bookingModel.setTime(dataObject.getString("time"));
+                                    bookingModel.setTime(dataObject.getString("time"));
                                     bookingModel.setUser_id(dataObject.getString("user_id"));
                                     bookingModelArrayList.add(bookingModel);
                                 }
@@ -147,14 +161,10 @@ public class UserBookingActivity extends AppCompatActivity {
                                 o_pitchBookingAdapter.notifyDataSetChanged();
                                 noDataLayout.setVisibility(View.GONE);
                             } else {
-                                noDataLayout.setVisibility(View.VISIBLE);
-                                image.setBackgroundResource(R.drawable.ic_booking);
-                                text.setText(getString(R.string.noBookingAvailableUSer));
+                                handleNoData();
                             }
                         } else {
-                            noDataLayout.setVisibility(View.GONE);
-                            image.setBackgroundResource(R.drawable.ic_booking);
-                            text.setText(getString(R.string.noBookingAvailableUSer));
+                            handleNoData();
                         }
                     } else {
                         Toast.makeText(UserBookingActivity.this, response.message(), Toast.LENGTH_SHORT).show();
@@ -173,6 +183,20 @@ public class UserBookingActivity extends AppCompatActivity {
 
 
     }
+
+    private void handleNoData() {
+        noDataLayout.setVisibility(View.VISIBLE);
+        if (isFirstTime) {
+            isFirstTime = false;
+            backToBookings.setVisibility(View.GONE);
+        } else {
+
+            backToBookings.setVisibility(View.VISIBLE);
+        }
+        image.setBackgroundResource(R.drawable.ic_booking);
+        text.setText(getString(R.string.noBookingAvailableUSer));
+    }
+
     private String start_date = "", end_date = "";
 
     private void getDate(TextView et, int whichDate) {
@@ -182,37 +206,48 @@ public class UserBookingActivity extends AppCompatActivity {
         int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog mDatePicker;
-        mDatePicker = new DatePickerDialog(UserBookingActivity.this, R.style.DialogTheme, (datepicker, selectedyear, selectedmonth, selectedday) -> {
+        mDatePicker = new DatePickerDialog(this, R.style.DialogTheme, (datepicker, selectedyear, selectedmonth, selectedday) -> {
             selectedmonth = selectedmonth + 1;
             et.setText("" + selectedyear + "-" + selectedmonth + "-" + selectedday);
             if (whichDate == 0) {
-                start_date = et.getText().toString();
+
+                start_date = startDateText.getText().toString();
+
             } else {
-                end_date = et.getText().toString();
+                end_date = endDateText.getText().toString();
+
             }
         }, mYear, mMonth, mDay);
-        mDatePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-        mDatePicker.setTitle(whichDate == 0 ? "Pick Start Date" : "Pick End Date");
+        mDatePicker.setTitle("Pick Date");
         mDatePicker.show();
     }
+
     private BookPitchMauallyDialog bookPitchMauallyDialog;
 
     private void setListeners() {
+
         searchButton.setOnClickListener(view -> {
+
+//            Log.i("date","date== "+start_date);
             if (startDateText.getText().toString().length() == 0) {
                 Toast.makeText(UserBookingActivity.this, getString(R.string.pleaseSelectStartDate), Toast.LENGTH_SHORT).show();
             } else if (endDateText.getText().toString().length() == 0) {
                 Toast.makeText(UserBookingActivity.this, getString(R.string.pleaseSelectEndDate), Toast.LENGTH_SHORT).show();
             } else {
+                start_date = startDateText.getText().toString();
+                end_date = endDateText.getText().toString();
+                Log.i("date", "date== " + start_date + " end== " + end_date);
                 getBookingForUser();
             }
         });
         pickEndDate.setOnClickListener(view ->
-                getDate(startDateText, 1)
+                getDate(endDateText, 1)
         );
         pickStartDate.setOnClickListener(view ->
-                getDate(endDateText, 0)
+                getDate(startDateText, 2)
         );
+
+
         addBookingButton.setOnClickListener(view -> {
             bookPitchMauallyDialog = DialogMethodCaller.openBookPitchMauallyDialog(UserBookingActivity.this, R.layout.dialog_add_booking_manually, false);
             bookPitchMauallyDialog.getDialog_error().show();

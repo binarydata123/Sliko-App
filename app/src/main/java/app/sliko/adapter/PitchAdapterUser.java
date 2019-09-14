@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Callback;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 
 import app.sliko.R;
 import app.sliko.activity.BookingActivity;
-import app.sliko.fragment.MyDialogFragment;
 import app.sliko.owner.activity.PitchDetailActivity;
 import app.sliko.utills.M;
 import butterknife.BindView;

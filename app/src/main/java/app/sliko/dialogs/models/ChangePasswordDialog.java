@@ -22,6 +22,7 @@ public class ChangePasswordDialog {
         this.dialog_error = dialog_error;
         this.etUserEmail = etUserEmail;
         this.etPassword = etPassword;
+        this.etNewPassword = etNewPassword;
         this.cancelButton = cancelButton;
         this.sendButton = sendButton;
 

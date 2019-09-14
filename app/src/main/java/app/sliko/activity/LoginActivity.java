@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
                         if (status.equalsIgnoreCase("true")) {
-                            Log.i(">>loginData", "onResponse: " + jsonObject.toString());
+                            Log.e(">>loginData", "onResponse: " + jsonObject.toString());
                             Prefs.saveUserData(jsonObject.getJSONObject("data").toString(), LoginActivity.this);
                             if (jsonObject.getJSONObject("data").has("is_stadium")) {
                                 startActivity(new Intent(LoginActivity.this, StadiumOwnerHomeActivity.class));

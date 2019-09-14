@@ -1,6 +1,7 @@
 package app.sliko.owner.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 
@@ -58,6 +57,7 @@ public class StadiumOpeningAdapter extends RecyclerView.Adapter<StadiumOpeningAd
                 StadiumOpeningAdapter.this.notifyDataSetChanged();
             });
         }
+        Log.e(">>de", "onBindViewHolder: "+imagesModelArrayList.get(i).isPicked() );
         myViewHolder.timingText.setText(imagesModelArrayList.get(i).getTime());
         if (getItemViewType(i) == PICKED) {
             myViewHolder.changeBackground.setBackground(context.getDrawable(R.drawable.edit_bg_green));
@@ -67,15 +67,16 @@ public class StadiumOpeningAdapter extends RecyclerView.Adapter<StadiumOpeningAd
             myViewHolder.timingText.setTextColor(context.getResources().getColor(R.color.black));
         }
     }
+    StringBuilder stringBuilder = null;
 
-    public JSONArray getSelectedArrayList() {
-        JSONArray jsonArray = new JSONArray();
+    public StringBuilder getSelectedArrayList() {
+        stringBuilder = new StringBuilder();
         for (int k = 0; k < imagesModelArrayList.size(); k++) {
             if (imagesModelArrayList.get(k).isPicked()) {
-                jsonArray.put(imagesModelArrayList.get(k).getTime());
+                stringBuilder.append(imagesModelArrayList.get(k).getTime()).append(",");
             }
         }
-        return jsonArray;
+        return stringBuilder;
     }
 
     @Override

@@ -1,24 +1,36 @@
 package app.sliko.owner.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONObject;
+
+import java.io.File;
 import java.util.ArrayList;
 
 import app.sliko.R;
 import app.sliko.models.StadiumImagesModel;
+import app.sliko.utills.M;
+import app.sliko.web.ApiInterface;
+import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddImagesAdapter extends RecyclerView.Adapter<AddImagesAdapter.MyViewHolder> {
 
@@ -26,10 +38,13 @@ public class AddImagesAdapter extends RecyclerView.Adapter<AddImagesAdapter.MyVi
     private Context context;
     private ArrayList<StadiumImagesModel> imagesModelArrayList;
 
+    Dialog dialog;
+
     public AddImagesAdapter(Context context, ArrayList<StadiumImagesModel> imagesModelArrayList, String type) {
         this.context = context;
         this.imagesModelArrayList = imagesModelArrayList;
         this.type = type;
+        dialog = M.showDialog(context, "", false);
     }
 
     @NonNull
@@ -42,22 +57,86 @@ public class AddImagesAdapter extends RecyclerView.Adapter<AddImagesAdapter.MyVi
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
 
-        Picasso.get().load(imagesModelArrayList.get(i).getImageName()).into(myViewHolder.imageViewDocument);
+        Log.e(">>id", "onBindViewHolder: " + imagesModelArrayList.get(i).getImageId() + "\n" + imagesModelArrayList.size());
+
+        if (imagesModelArrayList.get(i).getImageId().equals("")) {
+            try {
+                File fileimg = new File(imagesModelArrayList.get(i).getImageName());
+                Picasso.get().load(fileimg).into(myViewHolder.imageViewDocument);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        } else {
+            Picasso.get().load(imagesModelArrayList.get(i).getImageName()).into(myViewHolder.imageViewDocument);
+
+        }
+
         myViewHolder.deleteImage.setOnClickListener(v -> {
             if (imagesModelArrayList.get(i).getImageId().equalsIgnoreCase("")) {
-                //remove normally from list
                 imagesModelArrayList.remove(i);
+                AddImagesAdapter.this.notifyDataSetChanged();
             } else {
-                //delete Image from server
+
+                deleteFromServer(i);
+
+
             }
-            AddImagesAdapter.this.notifyDataSetChanged();
+
         });
-        if(type.equalsIgnoreCase("1")){
+        if (!imagesModelArrayList.get(i).getImageId().equalsIgnoreCase("")) {
             myViewHolder.deleteImage.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             myViewHolder.deleteImage.setVisibility(View.GONE);
         }
 
+    }
+
+    Call<ResponseBody> call;
+
+    private void deleteFromServer(int pos) {
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        if (type.equalsIgnoreCase("stadium")) {
+            call = service.ep_stadiumGalleryDelete(imagesModelArrayList.get(pos).getImageId());
+        } else {
+            call = service.ep_pitchGalleryDelete(imagesModelArrayList.get(pos).getImageId());
+        }
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+
+                            imagesModelArrayList.remove(pos);
+                            AddImagesAdapter.this.notifyDataSetChanged();
+
+                        } else {
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     ArrayList<StadiumImagesModel> updatedList;

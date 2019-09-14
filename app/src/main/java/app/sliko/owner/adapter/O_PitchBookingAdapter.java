@@ -48,9 +48,9 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
         myViewHolder.PB_name.setText(context.getString(R.string.pitchName) + ": " + pitchModelArrayList.get(i).getPitch_name());
         myViewHolder.PB_cost.setText(context.getString(R.string.paid) + ": " + pitchModelArrayList.get(i).getPrice());
         myViewHolder.PB_userName.setText(pitchModelArrayList.get(i).getFullname());
-        myViewHolder.PB_phone.setText(pitchModelArrayList.get(i).getPhone());
-        myViewHolder.PB_date.setText(M.returnDateOnly(pitchModelArrayList.get(i).getBooking_date()));
-        myViewHolder.PB_time.setText(" Time: (" + pitchModelArrayList.get(i).getTime() + ") ");
+        myViewHolder.PB_phone.setText(M.actAccordinglyWithJson(context, pitchModelArrayList.get(i).getPhone()));
+        myViewHolder.PB_date.setText(context.getString(R.string.date) + M.returnDateOnly(pitchModelArrayList.get(i).getBooking_date() + " 00:54:54"));
+        myViewHolder.PB_time.setText(context.getString(R.string.time) + "(" + pitchModelArrayList.get(i).getTime() + ") ");
         myViewHolder.PB_pitchReview.setRating(M.actAccordinglyWithJson(pitchModelArrayList.get(i).getPitch_review_avg()));
         Picasso.get().load(Api.DUMMY_PROFILE).into(myViewHolder.pitchImage);
         if (!type.equalsIgnoreCase("owner")) {
@@ -64,11 +64,11 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
             myViewHolder.pitchReviewCount.setText(pitchModelArrayList.get(i).getPitch_review_avg());
             myViewHolder.PB_pitchReview.setRating(Float.parseFloat(pitchModelArrayList.get(i).getPitch_review_avg()));
         }
-        if(pitchModelArrayList.get(i).getBooking_status().equalsIgnoreCase("0")){
-            myViewHolder.statusOfBooking.setBackground(context.getResources().getDrawable(R.drawable.edit_bg_red));
+        if (pitchModelArrayList.get(i).getBooking_status().equalsIgnoreCase("0")) {
+            myViewHolder.statusOfBooking.setBackgroundColor(context.getResources().getColor(R.color.toolbarColor));
             myViewHolder.statusOfBookingText.setText("Processing");
-        }  else if(pitchModelArrayList.get(i).getBooking_status().equalsIgnoreCase("1")){
-            myViewHolder.statusOfBooking.setBackground(context.getResources().getDrawable(R.drawable.edit_bg_green));
+        } else if (pitchModelArrayList.get(i).getBooking_status().equalsIgnoreCase("1")) {
+            myViewHolder.statusOfBooking.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
             myViewHolder.statusOfBookingText.setText("Complete");
         }
     }

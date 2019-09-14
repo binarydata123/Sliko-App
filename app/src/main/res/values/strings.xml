@@ -48,7 +48,6 @@
     <string name="entertime">Nhập thời gian</string>
     <string name="startdate">Ngày bắt đầu</string>
     <string name="enddate">Ngày cuối</string>
-    <string name="time">Thời gian</string>
     <string name="select_date">Chọn ngày</string>
     <string name="Save">Tiết kiệm</string>
     <string name="edit">Edit Stadium</string>
@@ -160,7 +159,27 @@
     <string name="bookingDate">Booking Date:&#160;</string>
     <string name="bookingTime">Booking Time:&#160;</string>
     <string name="setting">Setting</string>
-    <string name="totalEarnings">Total Earnings</string>
-    <string name="stadiumReport">Stadium Report</string>
+    <string name="totalEarnings">Total Revenue</string>
+    <string name="stadiumReport">Stadium Report By</string>
     <string name="please_enter_suitale_time">Please enter suitable time</string>
+    <string name="pitch">Pitch</string>
+    <string name="paymentMode">Payment Mode</string>
+    <string name="pitchType">PitchType</string>
+    <string name="numberOfPlayers">Number of players on pitch</string>
+    <string name="bookingInfo">Booking Info</string>
+    <string name="date">Date:&#160;</string>
+    <string name="time">Time:&#160;</string>
+    <string name="goBack">Back to bookings</string>
+    <string name="backToReports">Back to reports</string>
+    <string name="cash">Cash</string>
+    <string name="ZaloPay">ZaloPay</string>
+    <string name="momoPay">MomoPay</string>
+    <string name="amountToBePaid">Amount to be</string>
+    <string name="please_enter_stadium_address">Please enter stadium address</string>
+    <string name="please_enter_stadium_description">Please enter stadium description</string>
+    <string name="please_enter_pitch_name">Please enter pitch name</string>
+    <string name="updateStadium">Update Stadium</string>
+    <string name="password_should_big">Password should be min 6 char long</string>
+    <string name="please_enter_new_password">Please enter new password</string>
+    <string name="backToPitchBookings">Back to pitch bookings</string>
 </resources>

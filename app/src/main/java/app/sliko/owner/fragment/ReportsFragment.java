@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,6 +69,8 @@ public class ReportsFragment extends Fragment {
     TextView startDateText;
     @BindView(R.id.endDateText)
     TextView endDateText;
+    @BindView(R.id.backToBookings)
+    Button backToBookings;
 
     public static ReportsFragment newInstance() {
         Bundle args = new Bundle();
@@ -83,7 +86,6 @@ public class ReportsFragment extends Fragment {
         ButterKnife.bind(ReportsFragment.this, view);
         dialog = M.showDialog(getActivity(), "", false);
         setListeners();
-
         getAllBookings();
         bookingRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -99,6 +101,13 @@ public class ReportsFragment extends Fragment {
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });
+        backToBookings.setText(getString(R.string.backToReports));
+        backToBookings.setOnClickListener(view -> {
+
+            start_date = "";
+            end_date = "";
+            getAllBookings();
+        });
         return view;
     }
 
@@ -106,7 +115,7 @@ public class ReportsFragment extends Fragment {
 
     private void getAllBookings() {
         dialog.show();
-        Log.i(">>stadiumId", "getAllBookings: " + Prefs.getStadiumId(getActivity()) );
+        Log.i(">>stadiumId", "getAllBookings: " + Prefs.getStadiumId(getActivity()));
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_bookingList(M.fetchUserTrivialInfo(getActivity(), "id"),
                 Prefs.getStadiumId(getActivity()), "", start_date, end_date);
@@ -172,8 +181,17 @@ public class ReportsFragment extends Fragment {
 
     }
 
+    boolean isFirstTime = true;
+
     private void handleNoData() {
         noDataLayout.setVisibility(View.VISIBLE);
+        if (isFirstTime) {
+            isFirstTime = false;
+            backToBookings.setVisibility(View.GONE);
+        } else {
+
+            backToBookings.setVisibility(View.VISIBLE);
+        }
         image.setBackgroundResource(R.drawable.ic_booking);
     }
 
@@ -190,13 +208,15 @@ public class ReportsFragment extends Fragment {
             selectedmonth = selectedmonth + 1;
             et.setText("" + selectedyear + "-" + selectedmonth + "-" + selectedday);
             if (whichDate == 0) {
-                start_date = et.getText().toString();
+
+                start_date = startDateText.getText().toString();
+
             } else {
-                end_date = et.getText().toString();
+                end_date = endDateText.getText().toString();
+
             }
         }, mYear, mMonth, mDay);
-        mDatePicker.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-        mDatePicker.setTitle(whichDate == 0 ? "Pick Start Date" : "Pick End Date");
+        mDatePicker.setTitle("Pick Date");
         mDatePicker.show();
     }
 
@@ -204,21 +224,26 @@ public class ReportsFragment extends Fragment {
     private BookPitchMauallyDialog bookPitchMauallyDialog;
 
     private void setListeners() {
+
         searchButton.setOnClickListener(view -> {
             if (startDateText.getText().toString().length() == 0) {
                 Toast.makeText(getActivity(), getString(R.string.pleaseSelectStartDate), Toast.LENGTH_SHORT).show();
             } else if (endDateText.getText().toString().length() == 0) {
                 Toast.makeText(getActivity(), getString(R.string.pleaseSelectEndDate), Toast.LENGTH_SHORT).show();
             } else {
+                start_date = startDateText.getText().toString();
+                end_date = endDateText.getText().toString();
                 getAllBookings();
             }
         });
         pickEndDate.setOnClickListener(view ->
-                getDate(startDateText, 1)
+                getDate(endDateText, 1)
         );
         pickStartDate.setOnClickListener(view ->
-                getDate(endDateText, 2)
+                getDate(startDateText, 2)
         );
+
+
         addBookingButton.setOnClickListener(view -> {
             bookPitchMauallyDialog = DialogMethodCaller.openBookPitchMauallyDialog(getActivity(), R.layout.dialog_add_booking_manually, false);
             bookPitchMauallyDialog.getDialog_error().show();

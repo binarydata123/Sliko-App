@@ -59,7 +59,6 @@ public class VerticalTimingAdapter extends RecyclerView.Adapter<VerticalTimingAd
     public class MyViewHolder extends RecyclerView.ViewHolder {
         RecyclerView insideTimingRecyclerView;
         LinearLayout noBookingLayout;
-
         private MyViewHolder(@NonNull View itemView) {
             super(itemView);
             insideTimingRecyclerView = itemView.findViewById(R.id.insideTimingRecyclerView);

@@ -45,6 +45,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -56,6 +59,7 @@ import app.sliko.R;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.models.HomeStadiumListModel;
+import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.utills.M;
 import app.sliko.utills.Prefs;
 import app.sliko.web.Api;
@@ -111,10 +115,11 @@ public class UserHomeActivity extends AppCompatActivity implements LocationListe
 
     private void setUpLayout() {
         Log.e(">>id", "setUpLayout: " + M.fetchUserTrivialInfo(UserHomeActivity.this, "id"));
+        Log.e(">>id", "setUpLayout: " + M.fetchUserTrivialInfo(UserHomeActivity.this, "profilepic"));
         if (M.fetchUserTrivialInfo(UserHomeActivity.this, "profilepic").equalsIgnoreCase("")) {
             Picasso.get().load(Api.DUMMY_PROFILE).into(ivUserImage);
         } else {
-            Picasso.get().load(Api.DUMMY_PROFILE).into(ivUserImage);
+            Picasso.get().load(M.fetchUserTrivialInfo(UserHomeActivity.this, "profilepic")).into(ivUserImage);
         }
         etEmail.setText(M.actAccordingly(UserHomeActivity.this, "email"));
         etName.setText(M.actAccordingly(UserHomeActivity.this, "fullname"));
@@ -122,10 +127,27 @@ public class UserHomeActivity extends AppCompatActivity implements LocationListe
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(SuccessFullyStadiumCreated successFullyStadiumCreated) {
+        if (successFullyStadiumCreated != null) {
+            if (successFullyStadiumCreated.isStatus()) {
+                setUpLayout();
+            }
+        }
+
+    }
+
+
     @BindView(R.id.profileLayout)
     LinearLayout profileLayout;
     @BindView(R.id.editProfileLayout)
     LinearLayout editProfileLayout;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,6 +155,9 @@ public class UserHomeActivity extends AppCompatActivity implements LocationListe
         setContentView(R.layout.activity_user_home);
         Log.e("jj", "==");
         ButterKnife.bind(UserHomeActivity.this);
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
         dialog = M.showDialog(UserHomeActivity.this, "", false);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         toolbarTitle.setText(getString(R.string.Stadiums));

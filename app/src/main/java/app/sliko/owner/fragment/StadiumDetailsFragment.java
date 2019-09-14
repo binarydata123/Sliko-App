@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -74,6 +75,10 @@ public class StadiumDetailsFragment extends Fragment {
     ProgressBar progressBarLoading;
     @BindView(R.id.stadiumName)
     TextView stadiumName;
+    @BindView(R.id.bookingCount)
+    TextView bookingCount;
+    @BindView(R.id.amountCount)
+    TextView amountCount;
     @BindView(R.id.stadiumLocation)
     TextView stadiumLocation;
     @BindView(R.id.stadiumDescription)
@@ -93,7 +98,13 @@ public class StadiumDetailsFragment extends Fragment {
     @BindView(R.id.noPitchLayout)
     LinearLayout noPitchLayout;
     @BindView(R.id.sortSpinner)
-    Spinner sortSpinner;
+    Spinner sortByDays;
+    @BindView(R.id.sortByPitch)
+    Spinner sortByPitch;
+    @BindView(R.id.sortByModeOfPayment)
+    Spinner sortByModeOfPayment;
+    @BindView(R.id.pitchSpinnerLayout)
+    LinearLayout pitchSpinnerLayout;
     private ArrayList<String> reviewsModelArrayList;
     private StadiumImagesAdapter stadiumImagesAdapter;
     private View view;
@@ -112,7 +123,7 @@ public class StadiumDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setListeners();
-        Log.e(">>user_id", "onViewCreated: " + M.fetchUserTrivialInfo(getActivity() , "id"));
+        Log.e(">>user_id", "onViewCreated: " + M.fetchUserTrivialInfo(getActivity(), "id"));
     }
 
     @Override
@@ -120,6 +131,14 @@ public class StadiumDetailsFragment extends Fragment {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
     }
+
+    private ArrayList<String> modeOfPayment;
+    private ArrayList<String> sortArrayList;
+    private ArrayList<String> sortArrayListActualList;
+
+    private boolean days = false;
+    private boolean pitch = false;
+    private boolean payment = false;
 
     @Nullable
     @Override
@@ -132,22 +151,169 @@ public class StadiumDetailsFragment extends Fragment {
         }
         weakReference = new WeakReference<>(StadiumDetailsFragment.this);
         changeStadiumLayout.setVisibility(View.VISIBLE);
-        ArrayList<String> sortArrayList = new ArrayList<String>() {
+        sortArrayList = new ArrayList<String>() {
             {
+                add("All");
                 add("Yesterday");
                 add("Last 7 days");
                 add("Last 30 days");
             }
         };
-        sortSpinner.setAdapter(M.makeSpinnerAdapterWhite(getActivity(), sortArrayList, sortSpinner));
+        sortArrayListActualList = new ArrayList<String>() {
+            {
+                add("All");
+                add("1");
+                add("7");
+                add("30");
+            }
+        };
+
+        modeOfPayment = new ArrayList<String>() {
+            {
+                add("All");
+                add("Offline");
+                add("ZaloPay");
+                add("Momo");
+            }
+        };
+
+        sortByDays.setAdapter(M.makeSpinnerAdapterWhite(getActivity(), sortArrayList, sortByDays));
+
+        sortByModeOfPayment.setAdapter(M.makeSpinnerAdapterWhite(getActivity(), modeOfPayment, sortByModeOfPayment));
+
+        sortByDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (days) {
+
+                    if (sortByDays.getSelectedItemPosition() == 0) {
+                        filter_days = "";
+                    } else {
+                        filter_days = sortArrayListActualList.get(i);
+
+                    }
+                    getCurrentStadiumData();
+
+                } else {
+                    days = true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        sortByModeOfPayment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (payment) {
+                    if (sortByModeOfPayment.getSelectedItemPosition() == 0) {
+                        filter_payment_type = "";
+                    } else {
+                        filter_payment_type = modeOfPayment.get(i);
+
+                    }
+                    getCurrentStadiumData();
+
+                } else {
+                    payment = true;
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        sortByPitch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (pitch) {
+                    if (sortByPitch.getSelectedItemPosition() != 0) {
+                        pitch_id = pitchModelArrayList.get(sortByPitch.getSelectedItemPosition() - 1).getId();
+
+                    } else {
+                        pitch_id = "";
+                    }
+                    getCurrentStadiumData();
+
+                } else {
+                    pitch = true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         return view;
     }
 
+    private void getCurrentStadiumData() {
+        Log.e(">>data", "getCurrentStadiumData: " + M.fetchUserTrivialInfo(getActivity(), "id") + "\n" +
+
+                Prefs.getStadiumId(getActivity()) + "\n" + pitch_id + "\n" + filter_days + "\n" + filter_payment_type);
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_getStadiumRevenueDetails(
+                M.fetchUserTrivialInfo(getActivity(), "id"),
+                Prefs.getStadiumId(getActivity()), pitch_id,
+                filter_days,
+                filter_payment_type);
+        Log.e(">>detailsFrag", "getCurrentStadiumData: " + M.fetchUserTrivialInfo(getActivity(), "id")
+                + "\n" +
+                Prefs.getStadiumId(getActivity()) + "\n" + pitch_id + "\n" +
+                filter_days + "\n" +
+                filter_payment_type);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String total_count = data.getString("total_count");
+                            String total_amount = data.getString("total_amount");
+                            bookingCount.setText(total_count);
+                            amountCount.setText(total_amount);
+                        } else {
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Log.e(">>code", "onResponse: " + response.code());
+                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Log.e(">>code", "onResponse: " + e.getMessage());
+                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Log.e(">>code", "onResponse: " + t.getMessage());
+            }
+        });
+    }
+
+    private String filter_days = "", pitch_id = "", filter_payment_type = "";
+
+    ArrayList<String> pitchListing = new ArrayList<>();
 
     private ArrayList<String> pitchGalleryStringArrayList;
     String id;
 
     private void fetchStadiumInfo(String response) {
+        pitchListing.add("All");
         pitchModelArrayList = new ArrayList<>();
         reviewsModelArrayList = new ArrayList<>();
         try {
@@ -204,6 +370,7 @@ public class StadiumDetailsFragment extends Fragment {
                         pitchModel.setComplete_booking(pitchObject.getString("complete_booking"));
                         pitchModel.setPitch_review_avg(pitchObject.getString("pitch_review_avg"));
                         pitchModel.setId(pitchObject.getString("id"));
+                        Log.e(">>pitchID", "fetchStadiumInfo: " + pitchObject.getString("id"));
                         pitchModel.setPrice(pitchObject.getString("price"));
                         pitchModel.setStadium_id(pitchObject.getString("stadium_id"));
                         pitchModel.setUser_id(pitchObject.getString("user_id"));
@@ -213,10 +380,15 @@ public class StadiumDetailsFragment extends Fragment {
                         pitchGalleryStringArrayList.add(pitchImage.getString("pitch_image"));
                         pitchModel.setPitch_gallery(pitchGalleryStringArrayList);
                         pitchModelArrayList.add(pitchModel);
+                        pitchListing.add(pitchObject.getString("pitch_name"));
                     }
+                    sortByPitch.setAdapter(M.makeSpinnerAdapterWhite(getActivity(), pitchListing, sortByPitch));
                     setAdapter();
+                    pitchAdapterOwner.notifyDataSetChanged();
                     noPitchLayout.setVisibility(View.GONE);
+                    pitchSpinnerLayout.setVisibility(View.VISIBLE);
                 } else {
+                    pitchSpinnerLayout.setVisibility(View.GONE);
                     pitchesRecyclerView.setVisibility(View.GONE);
                     noPitchLayout.setVisibility(View.VISIBLE);
                     noPitchLayout.setOnClickListener(new View.OnClickListener() {
@@ -229,7 +401,7 @@ public class StadiumDetailsFragment extends Fragment {
                 stadiumImagesAdapter = new StadiumImagesAdapter(getActivity(), reviewsModelArrayList);
                 viewPager.setAdapter(stadiumImagesAdapter);
                 circleIndicator.setViewPager(viewPager);
-
+                getCurrentStadiumData();
             } else {
                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
             }
@@ -245,8 +417,6 @@ public class StadiumDetailsFragment extends Fragment {
         pitchAdapterOwner = new PitchAdapterOwner(getActivity(), pitchModelArrayList);
         pitchesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         pitchesRecyclerView.setAdapter(pitchAdapterOwner);
-        pitchAdapterOwner.notifyDataSetChanged();
-
     }
 
     private DialogConfirmation dialogConfirmation;
@@ -276,6 +446,7 @@ public class StadiumDetailsFragment extends Fragment {
                                         JSONObject jsonObject = new JSONObject(sResponse);
                                         String status = jsonObject.getString("status");
                                         String message = jsonObject.getString("message");
+                                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                                         if (status.equalsIgnoreCase("true")) {
                                             EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
                                         } else {
@@ -308,7 +479,6 @@ public class StadiumDetailsFragment extends Fragment {
                 noStadiumLayout.setVisibility(View.GONE);
                 stadiumLayout.setVisibility(View.VISIBLE);
                 fetchStadiumInfo(stadiumExistEventOrNot.getReponse());
-
             } else {
                 noStadiumLayout.setVisibility(View.VISIBLE);
                 stadiumLayout.setVisibility(View.GONE);

@@ -111,19 +111,18 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
             } else {
                 mDrawerLayout.openDrawer(GravityCompat.START);
             }
-
         });
-        int startEntry = 9;
-        int stopEntry = 17;
-        int slot = 2;
-        int temp = startEntry;
-        for (int k = startEntry; k < stopEntry; k++) {
-            if (temp < stopEntry) {
-                Log.i(">>data", "checkForLoop: " + ((temp) + "-" + (temp + slot)));
-                temp += slot;
-            }
-        }
 
+//        int startEntry = 9;
+//        int stopEntry = 17;
+//        int slot = 2;
+//        int temp = startEntry;
+//        for (int k = startEntry; k < stopEntry; k++) {
+//            if (temp < stopEntry) {
+//                Log.i(">>data", "checkForLoop: " + ((temp) + "-" + (temp + slot)));
+//                temp += slot;
+//            }
+//        }
         setUpLayout();
         if (!M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id").equalsIgnoreCase("")) {
             fetchStadiumInfo();
@@ -139,9 +138,7 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
         etEmail.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "email"));
         etName.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "fullname"));
         etPhone.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "phone"));
-        stadiumRelatedLayout.setVisibility(M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, Api.IS_STADIUM).equalsIgnoreCase("0") ?
-                View.GONE
-                : View.VISIBLE);
+        Log.e(">>data", "setUpLayout: " +  M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, Api.IS_STADIUM));
 
     }
 
@@ -312,6 +309,7 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
             if (successFullyStadiumCreated.isStatus()) {
                 fetchStadiumInfo();
                 setUpLayout();
+                stadiumRelatedLayout.setVisibility(View.VISIBLE);
             }
         }
     }

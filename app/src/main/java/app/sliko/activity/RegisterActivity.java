@@ -121,6 +121,9 @@ public class RegisterActivity extends AppCompatActivity {
             } else if ((etPassword.length() == 0 || etPassword.getText().toString().trim().length() == 0)) {
                 Toast.makeText(this, getString(R.string.please_enter_password), Toast.LENGTH_SHORT).show();
 
+            } else if ((etPassword.length() < 6)) {
+                Toast.makeText(this, getString(R.string.password_should_big), Toast.LENGTH_SHORT).show();
+
             } else if ((etConfirmPassword.length() == 0 || etConfirmPassword.getText().toString().trim().length() == 0)) {
                 Toast.makeText(this, getString(R.string.please_confirm_password), Toast.LENGTH_SHORT).show();
 

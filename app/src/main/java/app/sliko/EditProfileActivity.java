@@ -34,8 +34,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import app.sliko.events.ProfileUploadedSuccessEvent;
 import app.sliko.location.SelectAddressLocation;
-import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.utills.FilePath;
 import app.sliko.utills.M;
 import app.sliko.utills.Prefs;
@@ -135,9 +135,8 @@ public class EditProfileActivity extends AppCompatActivity {
         MultipartBody.Part multipart_body = null;
 
         if (photoFile != null) {
-            File file = new File(fileName.getName());
-            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
-            multipart_body = MultipartBody.Part.createFormData("profilepic", file.getName(), reqFile);
+            RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), photoFile);
+            multipart_body = MultipartBody.Part.createFormData("profilepic", photoFile.getName(), reqFile);
             call = service.editProfile(
                     multipart_body,
                     RequestBody.create(MediaType.parse("multipart/form-data"), M.fetchUserTrivialInfo(EditProfileActivity.this, "id")),
@@ -181,17 +180,17 @@ public class EditProfileActivity extends AppCompatActivity {
                         String message = jsonObject.getString("message");
                         Toast.makeText(EditProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                         if (status.equalsIgnoreCase("true")) {
-                            //M.updateTrivialInfo(AddStadiumActivity.this, Api.IS_STADIUM, Api.STADIUM_ADDED);
-                            EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
+                            Prefs.saveUserData(jsonObject.getJSONObject("data").toString(), EditProfileActivity.this);
+                            EventBus.getDefault().postSticky(new ProfileUploadedSuccessEvent(true));
+                            finish();
                         } else {
-                            EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(false));
+                            Toast.makeText(EditProfileActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
-                        finish();
+
                     } catch (Exception e) {
                         Toast.makeText(EditProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-
                     Toast.makeText(EditProfileActivity.this, response.toString() + "\n" + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
                     Log.i(">>response", "onResponse: " + response.toString() + "\n" + response.errorBody().toString());
                 }
@@ -220,18 +219,16 @@ public class EditProfileActivity extends AppCompatActivity {
                             {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     PERMISSIONS_REQUEST_CODE);
         } else {
-
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Complete action using"), 101);
-
         }
     }
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             for (int grantResult : grantResults) {
                 if (grantResult != PackageManager.PERMISSION_GRANTED) {
@@ -281,12 +278,7 @@ public class EditProfileActivity extends AppCompatActivity {
         setContentView(R.layout.edit_profile);
         ButterKnife.bind(EditProfileActivity.this);
         dialog = M.showDialog(EditProfileActivity.this, "", false);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
         toolbar.setNavigationIcon(R.drawable.back_arrow_white);
         toolbarTitle.setText(getString(R.string.editProfile));
         type = getIntent().getStringExtra("type");
@@ -398,19 +390,26 @@ public class EditProfileActivity extends AppCompatActivity {
                                 }
                             });
                             etUserName.setText(M.actAccordinglyWithJson(EditProfileActivity.this, dataObject.getString("fullname")));
+                            etUserName.setSelection(etUserName.length());
                             etEmail.setText(M.actAccordinglyWithJson(EditProfileActivity.this, dataObject.getString("email")));
+                            etEmail.setSelection(etEmail.length());
                             etPhone.setText(M.actAccordinglyWithJson(EditProfileActivity.this, dataObject.getString("phone")));
+                            etPhone.setSelection(etPhone.length());
                             etAddress.setText(M.actAccordinglyWithJson(EditProfileActivity.this, dataObject.getString("address")));
                             etHeight.setText(M.actAccordinglyWithJson(EditProfileActivity.this, dataObject.getString("height")));
+                            etHeight.setSelection(etHeight.length());
                             etWeight.setText(M.actAccordinglyWithJson(EditProfileActivity.this, dataObject.getString("weight")));
-                            if (dataObject.getString("footedness").trim().equalsIgnoreCase("LeftFoot")) {
+                            etWeight.setSelection(etWeight.length());
+                            if (dataObject.getString("footedness").equalsIgnoreCase("left foot")) {
                                 leftFoot.setChecked(true);
+                                rightFoot.setChecked(false);
                             } else {
+                                leftFoot.setChecked(false);
                                 rightFoot.setChecked(true);
                             }
                             etFavouriteTeam.setText(M.actAccordinglyWithJson(EditProfileActivity.this, dataObject.getString("favourite_team")));
+                            etFavouriteTeam.setSelection(etFavouriteTeam.length());
                             selectedPlayerPosition = dataObject.getString("play_position");
-
                             getPlayerPositionData(selectedPlayerPosition);
                         } else {
                             Toast.makeText(EditProfileActivity.this, message, Toast.LENGTH_SHORT).show();

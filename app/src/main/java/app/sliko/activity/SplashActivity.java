@@ -29,7 +29,7 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 finish();
             } else {
-                if (M.hasTrivialInfo(SplashActivity.this, Api.IS_STADIUM)) {
+                if (M.fetchUserTrivialInfo(SplashActivity.this , "role").equalsIgnoreCase("owner")) {
                     startActivity(new Intent(SplashActivity.this, StadiumOwnerHomeActivity.class));
                     finish();
                 } else {

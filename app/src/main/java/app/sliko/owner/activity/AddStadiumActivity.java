@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -31,6 +31,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import app.sliko.R;
 import app.sliko.location.SelectAddressLocation;
@@ -72,13 +74,14 @@ public class AddStadiumActivity extends AppCompatActivity {
     RecyclerView stadiumImagesRecyclerView;
     @BindView(R.id.availabilityRecyclerView)
     RecyclerView availabilityRecyclerView;
+
     private static final int PERMISSIONS_REQUEST_CODE = 0x1;
-    Dialog dialog;
+    private Dialog dialog;
     private ArrayList<StadiumImagesModel> imagesEncodedList;
-    String imageEncoded, address = "";
-    AddImagesAdapter addPitchImageAdapter;
-    String userId;
-    String lat = "", lng = "";
+    private String imageEncoded, address = "";
+    private AddImagesAdapter addPitchImageAdapter;
+    private String userId;
+    private String lat = "", lng = "";
 
     @BindView(R.id.chkboxsunday)
     CheckBox chkboxsunday;
@@ -94,12 +97,15 @@ public class AddStadiumActivity extends AppCompatActivity {
     CheckBox chkboxfriday;
     @BindView(R.id.chkboxsaturday)
     CheckBox chkboxsaturday;
+    @BindView(R.id.submitButton)
+    Button submitButton;
 
-    StadiumOpeningAdapter stadiumOpeningAdapter;
-    private JSONArray timeSlots = null;
+    private StadiumOpeningAdapter stadiumOpeningAdapter;
 
-    String stadium_id = "";
-    String stadiumType = "";
+    private String stadium_id = "";
+    private String stadiumType = "";
+
+    boolean canUpdate = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,38 +114,41 @@ public class AddStadiumActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         dialog = M.showDialog(this, "", false);
         userId = M.fetchUserTrivialInfo(AddStadiumActivity.this, "id");
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+        toolbar.setNavigationOnClickListener(view -> finish());
+
+        prepareStadiumData();
+
         stadiumType = getIntent().getStringExtra("stadiumType");
         assert stadiumType != null;
         if (stadiumType.equalsIgnoreCase("add")) {
             toolbarTitle.setText(getString(R.string.addedStadium));
+            setAdapter();
+            stadiumOpeningAdapter.notifyDataSetChanged();
+            canUpdate = false;
+            submitButton.setText(getString(R.string.addStadium));
         } else {
             toolbarTitle.setText(getString(R.string.editStadium));
             if (getIntent().getStringExtra("stadium_id") != null) {
                 stadium_id = getIntent().getStringExtra("stadium_id");
                 fetchStadiumInfo();
+                canUpdate = true;
+                submitButton.setText(getString(R.string.updateStadium));
             }
         }
-
         Log.e(">>", "onCreate: " + stadium_id);
         toolbar.setNavigationIcon(R.drawable.back_arrow_white);
         imagesEncodedList = new ArrayList<>();
         imagesEncodedList.clear();
 
         setStadiumImageAdapter();
-        prepareStadiumData();
     }
 
     ArrayList<AvailabilityModel> availabilityModels = new ArrayList<>();
 
     private void setStadiumImageAdapter() {
         stadiumImagesRecyclerView.setLayoutManager(new LinearLayoutManager(AddStadiumActivity.this, LinearLayoutManager.HORIZONTAL, false));
-        addPitchImageAdapter = new AddImagesAdapter(this, imagesEncodedList, "");
+        addPitchImageAdapter = new AddImagesAdapter(this, imagesEncodedList, "stadium");
+        stadiumImagesRecyclerView.setNestedScrollingEnabled(false);
         stadiumImagesRecyclerView.setAdapter(addPitchImageAdapter);
     }
 
@@ -151,10 +160,13 @@ public class AddStadiumActivity extends AppCompatActivity {
             availabilityModel.setTime(Api.timingArray[k]);
             availabilityModels.add(availabilityModel);
         }
+    }
+
+    private void setAdapter() {
         stadiumOpeningAdapter = new StadiumOpeningAdapter(AddStadiumActivity.this, availabilityModels, "editView");
         availabilityRecyclerView.setLayoutManager(new GridLayoutManager(AddStadiumActivity.this, 3));
+        availabilityRecyclerView.setNestedScrollingEnabled(false);
         availabilityRecyclerView.setAdapter(stadiumOpeningAdapter);
-        stadiumOpeningAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.submitButton)
@@ -171,20 +183,29 @@ public class AddStadiumActivity extends AppCompatActivity {
     private void setlisteners() {
 
         if (stadiumName.length() == 0 || stadiumName.getText().toString().trim().length() == 0) {
-            Toast.makeText(AddStadiumActivity.this, getResources().getString(R.string.plzEnterpitchname), Toast.LENGTH_SHORT).show();
-        } else if (stadiumDescription.length() == 0 || stadiumDescription.getText().toString().trim().length() == 0) {
-            Toast.makeText(AddStadiumActivity.this, getResources().getString(R.string.plzEnterdescption), Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddStadiumActivity.this, getResources().getString(R.string.please_enter_pitch_name), Toast.LENGTH_SHORT).show();
         } else if (stadiumAddress.length() == 0 || stadiumAddress.getText().toString().trim().length() == 0) {
-            Toast.makeText(AddStadiumActivity.this, getResources().getString(R.string.plzenteraddress), Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddStadiumActivity.this, getResources().getString(R.string.please_enter_stadium_address), Toast.LENGTH_SHORT).show();
         } else if (stadiumOpeningAdapter.getSelectedArrayList().length() == 0) {
             Toast.makeText(this, getResources().getString(R.string.please_select_atleast_one_time_slot), Toast.LENGTH_SHORT).show();
         } else if (imagesEncodedList.size() == 0) {
             Toast.makeText(this, getResources().getString(R.string.please_insert_one_image_atleast), Toast.LENGTH_SHORT).show();
         } else {
+            openingString = stadiumOpeningAdapter.getSelectedArrayList().toString();
+
+            if (openingString.endsWith(",")) {
+                Log.e(">>OpeningData", "setlisteners: " + openingString.substring(0, openingString.length() - 1));
+            } else {
+                Log.e(">>OpeningData", "setlisteners: " + openingString);
+
+            }
+
             updateMyInfo();
         }
 
     }
+
+    String openingString;
 
     @OnClick(R.id.pickImageLayout)
     void clickPitchImage() {
@@ -225,7 +246,7 @@ public class AddStadiumActivity extends AppCompatActivity {
                         stadiumImagesModel.setImageId("");
                         stadiumImagesModel.setImageName(imageEncoded);
                         imagesEncodedList.add(stadiumImagesModel);
-                        Log.i(">>idImage", "onActivityResult: " + imageEncoded + "\n" + mImageUri.getPath());
+                        Log.e(">>idImage", "onActivityResult: " + imageEncoded + "\n" + mImageUri.getPath());
                         cursor.close();
                     } else {
                         if (data.getClipData() != null) {
@@ -247,7 +268,7 @@ public class AddStadiumActivity extends AppCompatActivity {
                                 stadiumImagesModel.setImageId("");
                                 stadiumImagesModel.setImageName(imageEncoded);
                                 imagesEncodedList.add(stadiumImagesModel);
-                                Log.i(">>idImage", "onActivityResult: " + imageEncoded + "\n" + uri.getPath());
+                                Log.e(">>idImage", "onActivityResult: " + imageEncoded + "\n" + uri.getPath());
                                 cursor.close();
                             }
                             Log.v("LOG_TAG", "Selected Images" + mArrayUri.size());
@@ -296,25 +317,54 @@ public class AddStadiumActivity extends AppCompatActivity {
                     multipart_body[k] = MultipartBody.Part.createFormData("stadium_image[]", file.getName(), reqFile);
                 }
             }
-            Call<ResponseBody> call = service.createStadium(
-                    multipart_body,
-                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumName.getText().toString()),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), userId),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumDescription.getText().toString()),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumAddress.getText().toString()),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), lat),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), lng),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), stadiumOpeningAdapter.getSelectedArrayList().toString()),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), ""),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), ""),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxmonday.isChecked() ? "1" : "0"),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxtuesday.isChecked() ? "1" : "0"),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxwednsday.isChecked() ? "1" : "0"),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxthursday.isChecked() ? "1" : "0"),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxfriday.isChecked() ? "1" : "0"),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxsaturday.isChecked() ? "1" : "0"),
-                    RequestBody.create(MediaType.parse("multipart/form-data"), chkboxsunday.isChecked() ? "1" : "0")
-            );
+
+            Call<ResponseBody> call;
+            Log.e(">>es", "updateMyInfo: " + id);
+            Log.e(">>es", "updateMyInfo: " + userId);
+            Log.e(">>es", "updateMyInfo: " + stadiumName.getText().toString());
+
+            if (canUpdate) {
+                call = service.updateStadium(
+                        multipart_body,
+                        RequestBody.create(MediaType.parse("multipart/form-data"), id),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), stadiumName.getText().toString()),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), userId),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), stadiumDescription.getText().toString()),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), stadiumAddress.getText().toString()),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), lat),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), lng),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), openingString),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), openingString),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), openingString),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxmonday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxtuesday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxwednsday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxthursday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxfriday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxsaturday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxsunday.isChecked() ? "1" : "0")
+                );
+            } else {
+                call = service.createStadium(
+                        multipart_body,
+                        RequestBody.create(MediaType.parse("multipart/form-data"), stadiumName.getText().toString()),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), userId),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), stadiumDescription.getText().toString()),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), stadiumAddress.getText().toString()),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), lat),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), lng),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), openingString),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), openingString),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), openingString),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxmonday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxtuesday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxwednsday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxthursday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxfriday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxsaturday.isChecked() ? "1" : "0"),
+                        RequestBody.create(MediaType.parse("multipart/form-data"), chkboxsunday.isChecked() ? "1" : "0")
+                );
+            }
 
             final Callback<ResponseBody> callback = new Callback<ResponseBody>() {
                 @Override
@@ -328,7 +378,6 @@ public class AddStadiumActivity extends AppCompatActivity {
                             String message = jsonObject.getString("message");
                             Toast.makeText(AddStadiumActivity.this, message, Toast.LENGTH_SHORT).show();
                             if (status.equalsIgnoreCase("true")) {
-                                //M.updateTrivialInfo(AddStadiumActivity.this, Api.IS_STADIUM, Api.STADIUM_ADDED);
                                 EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
                             } else {
                                 EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(false));
@@ -340,13 +389,13 @@ public class AddStadiumActivity extends AppCompatActivity {
                     } else {
 
                         Toast.makeText(AddStadiumActivity.this, response.toString() + "\n" + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
-                        Log.i(">>response", "onResponse: " + response.toString() + "\n" + response.errorBody().toString());
+                        Log.e(">>response", "onResponse: " + response.toString() + "\n" + response.errorBody().toString());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.d(">>apiNotResponding", "update student failure : " + "api NotResponding Failure");
+                    Log.e(">>apiNotResponding", "update student failure : " + "api NotResponding Failure");
 
                     Toast.makeText(AddStadiumActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -354,14 +403,13 @@ public class AddStadiumActivity extends AppCompatActivity {
             call.enqueue(callback);
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(">>apiException", "update student failure : " + "api NotResponding Failure");
+            Log.e(">>apiException", "update student failure : " + "api NotResponding Failure");
         }
     }
 
-    private ArrayList<StadiumImagesModel> stadiumImagesDataArrayList;
+    String id;
 
     private void fetchStadiumInfo() {
-        stadiumImagesDataArrayList = new ArrayList<>();
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_stadium_detail(M.fetchUserTrivialInfo(AddStadiumActivity.this, "id"));
@@ -378,18 +426,20 @@ public class AddStadiumActivity extends AppCompatActivity {
                         if (status.equalsIgnoreCase("true")) {
                             JSONObject data = jsonObject.getJSONObject("data");
                             String stadium_name = data.getString("stadium_name");
+                            id = data.getString("id");
                             String description = data.getString("description");
+                            String slot_intervel = data.getString("slot_intervel");
                             String address = data.getString("address");
+                            Log.e(">>lats", "onResponse: " + lat + "\n" + lng);
                             lat = data.getString("lat");
                             lng = data.getString("lng");
-
                             chkboxmonday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
-                            chkboxtuesday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
-                            chkboxwednsday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
-                            chkboxthursday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
-                            chkboxfriday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
-                            chkboxsaturday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
-                            chkboxsunday.setChecked(data.getString("check_mon").equalsIgnoreCase("1"));
+                            chkboxtuesday.setChecked(data.getString("check_tue").equalsIgnoreCase("1"));
+                            chkboxwednsday.setChecked(data.getString("check_wed").equalsIgnoreCase("1"));
+                            chkboxthursday.setChecked(data.getString("check_thu").equalsIgnoreCase("1"));
+                            chkboxfriday.setChecked(data.getString("check_fri").equalsIgnoreCase("1"));
+                            chkboxsaturday.setChecked(data.getString("check_sat").equalsIgnoreCase("1"));
+                            chkboxsunday.setChecked(data.getString("check_sun").equalsIgnoreCase("1"));
                             stadiumName.setText(stadium_name);
                             stadiumDescription.setText(description);
                             stadiumAddress.setText(address);
@@ -401,10 +451,25 @@ public class AddStadiumActivity extends AppCompatActivity {
                                 String stadiumImage = stadiumImages.getString("stadium_image");
                                 stadiumImagesModel.setImageId(imageId);
                                 stadiumImagesModel.setImageName(stadiumImage);
-                                stadiumImagesDataArrayList.add(stadiumImagesModel);
+                                imagesEncodedList.add(stadiumImagesModel);
                             }
                             addPitchImageAdapter.notifyDataSetChanged();
 
+                            List<String> stringArrayList = Arrays.asList(slot_intervel.split(","));
+
+                            for (int k = 0; k < stringArrayList.size(); k++) {
+                                Log.e(">>slots", "onResponse: " + stringArrayList.get(k));
+                                for (int l = 0; l < availabilityModels.size(); l++) {
+                                    if (stringArrayList.get(k).trim().equalsIgnoreCase(availabilityModels.get(l).getTime().trim())) {
+                                        AvailabilityModel availabilityModel = availabilityModels.get(l);
+                                        availabilityModel.setPicked(true);
+                                        availabilityModels.set(l, availabilityModel);
+                                        Log.e(">>dataForAvailability", "onResponse: " + k + "\n" + l);
+                                    }
+                                }
+                            }
+                            setAdapter();
+                            stadiumOpeningAdapter.notifyDataSetChanged();
                         } else {
                             Toast.makeText(AddStadiumActivity.this, message, Toast.LENGTH_SHORT).show();
                         }

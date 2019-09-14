@@ -24,13 +24,6 @@
             android:padding="5dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Start Date"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
-
-            <TextView
                 android:id="@+id/startDateText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,7 +33,7 @@
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:padding="5dp"
-                android:text="Pick Start Date" />
+                android:hint="@string/startdate" />
         </LinearLayout>
 
         <LinearLayout
@@ -52,12 +45,6 @@
             android:orientation="vertical"
             android:padding="5dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="End Date"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/endDateText"
@@ -69,16 +56,16 @@
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:padding="5dp"
-                android:text="Pick End Date" />
+                android:hint="@string/enddate" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/searchButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".6"
-            android:gravity="center"
-            android:padding="5dp">
+            android:layout_weight=".7"
+            android:layout_gravity="center"
+            android:gravity="center">
 
             <ImageView
                 android:layout_width="20dp"
@@ -88,5 +75,4 @@
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
-
 

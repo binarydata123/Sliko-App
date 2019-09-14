@@ -11,7 +11,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 import app.sliko.R;
 import app.sliko.models.StadiumImagesModel;
 import app.sliko.owner.adapter.AddImagesAdapter;
+import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.utills.M;
 import app.sliko.utills.Prefs;
 import app.sliko.web.ApiInterface;
@@ -59,6 +63,10 @@ public class AddPitchActivity extends Activity {
     EditText etPitchPrice;
     @BindView(R.id.pitchImageRecyclerView)
     RecyclerView pitchImageRecyclerView;
+    @BindView(R.id.pitchType)
+    Spinner pitchTypeSpinner;
+    @BindView(R.id.addPitchButton)
+    Button addPitchButton;
 
     private static final int PERMISSIONS_REQUEST_CODE = 0x1;
     Dialog dialog;
@@ -86,10 +94,12 @@ public class AddPitchActivity extends Activity {
             getSinglePitchDetail();
             PITCH_EDIT = "1";
             canEdit = true;
+            addPitchButton.setText(getString(R.string.editPitch));
         } else {
             toolbarTitle.setText(getString(R.string.addPitch));
             PITCH_EDIT = "2";
             canEdit = false;
+            addPitchButton.setText(getString(R.string.addPitch));
         }
 
         pitchImagesGalleryArrayList = new ArrayList<>();
@@ -97,11 +107,14 @@ public class AddPitchActivity extends Activity {
         toolbar.setNavigationOnClickListener(view -> finish());
         toolbar.setNavigationIcon(R.drawable.back_arrow_white);
         setAdapter();
+
+        getPitchType();
+
     }
 
     private void setAdapter() {
         pitchImageRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        pitchImageAdapter = new AddImagesAdapter(this, pitchImagesGalleryArrayList, PITCH_EDIT);
+        pitchImageAdapter = new AddImagesAdapter(this, pitchImagesGalleryArrayList, "pitch");
         pitchImageRecyclerView.setAdapter(pitchImageAdapter);
     }
 
@@ -218,7 +231,7 @@ public class AddPitchActivity extends Activity {
             for (int k = 0; k < files.size(); k++) {
                 File file = new File(files.get(k).getImageName());
                 RequestBody reqFile = RequestBody.create(MediaType.parse("*/*"), file);
-                multipart_body[k] = MultipartBody.Part.createFormData("images[]", file.getName(), reqFile);
+                multipart_body[k] = MultipartBody.Part.createFormData("pitch_image[]", file.getName(), reqFile);
             }
 
         }
@@ -228,15 +241,19 @@ public class AddPitchActivity extends Activity {
                     RequestBody.create(MediaType.parse("multipart/form-data"), pitchId),
                     RequestBody.create(MediaType.parse("multipart/form-data"), Prefs.getStadiumId(AddPitchActivity.this)),
                     RequestBody.create(MediaType.parse("multipart/form-data"), etPitchName.getText().toString()),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), pitchTypeSpinner.getSelectedItem().toString()),
+
                     RequestBody.create(MediaType.parse("multipart/form-data"), etPitchDescription.getText().toString()),
                     RequestBody.create(MediaType.parse("multipart/form-data"), etPitchPrice.getText().toString())
             );
         } else {
             call = service.createPitch(
                     multipart_body,
-                    RequestBody.create(MediaType.parse("multipart/form-data"), canEdit ? pitchId : M.fetchUserTrivialInfo(AddPitchActivity.this, "id")),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), M.fetchUserTrivialInfo(AddPitchActivity.this, "id")),
                     RequestBody.create(MediaType.parse("multipart/form-data"), Prefs.getStadiumId(AddPitchActivity.this)),
                     RequestBody.create(MediaType.parse("multipart/form-data"), etPitchName.getText().toString()),
+                    RequestBody.create(MediaType.parse("multipart/form-data"), pitchTypeSpinner.getSelectedItem().toString()),
+
                     RequestBody.create(MediaType.parse("multipart/form-data"), etPitchDescription.getText().toString()),
                     RequestBody.create(MediaType.parse("multipart/form-data"), etPitchPrice.getText().toString())
             );
@@ -249,35 +266,38 @@ public class AddPitchActivity extends Activity {
                 dialog.dismiss();
                 if (response.isSuccessful()) {
                     try {
-                        if (response.isSuccessful()) {
-                            String sResponse = response.body().toString();
-                            JSONObject jsonObject = new JSONObject(sResponse);
-                            String status = jsonObject.getString("status");
-                            String message = jsonObject.getString("message");
-                            Toast.makeText(AddPitchActivity.this, message, Toast.LENGTH_SHORT).show();
-                            Toast.makeText(AddPitchActivity.this, message, Toast.LENGTH_SHORT).show();
-
+                        String responseString = response.body().string();
+                        JSONObject jsonObject = new JSONObject(responseString);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        Toast.makeText(AddPitchActivity.this, message, Toast.LENGTH_SHORT).show();
+                        if (status.equalsIgnoreCase("true")) {
+                            EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
                         } else {
-                            Toast.makeText(AddPitchActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                            EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(false));
                         }
-
-
+                        finish();
                     } catch (Exception e) {
-
                         Toast.makeText(AddPitchActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
+
                     Toast.makeText(AddPitchActivity.this, response.toString() + "\n" + response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                    Log.e(">>response", "onResponse: " + response.toString() + "\n" + response.errorBody().toString());
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(">>apiNotResponding", "update student failure : " + "api NotResponding Failure");
+
                 Toast.makeText(AddPitchActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         };
         call.enqueue(callback);
     }
+
+    String pitch_type;
 
     private void getSinglePitchDetail() {
         dialog.show();
@@ -298,6 +318,7 @@ public class AddPitchActivity extends Activity {
                             etPitchName.setText(M.actAccordinglyWithJson(AddPitchActivity.this, data.getString("pitch_name")));
                             etPitchPrice.setText(M.actAccordinglyWithJson(AddPitchActivity.this, data.getString("price")));
                             etPitchDescription.setText(M.actAccordinglyWithJson(AddPitchActivity.this, data.getString("description")));
+                            pitch_type = data.getString("pitch_type");
                             JSONArray pitchImageGallery = data.getJSONArray("pitch_gallery");
                             for (int k = 0; k < pitchImageGallery.length(); k++) {
                                 JSONObject jsonObject1 = pitchImageGallery.getJSONObject(k);
@@ -308,6 +329,59 @@ public class AddPitchActivity extends Activity {
                             }
                             setAdapter();
                             pitchImageAdapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(AddPitchActivity.this, message, Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(AddPitchActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(AddPitchActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(">>E", "onResponse: " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+                dialog.cancel();
+                Toast.makeText(AddPitchActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    ArrayList<String> typeOfPitches = new ArrayList<>();
+
+    private void getPitchType() {
+        dialog.show();
+        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+        Call<ResponseBody> call = service.ep_pitchPlayerType();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                dialog.cancel();
+                try {
+                    if (response.isSuccessful()) {
+                        String sResponse = response.body().string();
+                        JSONObject jsonObject = new JSONObject(sResponse);
+                        String status = jsonObject.getString("status");
+                        String message = jsonObject.getString("message");
+                        if (status.equalsIgnoreCase("true")) {
+                            JSONArray jsonObject1 = jsonObject.getJSONArray("data");
+                            for (int k = 0; k < jsonObject1.length(); k++) {
+                                JSONObject ibject = jsonObject1.getJSONObject(k);
+                                typeOfPitches.add(ibject.getString("players"));
+                            }
+                            pitchTypeSpinner.setAdapter(M.makeSpinnerAdapterWhite(AddPitchActivity.this, typeOfPitches, pitchTypeSpinner));
+
+                            if (canEdit) {
+                                for (int k = 0; k < typeOfPitches.size(); k++) {
+                                    if (pitch_type.equalsIgnoreCase(typeOfPitches.get(k))) {
+                                        pitchTypeSpinner.setSelection(k);
+                                        break;
+                                    }
+                                }
+                            }
+
                         } else {
                             Toast.makeText(AddPitchActivity.this, message, Toast.LENGTH_SHORT).show();
                         }

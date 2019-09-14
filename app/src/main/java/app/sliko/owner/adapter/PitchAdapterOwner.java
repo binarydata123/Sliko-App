@@ -60,6 +60,13 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
         myViewHolder.pitchName.setText(context.getString(R.string.pitchName) + ": " + pitchModelArrayList.get(i).getPitch_name());
+        if (pitchModelArrayList.get(i).getPitch_review_avg().equalsIgnoreCase("null") ||
+                pitchModelArrayList.get(i).getPitch_review_avg().equalsIgnoreCase("")) {
+            myViewHolder.SD_stadiumReviews.setText(context.getString(R.string.noReviews));
+        } else {
+            myViewHolder.SD_stadiumReviews.setText(pitchModelArrayList.get(i).getPitch_review_avg());
+        }
+
         myViewHolder.pitchPrice.setText(context.getString(R.string.price) + ": " + pitchModelArrayList.get(i).getPrice());
         myViewHolder.totalBookingOrders.setText(context.getString(R.string.totalBooking) + (Integer.parseInt(pitchModelArrayList.get(i).getProcess_booking()) + Integer.parseInt(pitchModelArrayList.get(i).getComplete_booking())) + "");
 
@@ -82,7 +89,7 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
         myViewHolder.viewDetailsButton.setOnClickListener(view ->
                 ((Activity) context)
                         .startActivity(new Intent(context, PitchDetailActivity.class)
-                                .putExtra("type","owner")
+                                .putExtra("type", "owner")
                                 .putExtra("pitch_id", pitchModelArrayList.get(i).getId())
                                 .putExtra("stadium_id", pitchModelArrayList.get(i).getStadium_id())));
         myViewHolder.btn_remove.setOnClickListener(view -> {
@@ -94,7 +101,7 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
             dialogConfirmation.getOkButton().setOnClickListener(view12 -> {
                 dialogConfirmation.getDialog_error().cancel();
                 ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-                Call<ResponseBody> call = service.ep_deletePitch(pitchModelArrayList.get(i).getId(), pitchModelArrayList.get(i).getStadium_id());
+                Call<ResponseBody> call = service.ep_deletePitch(pitchModelArrayList.get(i).getId());
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -155,6 +162,8 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
         TextView totalBookingOrders;
         @BindView(R.id.pitchRating)
         ColorRatingBar pitchRating;
+        @BindView(R.id.SD_stadiumReviews)
+        TextView SD_stadiumReviews;
 
 
         private MyViewHolder(@NonNull View itemView) {
