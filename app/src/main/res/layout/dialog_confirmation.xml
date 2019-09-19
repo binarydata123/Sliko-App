@@ -22,7 +22,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
+                <app.sliko.UI.SsMediumTextView
                     android:id="@+id/dialogConfirmationTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                     android:paddingTop="3dp"
                     android:paddingRight="16dp"
                     android:paddingBottom="3dp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <LinearLayout
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <app.sliko.UI.SsRegularTextView
                         android:id="@+id/dialogConfirmationMessage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
@@ -62,7 +62,7 @@
                 android:gravity="end"
                 android:orientation="horizontal">
 
-                <Button
+                <app.sliko.UI.SsRegularButton
                     android:id="@+id/okButton"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"

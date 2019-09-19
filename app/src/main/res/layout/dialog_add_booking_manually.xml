@@ -1,146 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/white_corner_round"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@android:color/transparent">
+    <LinearLayout
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
 
-    <TextView
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_corner_round"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <app.sliko.UI.SsMediumTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingTop="3dp"
+            android:textSize="20sp"
+            android:paddingRight="20dp"
+            android:paddingBottom="3dp"
+            android:text="@string/addBooking"
+            android:textColor="@color/lightGreen" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <app.sliko.UI.SsRegularTextView
+                android:layout_width="wrap_content"
+                android:text="@string/userName"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_bg_grey"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <app.sliko.UI.SsRegularEditText
+                    android:id="@+id/etName"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter name"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content">
+            <app.sliko.UI.SsRegularTextView
+                android:layout_width="wrap_content"
+                android:text="@string/email"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_bg_grey"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <app.sliko.UI.SsRegularEditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter Phone number"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:singleLine="true"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content">
+            <app.sliko.UI.SsRegularTextView
+                android:layout_width="wrap_content"
+                android:text="@string/phone"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_bg_grey"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <app.sliko.UI.SsRegularEditText
+                    android:id="@+id/etPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter Phone number"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:singleLine="true"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="end">
+
+
+            <app.sliko.UI.SsRegularButton
+                android:id="@+id/bookButtonLayout"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/edit_bg_green"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="@string/bookNow"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/edit_bg_green"
-        android:paddingLeft="20dp"
-        android:paddingTop="3dp"
-        android:paddingRight="20dp"
-        android:paddingBottom="3dp"
-        android:text="Add Booking"
-        android:textColor="@color/white" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/edit_bg_grey"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
-
+        android:gravity="center"
+        android:id="@+id/cancelButton"
+        android:layout_gravity="end"
+        android:layout_height="wrap_content">
         <ImageView
-            android:layout_width="15dp"
-            android:layout_height="17dp"
-            android:background="@drawable/user" />
+            android:layout_width="32dp"
+            android:background="@drawable/ic_error"
+            android:layout_height="32dp"/>
 
-        <TextView
-            android:layout_width="8dp"
-            android:layout_height="match_parent" />
-
-
-        <EditText
-            android:id="@+id/etName"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:hint="Enter name"
-            android:imeOptions="actionNext"
-            android:singleLine="true"
-            android:textSize="14sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/edit_bg_grey"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
-
-        <ImageView
-            android:layout_width="22dp"
-            android:layout_height="16dp"
-            android:background="@drawable/email" />
-
-        <TextView
-            android:layout_width="8dp"
-            android:layout_height="match_parent" />
-
-
-        <EditText
-            android:id="@+id/etEmail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:hint="Enter Phone number"
-            android:imeOptions="actionNext"
-            android:inputType="textEmailAddress"
-            android:singleLine="true"
-            android:textSize="14sp" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/edit_bg_grey"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
-
-        <ImageView
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:background="@drawable/ic_call_answer" />
-
-        <TextView
-            android:layout_width="8dp"
-            android:layout_height="match_parent" />
-
-
-        <EditText
-            android:id="@+id/etPhone"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:hint="Enter Phone number"
-            android:imeOptions="actionNext"
-            android:inputType="phone"
-            android:singleLine="true"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-
-        android:gravity="end">
-
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:background="@drawable/edit_bg_dark_grey"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="@string/cancel"
-            android:textColor="@color/black" />
-
-        <TextView
-            android:layout_width="10dp"
-            android:layout_height="match_parent" />
-
-        <Button
-            android:id="@+id/bookButtonLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:background="@drawable/edit_bg_green"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="@string/bookNow"
-            android:textColor="@color/white" />
-    </LinearLayout>
-</LinearLayout>
+</FrameLayout>

@@ -11,11 +11,12 @@
     <string name="payNow">Proceed to pay</string>
     <string name="close">Close</string>
     <string name="reviews">Pitch Reviews</string>
-    <string name="stadiumInfo">Stadium Info</string>
+    <string name="stadiumInfo">Stadium Information</string>
     <string name="pitches">Pitches</string>
     <string name="thankYouMessage">Cảm ơn bạn đã chọn Ứng dụng Sliko, Tiếp tục đặt phòng</string>
     <string name="price">Price: ₫&#160;</string>
     <string name="paid">Paid: ₫&#160;</string>
+    <string name="currencySymbol">₫&#160;</string>
     <string name="myBookings">My Bookings</string>
     <string name="notifications">Thông báo</string>
     <string name="editProfile">Edit Profile</string>
@@ -146,7 +147,7 @@
     <string name="noBookingAvailable">No pitch available for booking</string>
     <string name="noBookingAvailableUSer">No booking record found</string>
     <string name="couldNotLoadProfile">Could not load profile</string>
-    <string name="saveProfile">Save</string>
+    <string name="saveProfile">Save Changes</string>
     <string name="enablePermission">Enable Permissions</string>
     <string name="pickSlotForBooking">Pick slot for booking</string>
     <string name="pitchAndSlots">Pitch &amp; slots</string>
@@ -182,4 +183,32 @@
     <string name="password_should_big">Password should be min 6 char long</string>
     <string name="please_enter_new_password">Please enter new password</string>
     <string name="backToPitchBookings">Back to pitch bookings</string>
+    <string name="searchStadiumOrLocation">Search Stadium or Location</string>
+    <string name="bookings">Bookings</string>
+    <string name="bookingHistory">BookingHistory</string>
+    <string name="rewards">Rewards</string>
+    <string name="find">Find</string>
+    <string name="findLocation">Find Location</string>
+    <string name="lowestPitchPrice">Lowest Pitch Price ₫:&#160;</string>
+    <string name="location">Location:&#160;</string>
+    <string name="allTransition">AllTransitions</string>
+    <string name="totalSpent">Total Spent</string>
+    <string name="loginWithFb">Login with facebook</string>
+
+    <string name="fb_AppID">471813193397905</string>
+    <string name="fb_HashKey">ga0RGNYHvNM5d0SLGQfpQWAPGJ8=</string>
+    <string name="fb_login_protocol_scheme">fb471813193397905</string>
+    <string name="upcomingBooking">Upcoming</string>
+    <string name="sorry_could_not_retrive_your_email">Email not found on Facebook \\nSigning Out</string>
+    <string name="please_enter_below_fields">Please enter below fields to successfully change your password</string>
+    <string name="addBooking">Add Booking</string>
+    <string name="please_complete_process">Please complete your registration procerss</string>
+    <string name="loggingOutFromFb">Logging our from Facebook</string>
+    <string name="addPhoto">Add Images</string>
+    <string name="vacant">Vacant</string>
+    <string name="minutesRemaining">15 min remaining</string>
+    <string name="playing">Playing</string>
+    <string name="time_up">Time UP</string>
+    <string name="booked">Booked</string>
+    <string name="appID">1993872858584930105</string>
 </resources>

@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import app.sliko.R;
 import app.sliko.owner.activity.StadiumOwnerHomeActivity;
+import app.sliko.user.UserDashboard;
 import app.sliko.utills.M;
-import app.sliko.web.Api;
 
 public class SplashActivity extends AppCompatActivity {
     private static final int DELAY = 1500;
@@ -33,11 +33,10 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(new Intent(SplashActivity.this, StadiumOwnerHomeActivity.class));
                     finish();
                 } else {
-                    startActivity(new Intent(SplashActivity.this, UserHomeActivity.class));
+                    startActivity(new Intent(SplashActivity.this, UserDashboard.class));
                     finish();
                 }
             }
-
         };
         handler.postDelayed(runnable, DELAY);
     }

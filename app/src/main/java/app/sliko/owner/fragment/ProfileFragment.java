@@ -43,9 +43,6 @@ import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
     private View view;
-
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
     @BindView(R.id.userImage)
     CircleImageView userImage;
     @BindView(R.id.etName)
@@ -92,7 +89,7 @@ public class ProfileFragment extends Fragment {
     public void onEvent(ProfileUploadedSuccessEvent profileUploadedSuccessEvent) {
         if (profileUploadedSuccessEvent != null) {
             if (profileUploadedSuccessEvent.isStatus()) {
-                    fetchProfileInfo();
+                fetchProfileInfo();
             }
         }
 
@@ -107,7 +104,7 @@ public class ProfileFragment extends Fragment {
             EventBus.getDefault().register(this);
         }
         dialog = M.showDialog(getActivity(), "", false);
-        toolbar.setVisibility(View.GONE);
+
         progressImage.setVisibility(View.VISIBLE);
         fetchProfileInfo();
         setListener();

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_bookings"
+        android:icon="@drawable/ic_stadium_owner"
+        android:title="@string/bookings" />
+    <item
+        android:id="@+id/action_booking_history"
+        android:icon="@drawable/ic_booking"
+        android:title="@string/bookingHistory" />
+    <item
+        android:id="@+id/action_rewards"
+        android:icon="@drawable/ic_star"
+        android:title="@string/rewards"/>
+    <item
+        android:id="@+id/action_find"
+        android:icon="@drawable/ic_search"
+        android:title="@string/find"/>
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/ic_user"
+        android:title="@string/profile"/>
+</menu>

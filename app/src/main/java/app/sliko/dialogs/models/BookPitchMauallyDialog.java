@@ -6,16 +6,20 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import app.sliko.UI.SsRegularButton;
+import app.sliko.UI.SsRegularEditText;
+
 public class BookPitchMauallyDialog {
 
     private AlertDialog dialog_error;
-    private EditText etName;
-    private EditText etEmail;
-    private EditText etPhone;
-    private Button bookButtonLayout;
-    private Button cancelButton;
+    private SsRegularEditText etName;
+    private SsRegularEditText etEmail;
+    private SsRegularEditText etPhone;
+    private SsRegularButton bookButtonLayout;
+    private LinearLayout cancelButton;
 
-    public BookPitchMauallyDialog(AlertDialog dialog_error, EditText etName,EditText etEmail, EditText etPhone, Button bookButtonLayout,Button cancelButton) {
+    public BookPitchMauallyDialog(AlertDialog dialog_error, SsRegularEditText etName,SsRegularEditText etEmail, SsRegularEditText etPhone,
+                                  SsRegularButton bookButtonLayout,LinearLayout cancelButton) {
 
         this.dialog_error = dialog_error;
         this.etName = etName;
@@ -29,23 +33,23 @@ public class BookPitchMauallyDialog {
         return dialog_error;
     }
 
-    public EditText getEtName() {
+    public SsRegularEditText getEtName() {
         return etName;
     }
 
-    public EditText getEtPhone() {
+    public SsRegularEditText getEtPhone() {
         return etPhone;
     }
 
-    public EditText getEtEmail() {
+    public SsRegularEditText getEtEmail() {
         return etEmail;
     }
 
-    public Button getBookButtonLayout() {
+    public SsRegularButton getBookButtonLayout() {
         return bookButtonLayout;
     }
 
-    public Button getCancelButton() {
+    public LinearLayout getCancelButton() {
         return cancelButton;
     }
 }

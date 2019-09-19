@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.utills.M;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
@@ -110,7 +111,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.placeName)
-        TextView placeName;
+        SsRegularTextView placeName;
         @BindView(R.id.tap)
         LinearLayout tap;
 

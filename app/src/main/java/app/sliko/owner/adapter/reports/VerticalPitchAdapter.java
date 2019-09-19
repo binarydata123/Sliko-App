@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.booking.VerticalPitchModel;
 
 public class VerticalPitchAdapter extends RecyclerView.Adapter<VerticalPitchAdapter.MyViewHolder> {
@@ -45,7 +46,7 @@ public class VerticalPitchAdapter extends RecyclerView.Adapter<VerticalPitchAdap
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView pitchName;
+        SsRegularTextView pitchName;
 
         private MyViewHolder(@NonNull View itemView) {
             super(itemView);

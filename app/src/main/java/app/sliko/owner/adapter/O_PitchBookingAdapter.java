@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +15,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.owner.model.BookingModel;
 import app.sliko.utills.M;
 import app.sliko.web.Api;
@@ -82,25 +83,25 @@ public class O_PitchBookingAdapter extends RecyclerView.Adapter<O_PitchBookingAd
         @BindView(R.id.pitchImage)
         ImageView pitchImage;
         @BindView(R.id.PB_cost)
-        TextView PB_cost;
+        SsMediumTextView PB_cost;
         @BindView(R.id.PB_date)
-        TextView PB_date;
+        SsRegularTextView PB_date;
         @BindView(R.id.PB_name)
-        TextView PB_name;
+        SsRegularTextView PB_name;
         @BindView(R.id.PB_phone)
-        TextView PB_phone;
+        SsRegularTextView PB_phone;
         @BindView(R.id.PB_time)
-        TextView PB_time;
+        SsRegularTextView PB_time;
         @BindView(R.id.PB_userName)
-        TextView PB_userName;
+        SsRegularTextView PB_userName;
         @BindView(R.id.PB_pitchReview)
         ColorRatingBar PB_pitchReview;
         @BindView(R.id.pitchReviewCount)
-        TextView pitchReviewCount;
+        SsRegularTextView pitchReviewCount;
         @BindView(R.id.userDetailsLayout)
         LinearLayout userDetailsLayout;
         @BindView(R.id.statusOfBookingText)
-        TextView statusOfBookingText;
+        SsRegularTextView statusOfBookingText;
         @BindView(R.id.statusOfBooking)
         LinearLayout statusOfBooking;
 

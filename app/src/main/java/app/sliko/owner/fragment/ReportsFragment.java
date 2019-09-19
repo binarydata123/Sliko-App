@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +28,8 @@ import java.util.Calendar;
 import java.util.UUID;
 
 import app.sliko.R;
+import app.sliko.UI.SsRegularButton;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.BookPitchMauallyDialog;
 import app.sliko.owner.adapter.O_PitchBookingAdapter;
@@ -66,11 +67,11 @@ public class ReportsFragment extends Fragment {
     @BindView(R.id.image)
     ImageView image;
     @BindView(R.id.startDateText)
-    TextView startDateText;
+    SsRegularTextView startDateText;
     @BindView(R.id.endDateText)
-    TextView endDateText;
+    SsRegularTextView endDateText;
     @BindView(R.id.backToBookings)
-    Button backToBookings;
+    SsRegularButton backToBookings;
 
     public static ReportsFragment newInstance() {
         Bundle args = new Bundle();

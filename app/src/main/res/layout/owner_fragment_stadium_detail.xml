@@ -14,33 +14,34 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="200dp"
             android:background="@color/white">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="match_parent"
                 android:background="@color/white"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <FrameLayout
-
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    app:layout_collapseMode="parallax">
-
-                    <FrameLayout
+                    android:layout_height="match_parent">
+                    <androidx.cardview.widget.CardView
+                        app:cardCornerRadius="8dp"
+                        app:cardElevation="0dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-
                         <androidx.viewpager.widget.ViewPager
                             android:id="@+id/stadiumImagesViewPager"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />
-                    </FrameLayout>
 
+                    </androidx.cardview.widget.CardView>
                     <me.relex.circleindicator.CircleIndicator
                         android:id="@+id/circleIndicator"
                         android:layout_width="wrap_content"
@@ -53,74 +54,51 @@
 
                     </me.relex.circleindicator.CircleIndicator>
 
+
                     <LinearLayout
                         android:id="@+id/stadiumChangeLayout"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
                         android:layout_margin="5dp"
                         android:gravity="end|center_vertical"
                         android:orientation="horizontal">
-
-                        <FrameLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_gravity="end|center_vertical"
-                                android:layout_height="match_parent">
-                                <LinearLayout
-                                    android:id="@+id/deleteStadiumLayout"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/red_round_corner"
-                                    android:gravity="center"
-                                    android:orientation="vertical"
-                                    android:paddingLeft="16dp"
-                                    android:paddingTop="3dp"
-                                    android:paddingRight="16dp"
-                                    android:paddingBottom="3dp">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/delete"
-                                        android:textColor="@color/white" />
-
-                                </LinearLayout>
-
-                                <TextView
-                                    android:layout_width="5dp"
-                                    android:layout_height="wrap_content" />
-
-                                <LinearLayout
-                                    android:id="@+id/editStadiumLayout"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/edit_bg_green"
-                                    android:gravity="center"
-                                    android:orientation="vertical"
-                                    android:paddingLeft="16dp"
-                                    android:paddingTop="3dp"
-                                    android:paddingRight="16dp"
-                                    android:paddingBottom="3dp">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:drawableLeft="@drawable/ic_edit_white"
-                                        android:drawablePadding="8dp"
-                                        android:text="@string/edit"
-                                        android:textColor="@color/white" />
-                                </LinearLayout>
-                            </LinearLayout>
-                        </FrameLayout>
-
-
-
-
-
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:layout_width="wrap_content"
+                            android:requiresFadingEdge="none"
+                            android:fadingEdge="none"
+                            android:fadingEdgeLength="0dp"
+                            app:fabCustomSize="32dp"
+                            app:maxImageSize="18sp"
+                            app:fabSize="mini"
+                            app:elevation="1dp"
+                            android:id="@+id/deleteStadiumLayout"
+                            android:layout_gravity="end|bottom"
+                            app:backgroundTint="@color/toolbarColor"
+                            android:backgroundTint="@color/toolbarColor"
+                            android:src="@drawable/ic_delete"
+                            android:layout_height="wrap_content"/>
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="match_parent"/>
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:layout_width="wrap_content"
+                            android:requiresFadingEdge="none"
+                            android:fadingEdge="none"
+                            app:elevation="1dp"
+                            android:layout_gravity="end|bottom"
+                            android:fadingEdgeLength="0dp"
+                            app:fabCustomSize="32dp"
+                            app:maxImageSize="18sp"
+                            android:id="@+id/editStadiumLayout"
+                            app:fabSize="mini"
+                            app:backgroundTint="@color/lightGreen"
+                            android:backgroundTint="@color/lightGreen"
+                            android:src="@drawable/ic_edit_white"
+                            android:layout_height="wrap_content"/>
                     </LinearLayout>
+                    <include layout="@layout/no_image_layouts"/>
+
                 </FrameLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
@@ -140,7 +118,7 @@
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_height="wrap_content">
-                    <TextView
+                    <app.sliko.UI.SsMediumTextView
                         android:textColor="@color/black"
                         android:paddingRight="16dp"
                         android:layout_width="wrap_content"
@@ -156,7 +134,7 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:layout_weight="1">
-                            <TextView
+                            <app.sliko.UI.SsRegularTextView
                                 android:layout_width="wrap_content"
                                 android:text="Days"
                                 android:paddingRight="5dp"
@@ -187,7 +165,7 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:layout_weight="1">
-                            <TextView
+                            <app.sliko.UI.SsRegularTextView
                                 android:layout_width="wrap_content"
                                 android:text="@string/pitch"
                                 android:paddingRight="5dp"
@@ -218,7 +196,7 @@
                             android:layout_height="match_parent"
                             android:orientation="vertical"
                             android:layout_weight="1">
-                            <TextView
+                            <app.sliko.UI.SsRegularTextView
                                 android:layout_width="wrap_content"
                                 android:text="@string/paymentMode"
                                 android:paddingRight="5dp"
@@ -249,7 +227,7 @@
                         android:orientation="horizontal"
                         android:layout_height="wrap_content">
                         <androidx.cardview.widget.CardView
-                            app:cardBackgroundColor="#f7f7f7"
+                            app:cardBackgroundColor="@color/darkestGrey"
                             android:layout_width="match_parent"
                             android:layout_weight="1"
                             app:cardCornerRadius="5dp"
@@ -262,31 +240,37 @@
                                 android:layout_height="match_parent">
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:orientation="vertical"
-                                    android:layout_gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
                                     android:layout_height="wrap_content">
 
                                     <ImageView
-                                        android:layout_width="20dp"
-                                        android:background="@drawable/ic_total_booking"
-                                        android:layout_height="20dp"/>
-
-                                    <TextView
-                                        android:layout_marginTop="10dp"
-                                        android:textColor="@color/black"
-                                        android:textSize="20sp"
-                                        android:textStyle="italic"
-                                        android:id="@+id/bookingCount"
                                         android:layout_width="wrap_content"
+                                        android:background="@drawable/booking"
                                         android:layout_height="wrap_content"/>
 
-                                    <TextView
-                                        android:textStyle="italic"
-                                        android:textSize="14sp"
+                                    <LinearLayout
                                         android:layout_width="wrap_content"
-                                        android:text="@string/totalBooking"
-                                        android:layout_height="wrap_content"/>
+                                        android:orientation="vertical"
+                                        android:gravity="center_vertical"
+                                        android:paddingLeft="5dp"
+                                        android:layout_height="wrap_content">
+                                        <app.sliko.UI.SsMediumTextView
+                                            android:layout_marginTop="10dp"
+                                            android:textColor="@color/white"
+                                            android:textSize="22sp"
+                                            android:id="@+id/bookingCount"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"/>
 
+                                        <app.sliko.UI.SsRegularTextView
+                                            android:textSize="16sp"
+                                            android:textColor="@color/white"
+                                            android:layout_width="wrap_content"
+                                            android:text="@string/totalBooking"
+                                            android:layout_height="wrap_content"/>
+
+                                    </LinearLayout>
                                 </LinearLayout>
 
                             </LinearLayout>
@@ -309,29 +293,35 @@
                                 android:layout_height="match_parent">
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:orientation="vertical"
-                                    android:layout_gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
                                     android:layout_height="wrap_content">
                                     <ImageView
-                                        android:layout_width="18dp"
-                                        android:background="@drawable/ic_revenue"
-                                        android:layout_height="18dp"/>
-                                    <TextView
-                                        android:layout_marginTop="10dp"
-                                        android:textColor="@color/white"
-                                        android:textSize="20sp"
-                                        android:textStyle="italic"
                                         android:layout_width="wrap_content"
-                                        android:id="@+id/amountCount"
+                                        android:background="@drawable/revenue"
                                         android:layout_height="wrap_content"/>
-
-                                    <TextView
+                                    <LinearLayout
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/totalEarnings"
-                                        android:textColor="@color/white"
-                                        android:textSize="14sp"
-                                        android:textStyle="italic" />
+                                        android:orientation="vertical"
+                                        android:paddingLeft="5dp"
+                                        android:gravity="center_vertical"
+                                        android:layout_height="wrap_content">
+                                        <app.sliko.UI.SsMediumTextView
+                                            android:layout_marginTop="10dp"
+                                            android:textColor="@color/white"
+                                            android:textSize="22sp"
+                                            android:layout_width="wrap_content"
+                                            android:id="@+id/amountCount"
+                                            android:layout_height="wrap_content"/>
+
+                                        <app.sliko.UI.SsRegularTextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/totalEarnings"
+                                            android:textColor="@color/white"
+                                            android:textSize="16sp" />
+                                    </LinearLayout>
+
 
                                 </LinearLayout>
 
@@ -344,47 +334,23 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp">
 
-                    <TextView
+                    <app.sliko.UI.SsMediumTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/edit_bg_green"
                         android:focusable="true"
+                        android:textSize="16sp"
                         android:focusableInTouchMode="true"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="3dp"
-                        android:paddingRight="16dp"
-                        android:paddingBottom="3dp"
                         android:text="@string/stadiumInfo"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/lightGreen" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:gravity="end"
-                        android:orientation="horizontal">
-
-                        <hyogeun.github.com.colorratingbarlib.ColorRatingBar
-                            android:id="@+id/stadiumRating"
-                            style="?android:ratingBarStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:rating="3"
-                            app:changeable="false"
-                            app:empty_color="@color/emptyColor"
-                            app:half_color="@color/lightGreen"
-                            app:progress_color="@color/lightGreen" />
-
-                        <TextView
-                            android:id="@+id/SD_stadiumReviews"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/reviews"
-                            android:textSize="12sp" />
-                    </LinearLayout>
 
                 </FrameLayout>
-
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_height="1dp"
+                    android:alpha=".2"
+                    android:background="@color/alphaBlack"/>
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -396,10 +362,31 @@
                         android:orientation="vertical"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:gravity="end"
+                            android:orientation="horizontal">
 
-                        <TextView
-                            android:drawablePadding="8dp"
-                            android:drawableLeft="@drawable/ic_stadium_black_small"
+                            <hyogeun.github.com.colorratingbarlib.ColorRatingBar
+                                android:id="@+id/stadiumRating"
+                                style="?android:ratingBarStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:changeable="false"
+                                app:empty_color="@color/semi_black_color"
+                                app:half_color="@color/yellow"
+                                app:progress_color="@color/yellow" />
+
+                            <app.sliko.UI.SsRegularTextView
+                                android:id="@+id/SD_stadiumReviews"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <app.sliko.UI.SsRegularTextView
                             android:id="@+id/stadiumName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -408,24 +395,40 @@
                             android:textColor="@color/black"
                             android:textSize="16sp" />
 
-                        <TextView
+                        <app.sliko.UI.SsRegularTextView
                             android:id="@+id/stadiumDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             />
 
-                        <TextView
-                            android:textSize="16sp"
-                            android:drawableLeft="@drawable/ic_location"
-                            android:drawablePadding="8dp"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
                             android:layout_marginTop="5dp"
-                            android:id="@+id/stadiumLocation"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            />
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:text="@string/location"
+                                android:drawableLeft="@drawable/ic_location"
+                                android:drawablePadding="5dp"
+                                android:textSize="16sp"
+                                android:textColor="@color/lightGreen"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
 
-                        <TextView
+                            <app.sliko.UI.SsRegularTextView
+                                android:textSize="16sp"
+                                android:id="@+id/stadiumLocation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                />
+
+
+                        </LinearLayout>
+
+                        <app.sliko.UI.SsRegularTextView
                             android:textSize="12sp"
+                            android:visibility="gone"
                             android:id="@+id/createdDate"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -443,7 +446,7 @@
                     android:alpha=".2"
                     android:background="@color/black" />
 
-                <TextView
+                <app.sliko.UI.SsMediumTextView
                     android:id="@+id/pitchesLayout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -482,7 +485,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="25dp"
                         android:layout_height="wrap_content">
-                        <TextView
+                        <app.sliko.UI.SsRegularTextView
                             android:layout_width="wrap_content"
                             android:textSize="16sp"
                             android:text="No Pitch found in this stadium"
@@ -491,7 +494,7 @@
                             android:paddingTop="2dp"
                             android:paddingBottom="2dp"
                             android:layout_height="wrap_content"/>
-                        <TextView
+                        <app.sliko.UI.SsRegularTextView
                             android:layout_width="wrap_content"
                             android:background="@drawable/edit_bg_green"
                             android:text="Add Pitch"

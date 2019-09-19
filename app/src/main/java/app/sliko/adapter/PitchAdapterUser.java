@@ -21,6 +21,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
+import app.sliko.UI.SsRegularButton;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.activity.BookingActivity;
 import app.sliko.owner.activity.PitchDetailActivity;
 import app.sliko.utills.M;
@@ -61,6 +64,7 @@ public class PitchAdapterUser extends RecyclerView.Adapter<PitchAdapterUser.MyVi
                     .startActivity(new Intent(context, PitchDetailActivity.class)
                             .putExtra("type","user")
                             .putExtra("pitch_id", notificationModelArrayList.get(position).getId())
+                            .putExtra("pitch_name", notificationModelArrayList.get(position).getPitch_name())
                             .putExtra("user_id", notificationModelArrayList.get(position).getUser_id())
                             .putExtra("stadium_id", notificationModelArrayList.get(position).getStadium_id()));
         });
@@ -101,17 +105,17 @@ public class PitchAdapterUser extends RecyclerView.Adapter<PitchAdapterUser.MyVi
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.stadiumName)
-        TextView stadiumName;
+        SsMediumTextView stadiumName;
         @BindView(R.id.stadiumBookingPrice)
-        TextView stadiumBookingPrice;
+        SsRegularTextView stadiumBookingPrice;
         @BindView(R.id.bookStadiumButton)
-        Button bookStadiumButton;
+        SsRegularButton bookStadiumButton;
         @BindView(R.id.pitchImage)
         ImageView pitchImage;
         @BindView(R.id.imageProgress)
         ProgressBar imageProgress;
         @BindView(R.id.stadiumRatingCount)
-        TextView stadiumRatingCount;
+        SsRegularTextView stadiumRatingCount;
         @BindView(R.id.stadiumRating)
         ColorRatingBar stadiumRating;
         @BindView(R.id.tap)

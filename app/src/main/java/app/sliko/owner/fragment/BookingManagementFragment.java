@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,10 +23,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import app.sliko.R;
-import app.sliko.activity.BookingActivity;
 import app.sliko.booking.VerticalPitchModel;
 import app.sliko.booking.model.UserBookingModel;
 import app.sliko.owner.adapter.reports.HeaderTimingAdapter;
@@ -35,7 +35,6 @@ import app.sliko.owner.adapter.reports.VerticalPitchAdapter;
 import app.sliko.owner.adapter.reports.VerticalTimingAdapter;
 import app.sliko.owner.model.AvailabilityModel;
 import app.sliko.utills.M;
-import app.sliko.web.Api;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
@@ -79,6 +78,7 @@ public class BookingManagementFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
     private void prepareDataForResponse() {
         SELECTED_MONTH = calendarView.getMonth();
         SELECTED_YEAR = calendarView.getYear();
@@ -90,6 +90,7 @@ public class BookingManagementFragment extends Fragment {
         Log.e(">>params", "prepareDataForResponse: " + user_id + "\n" + stadium_id + "\n" + bookingDate);
         fetchBookingData(bookingDate);
     }
+
     private VerticalPitchAdapter verticalPitchAdapter;
     private ArrayList<VerticalPitchModel> verticalPitchArrayList;
     private VerticalTimingAdapter verticalTimingAdapter;
@@ -166,16 +167,17 @@ public class BookingManagementFragment extends Fragment {
                     if (response.isSuccessful()) {
                         String sResponse = response.body().string();
                         JSONObject jsonObject = new JSONObject(sResponse);
-                        String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
-                        Log.e(">>bookingResponse", "onResponse: " + jsonObject.toString());
-                        if (status.equalsIgnoreCase("true")) {
+                        Log.e(">>pitchBookingData", "onResponse: " + jsonObject.toString());
+                        if (jsonObject.getString("status").equalsIgnoreCase("true")) {
                             JSONObject data = jsonObject.getJSONObject("data");
                             String stadiumSlot = data.getString("stadium_slot");
-                            JSONArray stadiumSlotArray = new JSONArray(stadiumSlot);
-                            for (int l = 0; l < stadiumSlotArray.length(); l++) {
+                            Log.e(">>stadiumSlot", "onResponse: " + stadiumSlot);
+                            List<String> stadiumSlotArray = Arrays.asList(stadiumSlot.split(","));
+                            Log.e(">>stadiumSlot", "onResponse: " + stadiumSlotArray.size());
+                            for (int l = 0; l < stadiumSlotArray.size(); l++) {
                                 AvailabilityModel availabilityModel = new AvailabilityModel();
-                                availabilityModel.setTime(stadiumSlotArray.getString(l));
+                                availabilityModel.setTime(stadiumSlotArray.get(l));
                                 availabilityModel.setPicked(false);
                                 availabilityModels.add(availabilityModel);
                             }
@@ -210,7 +212,7 @@ public class BookingManagementFragment extends Fragment {
                             headerRecyclerViewForTimeSlot.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                             headerRecyclerViewForTimeSlot.setAdapter(headerTimingAdapter);
                             headerTimingAdapter.notifyDataSetChanged();
-                            verticalTimingAdapter = new VerticalTimingAdapter(getActivity(), timingData , "ownerView");
+                            verticalTimingAdapter = new VerticalTimingAdapter(getActivity(), timingData, "ownerView");
                             timingVerticalRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                             timingVerticalRecyclerView.setAdapter(verticalTimingAdapter);
                             verticalTimingAdapter.notifyDataSetChanged();

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.BookPitchMauallyDialog;
 import app.sliko.owner.adapter.O_PitchBookingAdapter;
@@ -48,7 +49,7 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
     @BindView(R.id.pickStartDate)
     LinearLayout pickStartDate;
     @BindView(R.id.toolbarTitle)
-    TextView toolbarTitle;
+    SsMediumTextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.pickEndDate)

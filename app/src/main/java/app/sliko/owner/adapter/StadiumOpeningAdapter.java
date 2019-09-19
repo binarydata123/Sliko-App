@@ -5,15 +5,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.owner.model.AvailabilityModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,10 +60,10 @@ public class StadiumOpeningAdapter extends RecyclerView.Adapter<StadiumOpeningAd
         Log.e(">>de", "onBindViewHolder: "+imagesModelArrayList.get(i).isPicked() );
         myViewHolder.timingText.setText(imagesModelArrayList.get(i).getTime());
         if (getItemViewType(i) == PICKED) {
-            myViewHolder.changeBackground.setBackground(context.getDrawable(R.drawable.edit_bg_green));
+            myViewHolder.changeBackground.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
             myViewHolder.timingText.setTextColor(context.getResources().getColor(R.color.white));
         } else {
-            myViewHolder.changeBackground.setBackground(context.getDrawable(R.drawable.edit_bg_green_strokes));
+            myViewHolder.changeBackground.setBackgroundColor(context.getResources().getColor(R.color.white));
             myViewHolder.timingText.setTextColor(context.getResources().getColor(R.color.black));
         }
     }
@@ -86,9 +86,9 @@ public class StadiumOpeningAdapter extends RecyclerView.Adapter<StadiumOpeningAd
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.changeBackground)
-        LinearLayout changeBackground;
+        CardView changeBackground;
         @BindView(R.id.timingText)
-        TextView timingText;
+        SsRegularTextView timingText;
 
         private MyViewHolder(@NonNull View itemView) {
             super(itemView);

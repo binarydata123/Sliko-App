@@ -2,51 +2,69 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:layout_height="match_parent">
+        <ImageView
+            android:layout_width="match_parent"
+            android:background="@drawable/card"
+            android:layout_height="220dp"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:padding="16dp"
-                android:orientation="vertical"
-                android:id="@+id/backImage"
-                android:gravity="center"
-                android:layout_height="wrap_content">
-                <ImageView
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <include layout="@layout/toolbar_transparent"/>
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/back_arrow_white" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/white_corner_round"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+                <app.sliko.UI.SsRegularEditText
+                    android:singleLine="true"
+                    android:id="@+id/searchQuery"
+                    android:background="@android:color/transparent"                android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Search address"
+                    android:textSize="14sp"
+                    android:paddingRight="10dp" />
 
             </LinearLayout>
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="5dp"
+                android:id="@+id/searchResultLayout"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <ProgressBar
+                        android:layout_margin="5dp"
+                        android:layout_width="32sp"
+                        android:layout_height="32sp"
+                        android:id="@+id/progress"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:id="@+id/searchedAddressRecyclerView"
+                        android:layout_height="match_parent"/>
 
-
-            <EditText
-                android:singleLine="true"
-                android:ems="2"
-                android:inputType="text"
-                android:imeOptions="actionSearch"
-                android:id="@+id/searchQuery"
-                android:background="@android:color/transparent"                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Search address"
-                android:textColor="@color/white"
-                android:paddingLeft="10dp"
-                android:textColorHint="@color/white"
-                android:paddingRight="10dp" />
-
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
-    </com.google.android.material.appbar.AppBarLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:id="@+id/searchedAddressRecyclerView"
-        android:layout_height="match_parent"/>
+    </FrameLayout>
+
 </LinearLayout>

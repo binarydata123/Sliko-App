@@ -17,6 +17,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.booking.model.UserBookingModel;
 import app.sliko.events.PayingForPitchEvent;
 import app.sliko.web.Api;
@@ -73,24 +74,24 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
             }
         } else {
             if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.BOOKED)) {
-                myViewHolder.timingView.setText("Booked");
+                myViewHolder.timingView.setText(context.getString(R.string.booked));
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
             } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.TIME_UP)) {
-                myViewHolder.timingView.setText("Time UP");
+                myViewHolder.timingView.setText(context.getString(R.string.time_up));
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.toolbarColor));
             } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.PLAYING)) {
-                myViewHolder.timingView.setText("Playing");
+                myViewHolder.timingView.setText(context.getString(R.string.playing));
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
             } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.MIN_TO_GO_15)) {
-                myViewHolder.timingView.setText("15 min remaining");
+                myViewHolder.timingView.setText(context.getString(R.string.minutesRemaining));
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.orange));
             } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase("") ||
                     verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACCANT)) {
-                myViewHolder.timingView.setText("Vacant");
+                myViewHolder.timingView.setText(context.getString(R.string.vacant));
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.bit_dark_grey));
             }
@@ -113,7 +114,7 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView timingView;
+        SsRegularTextView timingView;
         LinearLayout bookPitchAction;
 
         private MyViewHolder(@NonNull View itemView) {

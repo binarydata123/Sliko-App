@@ -31,8 +31,7 @@ public interface ApiInterface {
     @POST("login")
     Call<ResponseBody> ep_login(@Field("email") String email,
                                 @Field("password") String password,
-                                @Field("fcm_token") String fcm_token,
-                                @Field("role") String role);
+                                @Field("fcm_token") String fcm_token);
 
     @FormUrlEncoded
     @POST("pitch/galleryDelete")
@@ -95,7 +94,8 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("stadium/mapStadiumlist")
-    Call<ResponseBody> ep_homeListing(@Field("user_id") String user_id);
+    Call<ResponseBody> ep_homeListing(@Field("user_id") String user_id
+    ,@Field("search_data") String search_data);
 
     @FormUrlEncoded
     @POST("logout")

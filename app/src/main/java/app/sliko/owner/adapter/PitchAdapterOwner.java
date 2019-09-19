@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -22,6 +22,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.owner.activity.AddPitchActivity;
@@ -59,7 +61,7 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
-        myViewHolder.pitchName.setText(context.getString(R.string.pitchName) + ": " + pitchModelArrayList.get(i).getPitch_name());
+        myViewHolder.pitchName.setText(pitchModelArrayList.get(i).getPitch_name());
         if (pitchModelArrayList.get(i).getPitch_review_avg().equalsIgnoreCase("null") ||
                 pitchModelArrayList.get(i).getPitch_review_avg().equalsIgnoreCase("")) {
             myViewHolder.SD_stadiumReviews.setText(context.getString(R.string.noReviews));
@@ -90,6 +92,7 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
                 ((Activity) context)
                         .startActivity(new Intent(context, PitchDetailActivity.class)
                                 .putExtra("type", "owner")
+                                .putExtra("pitch_name", pitchModelArrayList.get(i).getPitch_name())
                                 .putExtra("pitch_id", pitchModelArrayList.get(i).getId())
                                 .putExtra("stadium_id", pitchModelArrayList.get(i).getStadium_id())));
         myViewHolder.btn_remove.setOnClickListener(view -> {
@@ -144,26 +147,26 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.editLayout)
-        TextView editLayout;
+        @BindView(R.id.edit)
+        FloatingActionButton editLayout;
         @BindView(R.id.pitchImage)
         ImageView pitchImage;
-        @BindView(R.id.btn_remove)
-        TextView btn_remove;
+        @BindView(R.id.delete)
+        FloatingActionButton btn_remove;
         @BindView(R.id.viewBookingDetailsButton)
         LinearLayout viewBookingDetailsButton;
         @BindView(R.id.pitchName)
-        TextView pitchName;
+        SsMediumTextView pitchName;
         @BindView(R.id.pitchPrice)
-        TextView pitchPrice;
+        SsRegularTextView pitchPrice;
         @BindView(R.id.viewDetailsButton)
         FrameLayout viewDetailsButton;
         @BindView(R.id.totalBookingOrders)
-        TextView totalBookingOrders;
+        SsRegularTextView totalBookingOrders;
         @BindView(R.id.pitchRating)
         ColorRatingBar pitchRating;
         @BindView(R.id.SD_stadiumReviews)
-        TextView SD_stadiumReviews;
+        SsRegularTextView SD_stadiumReviews;
 
 
         private MyViewHolder(@NonNull View itemView) {

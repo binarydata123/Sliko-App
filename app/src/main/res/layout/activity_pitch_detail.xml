@@ -1,307 +1,403 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout android:id="@+id/stadiumLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include layout="@layout/suspended_image"/>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/stadiumLayout"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:transitionName="@string/allTransition"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
+            android:layout_height="280dp"
+            app:contentScrim="@color/colorPrimary"
+            app:expandedTitleGravity="top"
+            android:fitsSystemWindows="true"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
 
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/collapsing_toolbar"
+            <FrameLayout
+                android:layout_marginTop="56dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                app:layout_collapseMode="pin"
+                app:layout_collapseParallaxMultiplier="0.5"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:background="@color/white"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-                <FrameLayout
-                    android:background="@android:color/transparent"
+                android:layout_height="220dp">
+                <androidx.cardview.widget.CardView
+                    app:cardCornerRadius="8dp"
+                    android:elevation="0dp"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    app:layout_collapseMode="parallax">
-
-                    <FrameLayout
+                    android:layout_height="match_parent">
+                    <androidx.viewpager.widget.ViewPager
+                        android:id="@+id/stadiumImagesViewPager"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent" />
 
-                        <androidx.viewpager.widget.ViewPager
-                            android:id="@+id/stadiumImagesViewPager"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-                        <Button
-                            android:layout_gravity="end|bottom"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginTop="5dp"
-                            android:id="@+id/bookButton"
-                            android:layout_width="120dp"
-                            android:textColor="@color/white"
-                            android:text="Book Now"
-                            android:background="@drawable/edit_bg_red"
-                            android:layout_height="30dp"/>
-                    </FrameLayout>
-
-                    <me.relex.circleindicator.CircleIndicator
-                        android:id="@+id/circleIndicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|center"
-                        android:layout_marginBottom="10dp"
-                        app:ci_drawable="@drawable/circle_selected"
-                        app:ci_drawable_unselected="@drawable/circle_un_selected"
-                        app:ci_orientation="horizontal">
-
-                    </me.relex.circleindicator.CircleIndicator>
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
+                </androidx.cardview.widget.CardView>
+                <me.relex.circleindicator.CircleIndicator
+                    android:id="@+id/circleIndicator"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="16dp">
+                    android:layout_gravity="bottom|center"
+                    android:layout_marginBottom="10dp"
+                    app:ci_drawable="@drawable/circle_selected"
+                    app:ci_drawable_unselected="@drawable/circle_un_selected"
+                    app:ci_orientation="horizontal">
 
-                    <LinearLayout
-                        android:id="@+id/backButton"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="@drawable/white_cricle"
-                        android:gravity="center">
+                </me.relex.circleindicator.CircleIndicator>
+                <include layout="@layout/no_image_layouts"/>
+                <app.sliko.UI.SsRegularButton
+                    android:id="@+id/bookButton"
+                    android:layout_width="100dp"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/edit_bg_red"
+                    android:textColor="@color/white"
+                    android:text="@string/bookNow"
+                    android:layout_height="36dp"/>
+            </FrameLayout>
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/back_arrow" />
-                    </LinearLayout>
-                </FrameLayout>
+            <include layout="@layout/toolbar_transparent"/>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
-        </com.google.android.material.appbar.AppBarLayout>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.core.widget.NestedScrollView
+        <LinearLayout
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fillViewport="true"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <app.sliko.UI.SsMediumTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="3dp"
+                    android:text="@string/PitchInfo"
+                    android:textColor="@color/lightGreen" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:gravity="end"
+                    android:orientation="horizontal">
+
+                    <hyogeun.github.com.colorratingbarlib.ColorRatingBar
+                        android:id="@+id/pitchRating"
+                        style="?android:ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:changeable="false"
+                        app:empty_color="@color/semi_black_color"
+                        app:half_color="@color/yellow"
+                        app:progress_color="@color/yellow" />
+
+                    <app.sliko.UI.SsRegularTextView
+                        android:id="@+id/pitchRatingCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reviews"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <app.sliko.UI.SsRegularTextView
+                        android:id="@+id/pitchName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_height="wrap_content">
+                        <app.sliko.UI.SsRegularTextView
+                            android:textColor="@color/lightGreen"
+                            android:text="@string/price"
+                            android:drawablePadding="5dp"
+                            android:drawableLeft="@drawable/ic_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <app.sliko.UI.SsRegularTextView
+                            android:textSize="16sp"
+                            android:id="@+id/pitchPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+
+
+                    <app.sliko.UI.SsRegularTextView
+                        android:layout_marginTop="2dp"
+                        android:id="@+id/pitchDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <app.sliko.UI.SsRegularTextView
+                        android:layout_marginTop="8dp"
+                        android:layout_width="wrap_content"
+                        android:text="Stadium Info"
+                        android:textSize="16sp"
+                        android:textColor="@color/black_color"
+                        android:layout_height="wrap_content"/>
+                    <app.sliko.UI.SsRegularTextView
+                        android:id="@+id/stadiumName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stadiumName"
+                        />
+                    <app.sliko.UI.SsRegularTextView
+                        android:id="@+id/stadiumDescription"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/stadiumName"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_height="wrap_content">
+                        <app.sliko.UI.SsRegularTextView
+                            android:text="@string/location"
+                            android:drawablePadding="5dp"
+                            android:drawableLeft="@drawable/ic_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <app.sliko.UI.SsRegularTextView
+                            android:id="@+id/stadiumAddress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:textColor="@color/lightGreen"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:text="Booking information"
+                        android:layout_height="wrap_content"/>
+
+                    <LinearLayout
+                        android:layout_marginTop="8dp"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+                        <androidx.cardview.widget.CardView
+                            app:cardBackgroundColor="@color/darkestGrey"
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            app:cardCornerRadius="5dp"
+                            android:layout_height="match_parent">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:padding="10dp"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:layout_height="match_parent">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:layout_height="wrap_content">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:background="@drawable/booking"
+                                        android:layout_height="wrap_content"/>
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:orientation="vertical"
+                                        android:gravity="center_vertical"
+                                        android:paddingLeft="5dp"
+                                        android:layout_height="wrap_content">
+                                        <app.sliko.UI.SsMediumTextView
+                                            android:layout_marginTop="10dp"
+                                            android:textColor="@color/white"
+                                            android:textSize="22sp"
+                                            android:id="@+id/completeBookings"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"/>
+                                        <app.sliko.UI.SsRegularTextView
+                                            android:textSize="16sp"
+                                            android:textColor="@color/white"
+                                            android:layout_width="wrap_content"
+                                            android:text="@string/totalBooking"
+                                            android:layout_height="wrap_content"/>
+
+                                    </LinearLayout>
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:layout_width="15dp"
+                            android:layout_height="match_parent"/>
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            app:cardCornerRadius="5dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="@color/lightGreen"
+                            android:layout_height="match_parent">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:padding="10dp"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:layout_height="match_parent">
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:orientation="horizontal"
+                                    android:gravity="center_vertical"
+                                    android:layout_height="wrap_content">
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:background="@drawable/revenue"
+                                        android:layout_height="wrap_content"/>
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:orientation="vertical"
+                                        android:paddingLeft="5dp"
+                                        android:gravity="center_vertical"
+                                        android:layout_height="wrap_content">
+                                        <app.sliko.UI.SsMediumTextView
+                                            android:layout_marginTop="10dp"
+                                            android:textColor="@color/white"
+                                            android:textSize="22sp"
+                                            android:layout_width="wrap_content"
+                                            android:id="@+id/upcomingBookings"
+                                            android:layout_height="wrap_content"/>
+                                        <app.sliko.UI.SsRegularTextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/upcomingBooking"
+                                            android:textColor="@color/white"
+                                            android:textSize="16sp" />
+                                    </LinearLayout>
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:alpha=".2"
+                android:background="@color/black" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:padding="16dp">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/edit_bg_green"
-                        android:focusable="true"
-                        android:focusableInTouchMode="true"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="3dp"
-                        android:paddingRight="16dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/PitchInfo"
-                        android:textColor="@color/white" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:gravity="end"
-                        android:orientation="horizontal">
-
-                        <hyogeun.github.com.colorratingbarlib.ColorRatingBar
-                            android:id="@+id/pitchRating"
-                            style="?android:ratingBarStyleSmall"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:rating="3"
-                            app:changeable="false"
-                            app:empty_color="@color/emptyColor"
-                            app:half_color="@color/lightGreen"
-                            app:progress_color="@color/lightGreen" />
-
-                        <TextView
-                            android:id="@+id/pitchRatingCount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/reviews"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="match_parent"
+                android:id="@+id/pitchReviewLayout"
+                >
+                <app.sliko.UI.SsMediumTextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/edit_bg_green"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="16dp"
+                    android:paddingBottom="3dp"
+                    android:text="@string/reviews"
+                    android:textColor="@color/white" />
 
-                    <LinearLayout
+
+                <FrameLayout
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/pitchesReviewsRecyclerView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="false" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBarLoading"
+                        android:layout_width="28sp"
+                        android:layout_height="28sp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="25dp" />
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/noDataLayout"
+                        android:layout_width="match_parent"
                         android:orientation="vertical"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp">
-
+                        android:background="@color/white"
+                        android:layout_marginTop="25dp"
+                        android:gravity="center"
+                        android:layout_height="wrap_content">
                         <TextView
-                            android:id="@+id/pitchName"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:gravity="center_vertical"
-                            android:textColor="@color/black"
-                            android:textSize="16sp" />
-                        <TextView
-                            android:textColor="@color/black_color"
-                            android:textSize="16sp"
-                            android:id="@+id/pitchPrice"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/price" />
-
-                        <TextView
-                            android:layout_marginTop="2dp"
-                            android:id="@+id/pitchDescription"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-
-                        <TextView
-                            android:layout_marginTop="8dp"
-                            android:layout_width="wrap_content"
-                            android:text="Stadium Info"
-                            android:textSize="16sp"
-                            android:textColor="@color/lightGreen"
+                            android:background="@drawable/edit_bg_grey"
+                            android:paddingRight="16dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:paddingLeft="16dp"
+                            android:text="No review found for this pitch"
                             android:layout_height="wrap_content"/>
-                        <TextView
-                            android:id="@+id/stadiumName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/stadiumName"
-                            />
-                        <TextView
-                            android:id="@+id/stadiumDescription"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/stadiumName"
-                            />
-                        <TextView
-                            android:id="@+id/stadiumAddress"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/Address"
-                            />
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:orientation="vertical"
-                            android:id="@+id/totalBookingLayout"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:textSize="16sp"
-                                android:layout_marginTop="8dp"
-                                android:id="@+id/totalBookings"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Total Bookings"
-                                android:textColor="@color/lightGreen" />
-
-                            <TextView
-                                android:id="@+id/upcomingBookings"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Upcoming Bookings" />
-
-                            <TextView
-                                android:id="@+id/completeBookings"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Complete Bookings"
-                                />
-                        </LinearLayout>
                     </LinearLayout>
 
                 </FrameLayout>
-
-                <TextView
-                    android:layout_width="80dp"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="15dp"
-                    android:alpha=".2"
-                    android:background="@color/black" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:id="@+id/pitchReviewLayout"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        android:background="@drawable/edit_bg_green"
-                        android:paddingLeft="16dp"
-                        android:paddingTop="3dp"
-                        android:paddingRight="16dp"
-                        android:paddingBottom="3dp"
-                        android:text="@string/reviews"
-                        android:textColor="@color/white" />
-
-
-                    <FrameLayout
-                        android:layout_marginTop="10dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/pitchesReviewsRecyclerView"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:nestedScrollingEnabled="false" />
-
-                        <ProgressBar
-                            android:id="@+id/progressBarLoading"
-                            android:layout_width="28sp"
-                            android:layout_height="28sp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="25dp" />
-                        <LinearLayout
-                            android:visibility="gone"
-                            android:id="@+id/noDataLayout"
-                            android:layout_width="match_parent"
-                            android:orientation="vertical"
-                            android:background="@color/white"
-                            android:layout_marginTop="25dp"
-                            android:gravity="center"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:background="@drawable/edit_bg_grey"
-                                android:paddingRight="16dp"
-                                android:paddingTop="3dp"
-                                android:paddingBottom="3dp"
-                                android:paddingLeft="16dp"
-                                android:text="No review found for this pitch"
-                                android:layout_height="wrap_content"/>
-                        </LinearLayout>
-
-                    </FrameLayout>
-                </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
 
-        </androidx.core.widget.NestedScrollView>
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-</FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

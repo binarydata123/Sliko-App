@@ -3,5 +3,5 @@
     <solid android:color="@color/toolbarColor" />
 
 
-    <corners android:radius="3dp" />
+    <corners android:radius="@dimen/corner_radius" />
 </shape>

@@ -6,14 +6,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -25,6 +24,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
+import app.sliko.UI.SsRegularButton;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.activity.BookingActivity;
 import app.sliko.adapter.StadiumImagesAdapter;
 import app.sliko.owner.adapter.ReviewsAdapter;
@@ -46,31 +48,27 @@ public class PitchDetailActivity extends AppCompatActivity {
     ViewPager pitchImagesViewPager;
     @BindView(R.id.circleIndicator)
     CircleIndicator circleIndicator;
-    @BindView(R.id.backButton)
-    LinearLayout backButton;
-    @BindView(R.id.totalBookingLayout)
-    LinearLayout totalBookingLayout;
 
     @BindView(R.id.pitchName)
-    TextView pitchName;
+    SsRegularTextView pitchName;
     @BindView(R.id.pitchPrice)
-    TextView pitchPrice;
+    SsRegularTextView pitchPrice;
     @BindView(R.id.stadiumName)
-    TextView stadiumName;
+    SsRegularTextView stadiumName;
 
     @BindView(R.id.stadiumDescription)
-    TextView stadiumDescription;
+    SsRegularTextView stadiumDescription;
     @BindView(R.id.stadiumAddress)
-    TextView stadiumAddress;
+    SsRegularTextView stadiumAddress;
     @BindView(R.id.upcomingBookings)
-    TextView upcomingBookings;
+    SsMediumTextView upcomingBookings;
 
     @BindView(R.id.completeBookings)
-    TextView completeBookings;
+    SsMediumTextView completeBookings;
     @BindView(R.id.pitchRatingCount)
-    TextView pitchRatingCount;
+    SsRegularTextView pitchRatingCount;
     @BindView(R.id.pitchDescription)
-    TextView pitchDescription;
+    SsRegularTextView pitchDescription;
     @BindView(R.id.pitchRating)
     ColorRatingBar pitchRating;
     @BindView(R.id.pitchesReviewsRecyclerView)
@@ -80,14 +78,20 @@ public class PitchDetailActivity extends AppCompatActivity {
     @BindView(R.id.noDataLayout)
     LinearLayout noDataLayout;
     @BindView(R.id.bookButton)
-    Button bookButton;
+    SsRegularButton bookButton;
+    @BindView(R.id.noImagesLayout)
+    LinearLayout noImagesLayout;
     ReviewsAdapter reviewsAdapter;
     Dialog dialog;
-
+    @BindView(R.id.toolbarTitle)
+    SsMediumTextView toolbarTitle;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
     String pitch_id = "";
     String stadium_id = "";
     String user_id = "";
     String type = "";
+    String pitch_name = "";
     StadiumImagesAdapter stadiumImagesAdapter;
     ArrayList<String> pitchImagesArrayList = new ArrayList<>();
     ArrayList<ReviewModel> reviewModelArrayList = new ArrayList<>();
@@ -100,14 +104,21 @@ public class PitchDetailActivity extends AppCompatActivity {
         weakReference = new WeakReference<>(PitchDetailActivity.this);
 
 
-        totalBookingLayout.setVisibility(View.GONE);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        toolbar.setNavigationIcon(R.drawable.back_arrow_white);
         dialog = M.showDialog(this, "", false);
         pitch_id = getIntent().getStringExtra("pitch_id");
         stadium_id = getIntent().getStringExtra("stadium_id");
+        pitch_name = getIntent().getStringExtra("pitch_name");
         user_id = getIntent().getStringExtra("user_id");
         type = getIntent().getStringExtra("type");
         Log.e(">>pitchDetailId", "onCreate: " + pitch_id + "\n" + stadium_id);
-        backButton.setOnClickListener(view -> finish());
+        toolbarTitle.setText(pitch_name);
         getSinglePitchDetail();
         if (type.equalsIgnoreCase("user")) {
             bookButton.setVisibility(View.VISIBLE);
@@ -147,10 +158,12 @@ public class PitchDetailActivity extends AppCompatActivity {
                             JSONObject dataObject = jsonObject.getJSONObject("data");
                             pitchName.setText(M.actAccordinglyWithJson(PitchDetailActivity.this, dataObject.getString("pitch_name")));
                             pitchDescription.setText(getString(R.string.description) + M.actAccordinglyWithJson(PitchDetailActivity.this, dataObject.getString("description")));
-                            pitchPrice.setText(getString(R.string.price) + M.actAccordinglyWithJson(PitchDetailActivity.this, dataObject.getString("price")));
+                            pitchPrice.setText(M.actAccordinglyWithJson(PitchDetailActivity.this, dataObject.getString("price")));
                             stadiumName.setText(M.actAccordinglyWithJson(PitchDetailActivity.this, dataObject.getJSONObject("stadium").getString("stadium_name")));
                             stadiumDescription.setText(M.actAccordinglyWithJson(PitchDetailActivity.this, dataObject.getJSONObject("stadium").getString("description")));
                             stadiumAddress.setText(M.actAccordinglyWithJson(PitchDetailActivity.this, dataObject.getJSONObject("stadium").getString("address")));
+                            completeBookings.setText(M.actAccordinglyWithJson(PitchDetailActivity.this, dataObject.getString("complete_booking")));
+                            upcomingBookings.setText(M.actAccordinglyWithJson(PitchDetailActivity.this, dataObject.getString("process_booking")));
 
                             if (dataObject.getString("pitch_review_avg").equalsIgnoreCase("null")) {
                                 pitchRatingCount.setText(getString(R.string.noReviews));
@@ -165,9 +178,9 @@ public class PitchDetailActivity extends AppCompatActivity {
                                     : Float.parseFloat(dataObject.getString("pitch_review_avg")));
                             Object stadium_gallery = dataObject.get("pitch_gallery");
                             if (stadium_gallery instanceof JSONObject) {
-                                JSONObject stadiumImages = dataObject.getJSONObject("pitch_gallery");
-                                pitchImagesArrayList.add(stadiumImages.getString("pitch_image"));
+                                noImagesLayout.setVisibility(View.VISIBLE);
                             } else {
+                                noImagesLayout.setVisibility(View.GONE);
                                 JSONArray stadium_galleryArray = dataObject.getJSONArray("pitch_gallery");
                                 for (int k = 0; k < stadium_galleryArray.length(); k++) {
                                     JSONObject stadiumImages = stadium_galleryArray.getJSONObject(k);
@@ -283,6 +296,7 @@ public class PitchDetailActivity extends AppCompatActivity {
             }
         });
     }
+
     private void handleNoRecord() {
         noDataLayout.setVisibility(View.VISIBLE);
     }

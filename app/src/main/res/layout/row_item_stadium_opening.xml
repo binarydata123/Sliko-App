@@ -16,7 +16,7 @@
             android:layout_width="15dp"
             android:background="@drawable/available"
             android:layout_height="15dp"/>
-        <TextView
+        <app.sliko.UI.SsRegularTextView
             android:paddingLeft="8dp"
             android:textSize="14sp"
             android:textColor="@color/black_color"

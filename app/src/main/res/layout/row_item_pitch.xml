@@ -4,21 +4,23 @@
     android:layout_height="wrap_content"
     android:id="@+id/tap"
     android:layout_marginBottom="5dp"
+    android:layout_margin="1dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical">
 
     <LinearLayout
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="match_parent">
         <androidx.cardview.widget.CardView
             android:layout_width="150dp"
+            app:cardCornerRadius="5dp"
             android:layout_height="100dp">
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
                 <ImageView
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
@@ -47,7 +49,7 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <TextView
+                    <app.sliko.UI.SsMediumTextView
                         android:textColor="@color/black_color"
                         android:textSize="16sp"
                         android:gravity="center_vertical"
@@ -56,8 +58,11 @@
                         android:layout_height="wrap_content"
                         android:text="Pitch Name" />
 
-                    <TextView
+                    <app.sliko.UI.SsRegularTextView
                         android:textSize="14sp"
+                        android:layout_marginTop="1dp"
+                        android:drawableLeft="@drawable/ic_tag"
+                        android:drawablePadding="5dp"
                         android:textColor="@color/lightGreen"
                         android:id="@+id/stadiumBookingPrice"
                         android:layout_width="wrap_content"
@@ -76,14 +81,14 @@
                             style="?android:ratingBarStyleSmall"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:rating="3"
                             app:changeable="false"
-                            app:empty_color="@color/emptyColor"
-                            app:half_color="@color/lightGreen"
-                            app:progress_color="@color/lightGreen" />
+                            app:empty_color="@color/semi_black_color"
+                            app:half_color="@color/yellow"
+                            app:progress_color="@color/yellow" />
 
-                        <TextView
+                        <app.sliko.UI.SsRegularTextView
                             android:textSize="14sp"
+                            android:paddingLeft="5dp"
                             android:id="@+id/stadiumRatingCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -91,7 +96,7 @@
                     </LinearLayout>
 
                 </LinearLayout>
-                <Button
+                <app.sliko.UI.SsRegularButton
                     android:id="@+id/bookStadiumButton"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
@@ -103,4 +108,5 @@
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>
+    <include layout="@layout/horizontal_separator"/>
 </LinearLayout>

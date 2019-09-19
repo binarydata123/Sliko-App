@@ -34,7 +34,7 @@
                     android:layout_width="match_parent"
                     android:orientation="vertical"
                     android:layout_height="match_parent">
-                    <TextView
+                    <app.sliko.UI.SsMediumTextView
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
                         android:orientation="horizontal"
                         android:gravity="center"
                         android:layout_height="wrap_content">
-                        <TextView
+                        <app.sliko.UI.SsRegularTextView
                             android:textSize="14sp"
                             android:layout_width="wrap_content"
                             android:text="Enable Notification"
@@ -67,7 +67,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <TextView
+                    <app.sliko.UI.SsRegularTextView
                         android:textSize="14sp"
                         android:layout_marginTop="10dp"
                         android:text="Set Notify time"
@@ -80,7 +80,7 @@
                         android:id="@+id/etTimeLayout"
                         android:layout_width="match_parent"
                         android:layout_height="46dp">
-                        <EditText
+                        <app.sliko.UI.SsRegularEditText
                             android:id="@+id/etTime"
                             android:hint="Enter time"
                             android:padding="10dp"
@@ -89,7 +89,7 @@
                             android:layout_width="match_parent"
                             android:background="@drawable/edit_bg_grey"
                             android:layout_height="match_parent"/>
-                        <TextView
+                        <app.sliko.UI.SsRegularTextView
                             android:padding="10dp"
                             android:layout_width="wrap_content"
                             android:text="In min"
@@ -115,7 +115,7 @@
                         android:layout_width="match_parent"
                         android:orientation="vertical"
                         android:layout_height="wrap_content">
-                        <TextView
+                        <app.sliko.UI.SsMediumTextView
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             android:layout_width="wrap_content"
@@ -131,7 +131,7 @@
                             android:layout_width="match_parent"
                             android:orientation="horizontal"
                             android:layout_height="wrap_content">
-                            <TextView
+                            <app.sliko.UI.SsRegularTextView
                                 android:layout_gravity="center_vertical"
                                 android:layout_width="wrap_content"
                                 android:text="Change Password"
@@ -150,7 +150,7 @@
                             android:layout_width="match_parent"
                             android:orientation="horizontal"
                             android:layout_height="wrap_content">
-                            <TextView
+                            <app.sliko.UI.SsRegularTextView
                                 android:layout_gravity="center_vertical"
                                 android:layout_width="wrap_content"
                                 android:text="Delete Account"

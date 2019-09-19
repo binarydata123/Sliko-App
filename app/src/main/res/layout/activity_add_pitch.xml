@@ -10,24 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/card" />
-
+        <include layout="@layout/suspended_image"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <include
-                layout="@layout/toolbar" />
+                layout="@layout/toolbar_transparent" />
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent">
 
-                <Button
+                <app.sliko.UI.SsRegularButton
                     android:id="@+id/addPitchButton"
                     android:layout_width="wrap_content"
                     android:layout_height="36dp"
@@ -75,7 +71,7 @@
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
-                                    <TextView
+                                    <app.sliko.UI.SsRegularTextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/Pitch_Name" />
@@ -95,13 +91,14 @@
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="50dp"
+                                    android:layout_height="46dp"
                                     android:background="@drawable/edit_bg_grey"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
 
-                                    <EditText
+                                    <app.sliko.UI.SsRegularEditText
+                                        android:inputType="textNoSuggestions"
                                         android:id="@+id/etPitchName"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
@@ -129,7 +126,7 @@
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
-                                    <TextView
+                                    <app.sliko.UI.SsRegularTextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/Description" />
@@ -155,7 +152,8 @@
                                     android:orientation="horizontal">
 
 
-                                    <EditText
+                                    <app.sliko.UI.SsRegularEditText
+                                        android:inputType="textNoSuggestions"
                                         android:id="@+id/etPitchDescription"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
@@ -181,7 +179,7 @@
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
-                                    <TextView
+                                    <app.sliko.UI.SsRegularTextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/numberOfPlayers" />
@@ -191,7 +189,7 @@
                                         android:layout_height="match_parent" />
 
                                     <TextView
-android:visibility="invisible"
+                                        android:visibility="invisible"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="*"
@@ -237,7 +235,7 @@ android:visibility="invisible"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
-                                    <TextView
+                                    <app.sliko.UI.SsRegularTextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/Price" />
@@ -257,13 +255,13 @@ android:visibility="invisible"
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="50dp"
+                                    android:layout_height="46dp"
                                     android:background="@drawable/edit_bg_grey"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal">
 
 
-                                    <EditText
+                                    <app.sliko.UI.SsRegularEditText
                                         android:id="@+id/etPitchPrice"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
@@ -285,7 +283,7 @@ android:visibility="invisible"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="15dp"
                                 android:orientation="vertical">
-                                <TextView
+                                <app.sliko.UI.SsRegularTextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/pitchImages" />
@@ -299,8 +297,9 @@ android:visibility="invisible"
 
                                     <LinearLayout
                                         android:id="@+id/pickImageLayout"
-                                        android:layout_width="30dp"
-                                        android:layout_height="30dp"
+                                        android:layout_width="70dp"
+                                        android:orientation="vertical"
+                                        android:layout_height="70dp"
                                         android:background="@drawable/edit_bg_grey"
                                         android:gravity="center">
 
@@ -308,6 +307,11 @@ android:visibility="invisible"
                                             android:layout_width="20dp"
                                             android:layout_height="20dp"
                                             android:background="@drawable/ic_add" />
+                                        <app.sliko.UI.SsRegularTextView
+                                            android:layout_width="wrap_content"
+                                            android:text="@string/addPhoto"
+                                            android:textSize="12sp"
+                                            android:layout_height="wrap_content"/>
                                     </LinearLayout>
 
                                     <androidx.recyclerview.widget.RecyclerView

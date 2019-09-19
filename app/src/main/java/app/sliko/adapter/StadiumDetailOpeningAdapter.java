@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +14,7 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.owner.model.AvailabilityModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,8 +43,15 @@ public class StadiumDetailOpeningAdapter extends RecyclerView.Adapter<StadiumDet
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_item_stadium_opening
-                , viewGroup, false);
+        View itemView;
+        if(!typeOfView.equalsIgnoreCase("detailView")){
+            itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_item_stadium_opening
+                    , viewGroup, false);
+        }else{
+            itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_item_stadium_opening_view
+                    , viewGroup, false);
+        }
+
         return new MyViewHolder(itemView);
     }
 
@@ -80,7 +87,7 @@ public class StadiumDetailOpeningAdapter extends RecyclerView.Adapter<StadiumDet
         @BindView(R.id.changeBackground)
         LinearLayout changeBackground;
         @BindView(R.id.timingText)
-        TextView timingText;
+        SsRegularTextView timingText;
 
         private MyViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="100dp"
     android:layout_height="wrap_content"
+    android:background="@color/lightGreen"
     android:id="@+id/changeBackground"
     android:orientation="vertical">
 
@@ -9,19 +10,19 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="wrap_content">
-        <TextView
+        <app.sliko.UI.SsRegularTextView
             android:textSize="11sp"
             android:singleLine="true"
             android:id="@+id/timingText"
+            android:textColor="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="10dp" />
         <TextView
             android:layout_width="1dp"
-            android:alpha=".3"
+            android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:background="@color/black"
-            android:layout_height="match_parent"/>
+            android:background="#ffffff" />
     </FrameLayout>
 </LinearLayout>

@@ -2,17 +2,17 @@ package app.sliko.location;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,6 +22,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
+import app.sliko.UI.SsRegularEditText;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.utills.M;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
@@ -32,37 +35,46 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SelectAddressLocation extends AppCompatActivity {
+public class FindLocationActivity extends AppCompatActivity {
     @BindView(R.id.searchedAddressRecyclerView)
     RecyclerView searchedAddressRecyclerView;
     @BindView(R.id.searchQuery)
-    EditText searchQuery;
-    @BindView(R.id.backImage)
-    LinearLayout backImage;
+    SsRegularEditText searchQuery;
+    @BindView(R.id.progress)
+    ProgressBar progress;
+    @BindView(R.id.toolbarTitle)
+    SsMediumTextView toolbarTitle;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;   @BindView(R.id.searchResultLayout)
+    CardView searchResultLayout;
     SearchAdapter searchAdapter;
     ArrayList<String> searchList;
-    Dialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actiivty_location);
-        ButterKnife.bind(SelectAddressLocation.this);
-        dialog = M.showDialog(SelectAddressLocation.this, "", false);
-        backImage.setOnClickListener(new View.OnClickListener() {
+        ButterKnife.bind(FindLocationActivity.this);
+        toolbar.setNavigationIcon(R.drawable.back_arrow_white);
+        toolbarTitle.setText(getString(R.string.findLocation));
+        searchResultLayout.setVisibility(View.GONE);
+        toolbar.setNavigationOnClickListener(view -> onBackPressed());
+        searchQuery.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
-                finish();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-        });
-        searchQuery.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() != 0) {
+                    searchResultLayout.setVisibility(View.VISIBLE);
+                    progress.setVisibility(View.VISIBLE);
                     getSinglePitchDetail(searchQuery.getText().toString());
-                    return true;
                 }
-                return false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
             }
         });
     }
@@ -76,13 +88,12 @@ public class SelectAddressLocation extends AppCompatActivity {
     private void getSinglePitchDetail(String query) {
         searchList = new ArrayList<>();
         searchList.clear();
-        dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_addressSuggestions(query);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                dialog.cancel();
+                progress.setVisibility(View.GONE);
                 try {
                     String sResponse = response.body().string();
                     JSONObject jsonObject = new JSONObject(sResponse);
@@ -96,14 +107,14 @@ public class SelectAddressLocation extends AppCompatActivity {
                         searchAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
-                    Toast.makeText(SelectAddressLocation.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FindLocationActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
-                dialog.cancel();
-                Toast.makeText(SelectAddressLocation.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+               progress.setVisibility(View.GONE);
+                Toast.makeText(FindLocationActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 

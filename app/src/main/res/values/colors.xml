@@ -20,9 +20,13 @@
     <color name="bit_dark_grey">#E5DBD8D8</color>
     <color name="light_grey">#303030</color>
     <color name="darkGreen">#055405</color>
-    <color name="yellow">#e2ff00</color>
-    <color name="lightGreen">#0d9324</color>
+    <color name="yellow">#f5af00</color>
+    <color name="lightGreen">#44d362</color>
     <color name="darkGrey">#ebecf0</color>
     <color name="emptyColor">#f5c4d6</color>
     <color name="orange">#fd6a34</color>
+    <color name="darkestGrey">#383b3b</color>
+    <color name="alphaBlack">#99000000</color>
+    <color name="alphaWhite">#fbfbf7</color>
+    <color name="alphaSecondryColor">#fcfcfe</color>
 </resources>

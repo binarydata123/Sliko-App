@@ -23,7 +23,7 @@
             android:orientation="vertical"
             android:padding="5dp">
 
-            <TextView
+            <app.sliko.UI.SsRegularTextView
                 android:id="@+id/startDateText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             android:padding="5dp">
 
 
-            <TextView
+            <app.sliko.UI.SsRegularTextView
                 android:id="@+id/endDateText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

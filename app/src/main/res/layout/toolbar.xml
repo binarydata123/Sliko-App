@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:orientation="horizontal">
-            <TextView
+            <app.sliko.UI.SsMediumTextView
                 android:textColor="@color/white"
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"

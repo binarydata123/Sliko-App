@@ -27,19 +27,19 @@
                 android:gravity="center_vertical"
                 android:orientation="vertical">
 
-                <TextView
+                <app.sliko.UI.SsRegularTextView
                     android:id="@+id/etEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:textColor="@color/lightGreen" />
-                <TextView
+                <app.sliko.UI.SsRegularTextView
                     android:id="@+id/etName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/lightGreen"
                     android:textSize="12sp" />
-                <TextView
+                <app.sliko.UI.SsRegularTextView
                     android:id="@+id/etPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <Button
+            <app.sliko.UI.SsRegularButton
                 android:visibility="gone"
                 android:id="@+id/loginButtonOnSideMenu"
                 android:layout_width="wrap_content"

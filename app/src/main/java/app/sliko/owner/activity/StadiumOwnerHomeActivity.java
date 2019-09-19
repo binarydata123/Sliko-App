@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import app.sliko.EditProfileActivity;
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
 import app.sliko.activity.LoginActivity;
 import app.sliko.activity.SettingActivity;
 import app.sliko.dialogs.DialogMethodCaller;
@@ -62,7 +63,7 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
     @BindView(R.id.ivUserImage)
     CircleImageView ivUserImage;
     @BindView(R.id.toolbarTitle)
-    TextView toolbarTitle;
+    SsMediumTextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.addPitchLayout)
@@ -139,6 +140,7 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
         etName.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "fullname"));
         etPhone.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "phone"));
         Log.e(">>data", "setUpLayout: " +  M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, Api.IS_STADIUM));
+ Log.e(">>userId", "setUpLayout: " +  M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id"));
 
     }
 

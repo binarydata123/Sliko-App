@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -33,6 +35,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.adapter.StadiumImagesAdapter;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.DialogConfirmation;
@@ -74,25 +78,25 @@ public class StadiumDetailsFragment extends Fragment {
     @BindView(R.id.progressBarLoading)
     ProgressBar progressBarLoading;
     @BindView(R.id.stadiumName)
-    TextView stadiumName;
+    SsRegularTextView stadiumName;
     @BindView(R.id.bookingCount)
-    TextView bookingCount;
+    SsMediumTextView bookingCount;
     @BindView(R.id.amountCount)
-    TextView amountCount;
+    SsMediumTextView amountCount;
     @BindView(R.id.stadiumLocation)
-    TextView stadiumLocation;
+    SsRegularTextView stadiumLocation;
     @BindView(R.id.stadiumDescription)
-    TextView stadiumDescription;
+    SsRegularTextView stadiumDescription;
     @BindView(R.id.stadiumRating)
     ColorRatingBar stadiumRating;
     @BindView(R.id.createdDate)
-    TextView createdDate;
+    SsRegularTextView createdDate;
     @BindView(R.id.SD_stadiumReviews)
-    TextView SD_stadiumReviews;
+    SsRegularTextView SD_stadiumReviews;
     @BindView(R.id.editStadiumLayout)
-    LinearLayout editStadiumLayout;
+    FloatingActionButton editStadiumLayout;
     @BindView(R.id.deleteStadiumLayout)
-    LinearLayout deleteSadiumLayout;
+    FloatingActionButton deleteSadiumLayout;
     @BindView(R.id.stadiumChangeLayout)
     LinearLayout changeStadiumLayout;
     @BindView(R.id.noPitchLayout)
@@ -105,6 +109,8 @@ public class StadiumDetailsFragment extends Fragment {
     Spinner sortByModeOfPayment;
     @BindView(R.id.pitchSpinnerLayout)
     LinearLayout pitchSpinnerLayout;
+    @BindView(R.id.noImagesLayout)
+    LinearLayout noImagesLayout;
     private ArrayList<String> reviewsModelArrayList;
     private StadiumImagesAdapter stadiumImagesAdapter;
     private View view;
@@ -283,7 +289,7 @@ public class StadiumDetailsFragment extends Fragment {
                             String total_count = data.getString("total_count");
                             String total_amount = data.getString("total_amount");
                             bookingCount.setText(total_count);
-                            amountCount.setText(total_amount);
+                            amountCount.setText(getString(R.string.currencySymbol) + Float.parseFloat(total_amount));
                         } else {
                             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                         }
@@ -350,9 +356,9 @@ public class StadiumDetailsFragment extends Fragment {
                 createdDate.setText(getString(R.string.stadiumAddedOn) + M.formateDateTimeBoth(created_at));
                 Object stadium_gallery = data.get("stadium_gallery");
                 if (stadium_gallery instanceof JSONObject) {
-                    JSONObject stadium_galleryObject = data.getJSONObject("stadium_gallery");
-                    reviewsModelArrayList.add(stadium_galleryObject.getString("stadium_image"));
+                    noImagesLayout.setVisibility(View.VISIBLE);
                 } else {
+                    noImagesLayout.setVisibility(View.GONE);
                     JSONArray stadium_galleryArray = data.getJSONArray("stadium_gallery");
                     for (int k = 0; k < stadium_galleryArray.length(); k++) {
                         JSONObject stadiumImages = stadium_galleryArray.getJSONObject(k);

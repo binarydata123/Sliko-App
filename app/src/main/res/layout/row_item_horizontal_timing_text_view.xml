@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="match_parent">
-        <TextView
+        <app.sliko.UI.SsRegularTextView
             android:textSize="11sp"
             android:id="@+id/timingView"
             android:singleLine="true"

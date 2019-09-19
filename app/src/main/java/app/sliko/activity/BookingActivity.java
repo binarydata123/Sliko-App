@@ -26,10 +26,13 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
 import app.sliko.booking.VerticalPitchModel;
 import app.sliko.booking.model.UserBookingModel;
 import app.sliko.events.PayingForPitchEvent;
@@ -54,7 +57,7 @@ public class BookingActivity extends AppCompatActivity {
     @BindView(R.id.timingVerticalRecyclerView)
     RecyclerView timingVerticalRecyclerView;
     @BindView(R.id.toolbarTitle)
-    TextView toolbarTitle;
+    SsMediumTextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.pitchVerticalRecyclerView)
@@ -194,10 +197,10 @@ public class BookingActivity extends AppCompatActivity {
                             stadium_description = data.getString("stadium_description");
                             stadium_address = data.getString("stadium_address");
                             String stadiumSlot = data.getString("stadium_slot");
-                            JSONArray stadiumSlotArray = new JSONArray(stadiumSlot);
-                            for (int l = 0; l < stadiumSlotArray.length(); l++) {
+                            List<String> stadiumSlotArrayList = Arrays.asList(stadiumSlot.split(","));
+                            for (int l = 0; l < stadiumSlotArrayList.size(); l++) {
                                 AvailabilityModel availabilityModel = new AvailabilityModel();
-                                availabilityModel.setTime(stadiumSlotArray.getString(l));
+                                availabilityModel.setTime(stadiumSlotArrayList.get(l));
                                 availabilityModel.setPicked(false);
                                 availabilityModels.add(availabilityModel);
                             }
@@ -299,7 +302,7 @@ public class BookingActivity extends AppCompatActivity {
                 deleverables.put("stadium_description", stadium_description);
                 deleverables.put("stadium_address", stadium_address);
                 deleverables.put("bookingDate", bookingDate);
-                BookPitchPaymentFragment bottomSheetFragment = new BookPitchPaymentFragment(deleverables);
+                BookPitchPaymentFragment bottomSheetFragment = new BookPitchPaymentFragment(BookingActivity.this,deleverables);
                 bottomSheetFragment.show(getSupportFragmentManager(), "pitchBookingDialogFragment");
             } else {
                 Toast.makeText(this, getString(R.string.pleaseSelectDifferentDate), Toast.LENGTH_SHORT).show();

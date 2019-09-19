@@ -1,24 +1,22 @@
 package app.sliko.dialogs.models;
 
 import android.app.AlertDialog;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+
+import app.sliko.UI.SsRegularButton;
+import app.sliko.UI.SsRegularEditText;
 
 public class ChangePasswordDialog {
     private AlertDialog dialog_error;
-    private EditText etUserEmail;
-    private EditText etPassword;
-    private EditText etNewPassword;
-    private Button cancelButton;
-    private Button sendButton;
+    private SsRegularEditText etUserEmail;
+    private SsRegularEditText etPassword;
+    private SsRegularEditText etNewPassword;
+    private LinearLayout cancelButton;
+    private SsRegularButton sendButton;
 
     public ChangePasswordDialog(AlertDialog dialog_error,
-                                EditText etUserEmail, EditText etPassword, EditText etNewPassword,
-                                Button cancelButton, Button sendButton) {
+                                SsRegularEditText etUserEmail, SsRegularEditText etPassword, SsRegularEditText etNewPassword,
+                                LinearLayout cancelButton, SsRegularButton sendButton) {
         this.dialog_error = dialog_error;
         this.etUserEmail = etUserEmail;
         this.etPassword = etPassword;
@@ -32,23 +30,23 @@ public class ChangePasswordDialog {
         return dialog_error;
     }
 
-    public EditText getEtUserEmail() {
+    public SsRegularEditText getEtUserEmail() {
         return etUserEmail;
     }
 
-    public EditText getEtPassword() {
+    public SsRegularEditText getEtPassword() {
         return etPassword;
     }
 
-    public EditText getEtNewPassword() {
+    public SsRegularEditText getEtNewPassword() {
         return etNewPassword;
     }
 
-    public Button getCancelButton() {
+    public LinearLayout getCancelButton() {
         return cancelButton;
     }
 
-    public Button getSendButton() {
+    public SsRegularButton getSendButton() {
         return sendButton;
     }
 }

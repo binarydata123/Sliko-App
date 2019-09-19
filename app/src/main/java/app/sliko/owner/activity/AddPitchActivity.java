@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,10 +29,15 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
+import app.sliko.EditProfileActivity;
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
+import app.sliko.UI.SsRegularButton;
+import app.sliko.UI.SsRegularEditText;
 import app.sliko.models.StadiumImagesModel;
 import app.sliko.owner.adapter.AddImagesAdapter;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
+import app.sliko.utills.FilePath;
 import app.sliko.utills.M;
 import app.sliko.utills.Prefs;
 import app.sliko.web.ApiInterface;
@@ -54,19 +58,19 @@ public class AddPitchActivity extends Activity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.toolbarTitle)
-    TextView toolbarTitle;
+    SsMediumTextView toolbarTitle;
     @BindView(R.id.etPitchName)
-    EditText etPitchName;
+    SsRegularEditText etPitchName;
     @BindView(R.id.etPitchDescription)
-    EditText etPitchDescription;
+    SsRegularEditText etPitchDescription;
     @BindView(R.id.etPitchPrice)
-    EditText etPitchPrice;
+    SsRegularEditText etPitchPrice;
     @BindView(R.id.pitchImageRecyclerView)
     RecyclerView pitchImageRecyclerView;
     @BindView(R.id.pitchType)
     Spinner pitchTypeSpinner;
     @BindView(R.id.addPitchButton)
-    Button addPitchButton;
+    SsRegularButton addPitchButton;
 
     private static final int PERMISSIONS_REQUEST_CODE = 0x1;
     Dialog dialog;
@@ -161,18 +165,12 @@ public class AddPitchActivity extends Activity {
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     if (data.getData() != null) {
                         Uri mImageUri = data.getData();
-                        // Get the cursor
-                        Cursor cursor = getContentResolver().query(mImageUri,
-                                filePathColumn, null, null, null);
-                        // Move to first row
-                        cursor.moveToFirst();
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                        String image = FilePath.getPath(this, mImageUri);
                         StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
                         stadiumImagesModel.setImageId("");
-                        stadiumImagesModel.setImageName(cursor.getString(columnIndex));
+                        stadiumImagesModel.setImageName(image);
                         pitchImagesGalleryArrayList.add(stadiumImagesModel);
                         Log.e(">>idImage", "onActivityResult: " + mImageUri.getPath());
-                        cursor.close();
                     } else {
                         if (data.getClipData() != null) {
                             ClipData mClipData = data.getClipData();
@@ -183,17 +181,12 @@ public class AddPitchActivity extends Activity {
                                 Uri uri = item.getUri();
                                 mArrayUri.add(uri);
                                 // Get the cursor
-                                Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
-                                // Move to first row
-                                cursor.moveToFirst();
-
-                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                                String image = FilePath.getPath(this, uri);
                                 StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
                                 stadiumImagesModel.setImageId("");
-                                stadiumImagesModel.setImageName(cursor.getString(columnIndex));
+                                stadiumImagesModel.setImageName(image);
                                 pitchImagesGalleryArrayList.add(stadiumImagesModel);
                                 Log.e(">>idImage", "onActivityResult: " + "\n" + uri.getPath());
-                                cursor.close();
                             }
                             Log.v("LOG_TAG", "Selected Images" + mArrayUri.size());
                         }

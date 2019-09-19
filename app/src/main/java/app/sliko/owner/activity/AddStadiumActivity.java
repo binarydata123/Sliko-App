@@ -10,11 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,12 +32,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import app.sliko.R;
-import app.sliko.location.SelectAddressLocation;
+import app.sliko.UI.SsMediumTextView;
+import app.sliko.UI.SsRegularButton;
+import app.sliko.UI.SsRegularEditText;
+import app.sliko.UI.SsRegularTextView;
+import app.sliko.location.FindLocationActivity;
 import app.sliko.models.StadiumImagesModel;
 import app.sliko.owner.adapter.AddImagesAdapter;
 import app.sliko.owner.adapter.StadiumOpeningAdapter;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.owner.model.AvailabilityModel;
+import app.sliko.utills.FilePath;
 import app.sliko.utills.M;
 import app.sliko.web.Api;
 import app.sliko.web.ApiInterface;
@@ -59,15 +61,15 @@ import retrofit2.Response;
 public class AddStadiumActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbarTitle)
-    TextView toolbarTitle;
+    SsMediumTextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.stadiumName)
-    EditText stadiumName;
+    SsRegularEditText stadiumName;
     @BindView(R.id.stadiumDescription)
-    EditText stadiumDescription;
+    SsRegularEditText stadiumDescription;
     @BindView(R.id.stadiumAddress)
-    TextView stadiumAddress;
+    SsRegularTextView stadiumAddress;
     @BindView(R.id.pickImageLayout)
     LinearLayout pickImageLayout;
     @BindView(R.id.pitchImageRecyclerView)
@@ -98,7 +100,7 @@ public class AddStadiumActivity extends AppCompatActivity {
     @BindView(R.id.chkboxsaturday)
     CheckBox chkboxsaturday;
     @BindView(R.id.submitButton)
-    Button submitButton;
+    SsRegularButton submitButton;
 
     private StadiumOpeningAdapter stadiumOpeningAdapter;
 
@@ -176,7 +178,7 @@ public class AddStadiumActivity extends AppCompatActivity {
 
     @OnClick(R.id.stadiumAddress)
     void clickAddress() {
-        startActivityForResult(new Intent(AddStadiumActivity.this, SelectAddressLocation.class), 200);
+        startActivityForResult(new Intent(AddStadiumActivity.this, FindLocationActivity.class), 200);
     }
 
 
@@ -232,44 +234,28 @@ public class AddStadiumActivity extends AppCompatActivity {
         switch (requestCode) {
             case 102:
                 if (data != null) {
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
                     if (data.getData() != null) {
                         Uri mImageUri = data.getData();
-                        // Get the cursor
-                        Cursor cursor = getContentResolver().query(mImageUri,
-                                filePathColumn, null, null, null);
-                        // Move to first row
-                        cursor.moveToFirst();
-                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                        imageEncoded = cursor.getString(columnIndex);
+                        String image = FilePath.getPath(this, mImageUri);
                         StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
                         stadiumImagesModel.setImageId("");
-                        stadiumImagesModel.setImageName(imageEncoded);
+                        stadiumImagesModel.setImageName(image);
                         imagesEncodedList.add(stadiumImagesModel);
                         Log.e(">>idImage", "onActivityResult: " + imageEncoded + "\n" + mImageUri.getPath());
-                        cursor.close();
                     } else {
                         if (data.getClipData() != null) {
                             ClipData mClipData = data.getClipData();
                             ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
                             for (int i = 0; i < mClipData.getItemCount(); i++) {
-
                                 ClipData.Item item = mClipData.getItemAt(i);
                                 Uri uri = item.getUri();
                                 mArrayUri.add(uri);
-                                // Get the cursor
-                                Cursor cursor = getContentResolver().query(uri, filePathColumn, null, null, null);
-                                // Move to first row
-                                cursor.moveToFirst();
-
-                                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                                imageEncoded = cursor.getString(columnIndex);
+                                String image = FilePath.getPath(this, uri);
                                 StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
                                 stadiumImagesModel.setImageId("");
-                                stadiumImagesModel.setImageName(imageEncoded);
+                                stadiumImagesModel.setImageName(image);
                                 imagesEncodedList.add(stadiumImagesModel);
                                 Log.e(">>idImage", "onActivityResult: " + imageEncoded + "\n" + uri.getPath());
-                                cursor.close();
                             }
                             Log.v("LOG_TAG", "Selected Images" + mArrayUri.size());
                         }
@@ -279,10 +265,25 @@ public class AddStadiumActivity extends AppCompatActivity {
 
                 break;
             case 200:
-                lat = data.getStringExtra("lat");
-                lng = data.getStringExtra("lng");
-                Log.e(">>addressLat", "onActivityResult: " + lat + "\n" + lng);
-                stadiumAddress.setText(data.getStringExtra("addressSelected"));
+                if (data != null) {
+                    if (data.getStringExtra("lat") != null) {
+                        lat = data.getStringExtra("lat");
+                    } else {
+                        lat = "0.0";
+                    }
+
+                    if (data.getStringExtra("lng") != null) {
+                        lng = data.getStringExtra("lng");
+                    } else {
+                        lng = "0.0";
+                    }
+
+                    if (data.getStringExtra("addressSelected") != null) {
+                        stadiumAddress.setText(data.getStringExtra("addressSelected"));
+                    }
+                    Log.e(">>addressLat", "onActivityResult: " + lat + "\n" + lng);
+
+                }
                 break;
         }
     }
@@ -423,6 +424,7 @@ public class AddStadiumActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
+                        Log.e(">>stadiumResponse", "onResponse: " + jsonObject.toString());
                         if (status.equalsIgnoreCase("true")) {
                             JSONObject data = jsonObject.getJSONObject("data");
                             String stadium_name = data.getString("stadium_name");
@@ -443,17 +445,21 @@ public class AddStadiumActivity extends AppCompatActivity {
                             stadiumName.setText(stadium_name);
                             stadiumDescription.setText(description);
                             stadiumAddress.setText(address);
-                            JSONArray jsonArray = data.getJSONArray("stadium_gallery");
-                            for (int k = 0; k < jsonArray.length(); k++) {
-                                JSONObject stadiumImages = jsonArray.getJSONObject(k);
-                                StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
-                                String imageId = stadiumImages.getString("id");
-                                String stadiumImage = stadiumImages.getString("stadium_image");
-                                stadiumImagesModel.setImageId(imageId);
-                                stadiumImagesModel.setImageName(stadiumImage);
-                                imagesEncodedList.add(stadiumImagesModel);
+                            Object object = data.get("stadium_gallery");
+                            if (!(object instanceof JSONObject)) {
+                                JSONArray jsonArray = data.getJSONArray("stadium_gallery");
+                                for (int k = 0; k < jsonArray.length(); k++) {
+                                    JSONObject stadiumImages = jsonArray.getJSONObject(k);
+                                    StadiumImagesModel stadiumImagesModel = new StadiumImagesModel();
+                                    String imageId = stadiumImages.getString("id");
+                                    String stadiumImage = stadiumImages.getString("stadium_image");
+                                    stadiumImagesModel.setImageId(imageId);
+                                    stadiumImagesModel.setImageName(stadiumImage);
+                                    imagesEncodedList.add(stadiumImagesModel);
+                                }
+                                addPitchImageAdapter.notifyDataSetChanged();
+
                             }
-                            addPitchImageAdapter.notifyDataSetChanged();
 
                             List<String> stringArrayList = Arrays.asList(slot_intervel.split(","));
 
@@ -477,7 +483,6 @@ public class AddStadiumActivity extends AppCompatActivity {
                         Toast.makeText(AddStadiumActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Toast.makeText(AddStadiumActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(">>E", "onResponse: " + e.getMessage());
                 }
             }

@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.appcompat.widget.Toolbar android:id="@+id/toolbar"
+    app:layout_collapseMode="pin"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="?attr/actionBarSize"
+    android:background="@android:color/transparent"
+    app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"
-        app:layout_scrollFlags="scroll|enterAlways"
-        app:popupTheme="@style/Theme.AppCompat.Light.DarkActionBar">
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <app.sliko.UI.SsMediumTextView
+            android:textColor="@color/white"
+            android:id="@+id/toolbarTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title" />
+    </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-            <TextView
-                android:textColor="@color/white"
-                android:id="@+id/toolbarTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title" />
-        </LinearLayout>
+</androidx.appcompat.widget.Toolbar>
 
-    </androidx.appcompat.widget.Toolbar>
-
-</LinearLayout>

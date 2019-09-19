@@ -43,18 +43,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if ((etUserEmail.length() == 0 || etUserEmail.getText().toString().trim().length() == 0)) {
-                    Toast.makeText(ForgotPasswordActivity.this, getString(R.string.please_enter_email), Toast.LENGTH_SHORT).show();
+        sendButton.setOnClickListener(view -> {
+            if ((etUserEmail.length() == 0 || etUserEmail.getText().toString().trim().length() == 0)) {
+                Toast.makeText(ForgotPasswordActivity.this, getString(R.string.please_enter_email), Toast.LENGTH_SHORT).show();
 
-                } else if (!M.validateEmail(etUserEmail.getText().toString())) {
-                    Toast.makeText(ForgotPasswordActivity.this, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
+            } else if (!M.validateEmail(etUserEmail.getText().toString())) {
+                Toast.makeText(ForgotPasswordActivity.this, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
 
-                } else {
-                    makeForgotPasswordRequest();
-                }
+            } else {
+                makeForgotPasswordRequest();
             }
         });
     }

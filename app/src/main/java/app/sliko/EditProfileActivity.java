@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -34,8 +33,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import app.sliko.UI.SsMediumTextView;
+import app.sliko.UI.SsRegularEditText;
 import app.sliko.events.ProfileUploadedSuccessEvent;
-import app.sliko.location.SelectAddressLocation;
+import app.sliko.location.FindLocationActivity;
 import app.sliko.utills.FilePath;
 import app.sliko.utills.M;
 import app.sliko.utills.Prefs;
@@ -58,7 +59,7 @@ public class EditProfileActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.toolbarTitle)
-    TextView toolbarTitle;
+    SsMediumTextView toolbarTitle;
     @BindView(R.id.progressImage)
     ProgressBar progressImage;
     @BindView(R.id.userImage)
@@ -67,17 +68,17 @@ public class EditProfileActivity extends AppCompatActivity {
     String type;
     Dialog dialog;
     @BindView(R.id.etUserName)
-    EditText etUserName;
+    SsRegularEditText etUserName;
     @BindView(R.id.etPhone)
-    EditText etPhone;
+    SsRegularEditText etPhone;
     @BindView(R.id.etEmail)
-    EditText etEmail;
+    SsRegularEditText etEmail;
     @BindView(R.id.etFavouriteTeam)
-    EditText etFavouriteTeam;
+    SsRegularEditText etFavouriteTeam;
     @BindView(R.id.etHeight)
-    EditText etHeight;
+    SsRegularEditText etHeight;
     @BindView(R.id.etWeight)
-    EditText etWeight;
+    SsRegularEditText etWeight;
     @BindView(R.id.etAddress)
     TextView etAddress;
     @BindView(R.id.rightFoot)
@@ -106,19 +107,21 @@ public class EditProfileActivity extends AppCompatActivity {
         } else if (!M.validateEmail(etEmail.getText().toString())) {
             Toast.makeText(this, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
 
-        } else if ((etFavouriteTeam.length() == 0 || etFavouriteTeam.getText().toString().trim().length() == 0)) {
-            Toast.makeText(this, getString(R.string.please_enter_team), Toast.LENGTH_SHORT).show();
-
-        } else if (playPositionSpinner.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, getString(R.string.please_select_play_position), Toast.LENGTH_SHORT).show();
-
-        } else if ((etHeight.length() == 0 || etHeight.getText().toString().trim().length() == 0)) {
-            Toast.makeText(this, getString(R.string.please_enter_height), Toast.LENGTH_SHORT).show();
-
-        } else if ((etWeight.length() == 0 || etWeight.getText().toString().trim().length() == 0)) {
-            Toast.makeText(this, getString(R.string.please_enter_weight), Toast.LENGTH_SHORT).show();
-
-        } else {
+        }
+//        else if ((etFavouriteTeam.length() == 0 || etFavouriteTeam.getText().toString().trim().length() == 0)) {
+//            Toast.makeText(this, getString(R.string.please_enter_team), Toast.LENGTH_SHORT).show();
+//
+//        } else if (playPositionSpinner.getSelectedItemPosition() == 0) {
+//            Toast.makeText(this, getString(R.string.please_select_play_position), Toast.LENGTH_SHORT).show();
+//
+//        } else if ((etHeight.length() == 0 || etHeight.getText().toString().trim().length() == 0)) {
+//            Toast.makeText(this, getString(R.string.please_enter_height), Toast.LENGTH_SHORT).show();
+//
+//        } else if ((etWeight.length() == 0 || etWeight.getText().toString().trim().length() == 0)) {
+//            Toast.makeText(this, getString(R.string.please_enter_weight), Toast.LENGTH_SHORT).show();
+//
+//        }
+        else {
             updateProfileData(photoFile);
         }
     }
@@ -239,6 +242,10 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    @OnClick(R.id.cancelButton)
+    public void onClickCancel(){
+        onBackPressed();
+    }
     File photoFile = null;
     String imageFilePath = "";
 
@@ -247,10 +254,26 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case 200:
-                lat = data.getStringExtra("lat");
-                lng = data.getStringExtra("lng");
-                Log.e(">>addressLat", "onActivityResult: " + lat + "\n" + lng);
-                etAddress.setText(data.getStringExtra("addressSelected"));
+                if (data != null) {
+                    if (data.getStringExtra("lat") != null) {
+                        lat = data.getStringExtra("lat");
+                    } else {
+                        lat = "0.0";
+                    }
+
+                    if (data.getStringExtra("lng") != null) {
+                        lng = data.getStringExtra("lng");
+                    } else {
+                        lng = "0.0";
+                    }
+
+                    if (data.getStringExtra("addressSelected") != null) {
+                        etAddress.setText(data.getStringExtra("addressSelected"));
+                    }
+
+                    Log.e(">>addressLat", "onActivityResult: " + lat + "\n" + lng);
+                }
+
                 break;
             case 101:
                 if (resultCode != Activity.RESULT_CANCELED) {
@@ -303,7 +326,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     @OnClick(R.id.addressLayout)
     public void etAddressClick() {
-        startActivityForResult(new Intent(EditProfileActivity.this, SelectAddressLocation.class), 200);
+        startActivityForResult(new Intent(EditProfileActivity.this, FindLocationActivity.class), 200);
     }
 
 

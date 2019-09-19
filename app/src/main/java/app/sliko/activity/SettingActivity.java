@@ -20,6 +20,8 @@ import androidx.appcompat.widget.Toolbar;
 import org.json.JSONObject;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
+import app.sliko.UI.SsRegularEditText;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.ChangePasswordDialog;
 import app.sliko.dialogs.models.DialogConfirmation;
@@ -36,13 +38,13 @@ import retrofit2.Response;
 
 public class SettingActivity extends AppCompatActivity {
     @BindView(R.id.toolbarTitle)
-    TextView toolbarTitle;
+    SsMediumTextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.enableDisableNotificationButton)
     Switch enableDisableNotificationButton;
     @BindView(R.id.etTime)
-    EditText etTime;
+    SsRegularEditText etTime;
     @BindView(R.id.etTimeLayout)
     FrameLayout etTimeLayout;
     @BindView(R.id.saveButton)
@@ -311,7 +313,6 @@ public class SettingActivity extends AppCompatActivity {
                             saveButton.setVisibility(View.GONE);
                             etTime.setEnabled(false);
                             etTimeLayout.setAlpha(.5f);
-                            Toast.makeText(SettingActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Toast.makeText(SettingActivity.this, response.message(), Toast.LENGTH_SHORT).show();

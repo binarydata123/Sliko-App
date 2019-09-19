@@ -34,9 +34,9 @@
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:background="@drawable/slicko_simple_image"
+                    android:background="@drawable/slicko_simple_image_white"
                     android:layout_height="wrap_content"/>
-                <TextView
+                <app.sliko.UI.SsRegularTextView
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                             android:layout_height="match_parent" />
 
 
-                        <EditText
+                        <app.sliko.UI.SsRegularEditText
                             android:id="@+id/etUserEmail"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -100,7 +100,7 @@
                             android:layout_height="match_parent" />
 
 
-                        <EditText
+                        <app.sliko.UI.SsRegularEditText
                             android:id="@+id/etPassword"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -113,6 +113,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -124,7 +125,7 @@
                             android:gravity="center_vertical"
                             android:orientation="vertical"
                             android:padding="16dp">
-                            <TextView
+                            <app.sliko.UI.SsRegularTextView
                                 android:textSize="16sp"
                                 android:textColor="@color/black_color"
                                 android:layout_width="wrap_content"
@@ -166,7 +167,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <TextView
+                    <app.sliko.UI.SsRegularTextView
                         android:id="@+id/forgotPassword"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -190,19 +191,54 @@
                             android:layout_gravity="center"
                             android:visibility="gone" />
 
-                        <Button
-                            android:id="@+id/loginbtn"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:background="@drawable/button_bg"
-                            android:focusable="false"
-                            android:focusableInTouchMode="false"
-                            android:text="@string/login"
-                            android:textColor="@color/white" />
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
+
+                            <app.sliko.UI.SsRegularButton
+                                android:id="@+id/loginbtn"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:background="@drawable/button_bg"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:text="@string/login"
+                                android:textColor="@color/white" />
+
+
+                        </LinearLayout>
 
 
                     </FrameLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:text="OR"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:layout_height="wrap_content"/>
+                    <LinearLayout
+                        android:layout_marginTop="10dp"
+                        android:id="@+id/fbLoginButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/button_bg_blue"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false" >
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:background="@drawable/ic_facebook_logo"
+                            android:layout_height="24dp"/>
+                        <app.sliko.UI.SsRegularTextView
+                            android:layout_width="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/loginWithFb"
+                            android:textColor="@color/white"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/noAccountClick"
@@ -218,7 +254,7 @@
                             android:layout_height="1dp"
                             android:background="@color/black" />
 
-                        <TextView
+                        <app.sliko.UI.SsRegularTextView
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

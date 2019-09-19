@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsRegularTextView;
 import app.sliko.owner.model.ReviewModel;
 import app.sliko.web.Api;
 import butterknife.BindView;
@@ -60,13 +61,13 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.MyViewHo
         @BindView(R.id.reviewPitchImage)
         ImageView reviewPitchImage;
         @BindView(R.id.reviewPitchName)
-        TextView reviewPitchName;
+        SsRegularTextView reviewPitchName;
         @BindView(R.id.reviewDateGiven)
-        TextView reviewDateGiven;
+        SsRegularTextView reviewDateGiven;
         @BindView(R.id.reviewPitchUserName)
-        TextView reviewPitchUserName;
+        SsRegularTextView reviewPitchUserName;
         @BindView(R.id.reviewMessage)
-        TextView reviewMessage;
+        SsRegularTextView reviewMessage;
         @BindView(R.id.pitchRating)
         ColorRatingBar pitchRating;
 
