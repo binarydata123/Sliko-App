@@ -70,7 +70,7 @@
                                         android:textColor="@color/black_color"
                                         android:id="@+id/totalBooking"
                                         android:layout_width="wrap_content"
-                                        android:text="10"
+                                        android:text="0"
                                         android:textStyle="bold"
                                         android:layout_height="wrap_content"/>
                                     <app.sliko.UI.SsRegularTextView
@@ -98,7 +98,6 @@
                                         android:id="@+id/totalSpent"
                                         android:textColor="@color/black_color"
                                         android:layout_width="wrap_content"
-                                        android:text="2000"
                                         android:textStyle="bold"
                                         android:layout_height="wrap_content"/>
                                     <app.sliko.UI.SsRegularTextView
@@ -534,19 +533,95 @@
                                 android:alpha=".1"/>
 
                         </LinearLayout>
-                        <app.sliko.UI.SsRegularButton
-                            android:layout_gravity="end"
-                            android:layout_marginBottom="10dp"
-                            android:id="@+id/changePasswordButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36sp"
-                            android:layout_marginTop="10dp"
-                            android:paddingRight="16dp"
-                            android:paddingLeft="16dp"
-                            android:background="@color/lightGreen"
-                            android:text="@string/changePassword"
-                            android:textAllCaps="false"
-                            android:textColor="@color/white" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:orientation="vertical"
+                            android:layout_height="wrap_content">
+                            <app.sliko.UI.SsMediumTextView
+                                android:layout_width="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:textColor="@color/black_color"
+                                android:textSize="16sp"
+                                android:layout_height="wrap_content"
+                                android:text="@string/account"/>
+                            <LinearLayout
+                                android:id="@+id/settingLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingTop="16dp">
+
+                                <ImageView
+                                    android:background="@drawable/ic_settings_green"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+
+                                    />
+
+                                <app.sliko.UI.SsRegularTextView
+                                    android:layout_width="match_parent"
+                                    android:textSize="16sp"
+                                    android:layout_height="wrap_content"
+                                    android:drawablePadding="10dp"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="8dp"
+                                    android:text="@string/setting"
+                                    android:textColor="@color/black" />
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:paddingTop="16dp"
+                                android:id="@+id/signOutLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingBottom="16dp">
+
+                                <ImageView
+                                    android:background="@drawable/ic_logout_green"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    />
+
+                                <app.sliko.UI.SsRegularTextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawablePadding="10dp"
+                                    android:textSize="16sp"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="8dp"
+                                    android:text="@string/singOut"
+                                    android:textColor="@color/black" />
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:id="@+id/changePassword"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingBottom="16dp">
+
+                                <ImageView
+                                    android:background="@drawable/ic_password_green"
+                                    android:layout_width="18dp"
+                                    android:layout_height="18dp"
+                                    />
+
+                                <app.sliko.UI.SsRegularTextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:drawablePadding="10dp"
+                                    android:textSize="16sp"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="8dp"
+                                    android:text="@string/changePassword"
+                                    android:textColor="@color/black" />
+
+                            </LinearLayout>
+                        </LinearLayout>
 
                     </LinearLayout>
 

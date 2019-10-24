@@ -19,10 +19,11 @@ public class FindPitchAndMatch
 
         FindPitchAndMatch fragment = new FindPitchAndMatch();
         fragment.setArguments(args);
+
         return fragment;
     }
 
-    View view;
+    private View view;
 
     @Nullable
     @Override

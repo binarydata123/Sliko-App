@@ -22,7 +22,16 @@ public class PitchModel {
     private String process_booking = "0";
     private String complete_booking = "0";
     private String pitch_id = "0";
+    private String pitch_type = "0";
     private ArrayList<String> pitch_gallery = null;
+
+    public String getPitch_type() {
+        return pitch_type;
+    }
+
+    public void setPitch_type(String pitch_type) {
+        this.pitch_type = pitch_type;
+    }
 
     public String getPitch_id() {
         return pitch_id;

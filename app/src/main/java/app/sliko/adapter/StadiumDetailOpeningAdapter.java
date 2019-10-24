@@ -1,6 +1,7 @@
 package app.sliko.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,21 @@ public class StadiumDetailOpeningAdapter extends RecyclerView.Adapter<StadiumDet
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
+
+Log.e("get position","===="+imagesModelArrayList.get(0).getTime()+"<><>"+imagesModelArrayList.get(imagesModelArrayList.size()-1).getTime());
+String first = imagesModelArrayList.get(0).getTime();
+        String[] separated = first.split(":");
+        String s1=     separated[0].trim();
+        String s2=    separated[1];
+String last =imagesModelArrayList.get(imagesModelArrayList.size()-1).getTime();
+        String[] separated2 = last.split(":");
+        String s11=     separated2[0];
+        String s12=    separated2[1].trim();
+
+        myViewHolder.timingText.setText(s1+" : "+s12);
+
+       // myViewHolder.timingText.setText(imagesModelArrayList.get(i).getTime());
+
         if(!typeOfView.equalsIgnoreCase("detailView")){
             myViewHolder.changeBackground.setOnClickListener(view -> {
                 AvailabilityModel availabilityModel = imagesModelArrayList.get(i);
@@ -65,7 +81,6 @@ public class StadiumDetailOpeningAdapter extends RecyclerView.Adapter<StadiumDet
                 StadiumDetailOpeningAdapter.this.notifyDataSetChanged();
             });
         }
-        myViewHolder.timingText.setText(imagesModelArrayList.get(i).getTime());
     }
 
     public JSONArray getSelectedArrayList() {

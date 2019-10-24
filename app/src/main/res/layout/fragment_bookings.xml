@@ -44,6 +44,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:nestedScrollingEnabled="false" />
+                    <include layout="@layout/no_data_layout" />
                 </RelativeLayout>
             </androidx.core.widget.NestedScrollView>
 
@@ -66,6 +67,6 @@
 
     </FrameLayout>
 
-    <include layout="@layout/no_data_layout" />
+
 
 </FrameLayout>

@@ -23,6 +23,24 @@ public class BookingModel {
     private String created_at= "";
     private String updated_at= "";
     private String booking_date= "";
+    private String review= "";
+    private String feedback_message= "";
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
+    public String getFeedback_message() {
+        return feedback_message;
+    }
+
+    public void setFeedback_message(String feedback_message) {
+        this.feedback_message = feedback_message;
+    }
 
     public String getBooking_date() {
         return booking_date;

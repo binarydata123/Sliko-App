@@ -30,12 +30,12 @@
             android:layout_height="wrap_content">
             <app.sliko.UI.SsRegularTextView
                 android:layout_width="wrap_content"
-                android:text="@string/userName"
+                android:text="@string/userNamenew"
                 android:layout_height="wrap_content"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="46dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_bg_grey"
                 android:gravity="center_vertical"
@@ -69,7 +69,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="46dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_bg_grey"
                 android:gravity="center_vertical"
@@ -82,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    android:hint="Enter Phone number"
+                    android:hint="Enter email"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress"
                     android:singleLine="true"
@@ -102,7 +102,7 @@
                 android:layout_height="wrap_content"/>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="46dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/edit_bg_grey"
                 android:gravity="center_vertical"
@@ -122,8 +122,80 @@
                     android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
+<!--===========date and time set ===========-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content">
+            <app.sliko.UI.SsRegularTextView
+                android:layout_width="wrap_content"
+                android:text="@string/date"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_bg_grey"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <app.sliko.UI.SsRegularTextView
+                    android:id="@+id/txtdate"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/date"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
 
 
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content">
+            <app.sliko.UI.SsRegularTextView
+                android:layout_width="wrap_content"
+                android:text="@string/time"
+                android:layout_height="wrap_content"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/edit_bg_grey"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <app.sliko.UI.SsRegularTextView
+                    android:id="@+id/txtime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="@string/time"
+                    android:gravity="center_vertical"
+
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+        <!--==========-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

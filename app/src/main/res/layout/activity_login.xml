@@ -74,7 +74,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:hint="Email email"
+                            android:hint="@string/enterEmail"
                             android:imeOptions="actionNext"
                             android:singleLine="true"
                             android:textSize="14sp" />
@@ -105,7 +105,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent"
-                            android:hint="Password"
+                            android:hint="@string/enter_password"
                             android:imeOptions="actionDone"
                             android:inputType="textPassword"
                             android:singleLine="true"
@@ -174,7 +174,7 @@
                         android:gravity="end|center_vertical"
                         android:padding="16dp"
                         android:text="@string/forgotPassword"
-                        android:textColor="@color/yellow"
+                        android:textColor="@color/black_color"
                         android:textSize="16sp" />
 
                     <FrameLayout
@@ -212,11 +212,12 @@
 
 
                     </FrameLayout>
-                    <TextView
+                    <app.sliko.UI.SsMediumTextView
                         android:layout_width="match_parent"
-                        android:text="OR"
+                        android:text="@string/or"
                         android:layout_marginTop="5dp"
                         android:gravity="center"
+                        android:textColor="@color/white"
                         android:layout_height="wrap_content"/>
                     <LinearLayout
                         android:layout_marginTop="10dp"

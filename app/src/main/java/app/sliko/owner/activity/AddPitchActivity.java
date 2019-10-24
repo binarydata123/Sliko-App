@@ -6,14 +6,11 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,7 +26,6 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 
-import app.sliko.EditProfileActivity;
 import app.sliko.R;
 import app.sliko.UI.SsMediumTextView;
 import app.sliko.UI.SsRegularButton;
@@ -104,6 +100,7 @@ public class AddPitchActivity extends Activity {
             PITCH_EDIT = "2";
             canEdit = false;
             addPitchButton.setText(getString(R.string.addPitch));
+            getPitchType();
         }
 
         pitchImagesGalleryArrayList = new ArrayList<>();
@@ -112,7 +109,6 @@ public class AddPitchActivity extends Activity {
         toolbar.setNavigationIcon(R.drawable.back_arrow_white);
         setAdapter();
 
-        getPitchType();
 
     }
 
@@ -130,11 +126,14 @@ public class AddPitchActivity extends Activity {
             Toast.makeText(AddPitchActivity.this, getResources().getString(R.string.plzEnterdescption), Toast.LENGTH_SHORT).show();
         } else if (etPitchPrice.length() == 0 || etPitchPrice.getText().toString().trim().length() == 0) {
             Toast.makeText(AddPitchActivity.this, getResources().getString(R.string.enterprice), Toast.LENGTH_SHORT).show();
+        } else if (pitchTypeSpinner.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "" + getResources().getString(R.string.pleaseSelectPitchType), Toast.LENGTH_SHORT).show();
         } else if (pitchImagesGalleryArrayList.size() == 0) {
             Toast.makeText(this, "" + getResources().getString(R.string.please_insert_one_image_atleast), Toast.LENGTH_SHORT).show();
         } else {
-
-            addNewStadium();
+            Log.e(">>pitchType", "addPitchButtonClick: " +
+                    pitchTypeSpinner.getSelectedItem().toString());
+            addEditPitchMethod();
         }
     }
 
@@ -202,7 +201,7 @@ public class AddPitchActivity extends Activity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSIONS_REQUEST_CODE) {
             for (int grantResult : grantResults) {
                 if (grantResult != PackageManager.PERMISSION_GRANTED) {
@@ -214,7 +213,7 @@ public class AddPitchActivity extends Activity {
 
     Call<ResponseBody> call;
 
-    public void addNewStadium() {
+    public void addEditPitchMethod() {
         ArrayList<StadiumImagesModel> files = new ArrayList<>(pitchImageAdapter.getUpdatedList());
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
@@ -320,6 +319,7 @@ public class AddPitchActivity extends Activity {
                                 stadiumImagesModel.setImageName(jsonObject1.getString("pitch_image"));
                                 pitchImagesGalleryArrayList.add(stadiumImagesModel);
                             }
+                            getPitchType();
                             setAdapter();
                             pitchImageAdapter.notifyDataSetChanged();
                         } else {
@@ -345,13 +345,13 @@ public class AddPitchActivity extends Activity {
     ArrayList<String> typeOfPitches = new ArrayList<>();
 
     private void getPitchType() {
-        dialog.show();
+        typeOfPitches.add(getString(R.string.selectPitchType));
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_pitchPlayerType();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                dialog.cancel();
+
                 try {
                     if (response.isSuccessful()) {
                         String sResponse = response.body().string();
@@ -374,7 +374,6 @@ public class AddPitchActivity extends Activity {
                                     }
                                 }
                             }
-
                         } else {
                             Toast.makeText(AddPitchActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
@@ -389,11 +388,9 @@ public class AddPitchActivity extends Activity {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
-                dialog.cancel();
+
                 Toast.makeText(AddPitchActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
 }

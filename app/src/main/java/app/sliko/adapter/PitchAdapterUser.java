@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -52,6 +50,7 @@ public class PitchAdapterUser extends RecyclerView.Adapter<PitchAdapterUser.MyVi
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
+        myViewHolder.bookStadiumButton.setVisibility(View.GONE);
         myViewHolder.bookStadiumButton.setOnClickListener(view -> {
             ((Activity) context)
                     .startActivity(new Intent(context, BookingActivity.class)
@@ -62,7 +61,7 @@ public class PitchAdapterUser extends RecyclerView.Adapter<PitchAdapterUser.MyVi
         myViewHolder.tap.setOnClickListener(view -> {
             ((Activity) context)
                     .startActivity(new Intent(context, PitchDetailActivity.class)
-                            .putExtra("type","user")
+                            .putExtra("type", "user")
                             .putExtra("pitch_id", notificationModelArrayList.get(position).getId())
                             .putExtra("pitch_name", notificationModelArrayList.get(position).getPitch_name())
                             .putExtra("user_id", notificationModelArrayList.get(position).getUser_id())
@@ -70,6 +69,7 @@ public class PitchAdapterUser extends RecyclerView.Adapter<PitchAdapterUser.MyVi
         });
         myViewHolder.imageProgress.setVisibility(View.VISIBLE);
         myViewHolder.stadiumBookingPrice.setText(context.getString(R.string.price) + M.actAccordinglyWithJson(context, notificationModelArrayList.get(position).getPrice()));
+        myViewHolder.pitchType.setText(M.actAccordinglyWithJson(context, notificationModelArrayList.get(position).getPitch_type()));
         myViewHolder.stadiumName.setText(M.actAccordinglyWithJson(context, notificationModelArrayList.get(position).getPitch_name()));
 
         Picasso.get().load(notificationModelArrayList.get(position).getPitch_gallery().get(0))
@@ -86,7 +86,6 @@ public class PitchAdapterUser extends RecyclerView.Adapter<PitchAdapterUser.MyVi
         });
         if (notificationModelArrayList.get(position).getPitch_review_avg().equalsIgnoreCase("null")) {
             myViewHolder.stadiumRatingCount.setText(context.getString(R.string.noReviews));
-            myViewHolder.stadiumRating.setVisibility(View.GONE);
         } else {
             String count = notificationModelArrayList.get(position).getPitch_review_avg().equalsIgnoreCase("null") ?
                     "0"
@@ -108,6 +107,8 @@ public class PitchAdapterUser extends RecyclerView.Adapter<PitchAdapterUser.MyVi
         SsMediumTextView stadiumName;
         @BindView(R.id.stadiumBookingPrice)
         SsRegularTextView stadiumBookingPrice;
+        @BindView(R.id.pitchType)
+        SsRegularTextView pitchType;
         @BindView(R.id.bookStadiumButton)
         SsRegularButton bookStadiumButton;
         @BindView(R.id.pitchImage)

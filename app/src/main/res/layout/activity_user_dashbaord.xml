@@ -47,5 +47,5 @@
 
         </LinearLayout>
     </FrameLayout>
-    <include layout="@layout/side_layout" />
+<!--    <include layout="@layout/side_layout" />-->
 </androidx.drawerlayout.widget.DrawerLayout>

@@ -3,6 +3,7 @@ package app.sliko.user.fragment;
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -17,11 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -29,6 +30,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -53,7 +56,9 @@ import app.sliko.dialogs.models.StadiumInfoDialog;
 import app.sliko.location.SearchStadiumAdapter;
 import app.sliko.models.HomeStadiumListModel;
 import app.sliko.user.activity.StadiumDetailActivity;
+import app.sliko.utills.GpsUtils;
 import app.sliko.utills.M;
+import app.sliko.utills.Prefs;
 import app.sliko.web.Api;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
@@ -79,6 +84,7 @@ public class UserMapFragment extends Fragment implements LocationListener {
         fragment.setArguments(args);
         return fragment;
     }
+
     private SupportMapFragment getSupportMapFragmentId() {
         return (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapfragment);
     }
@@ -106,49 +112,109 @@ public class UserMapFragment extends Fragment implements LocationListener {
 
     View view;
 
+    FusedLocationProviderClient mFusedLocationClient;
+
+    private void forLocationSetUp() {
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(getActivity(), location -> {
+                    if (location != null) {
+                        lat = location.getLatitude() + "";
+                        lng = location.getLongitude() + "";
+                    }
+                });
+    }
+
+    private boolean isGPS = false;
+
+    private boolean ifPermissionGiven() {
+        new GpsUtils(getActivity()).turnGPSOn(isGPSEnable -> {
+            // turn on GPS
+            isGPS = isGPSEnable;
+        });
+        return isGPS;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == Prefs.VAR) {
+                isGPS = true;
+
+                forLocationSetUp();
+            }
+            //fetchAllProvidersList();
+        }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (context != null) {
+            if (ifPermissionGiven()) {
+                forLocationSetUp();
+            }
+            dialog = M.showDialog(context, "", false);
+            weakReference = new WeakReference<>(UserMapFragment.this);
+            forLocationSetUp();
+            getAllStadiums();
+            mapFragment = getSupportMapFragmentId();
+            mapFragment.getMapAsync(googleMap -> {
+                mMap = googleMap;
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                mMap.setMyLocationEnabled(true);
+                repositionLocationButton();
+                mMap.setOnMarkerClickListener(marker -> {
+                    for (int k = 0; k < markerArrayList.size(); k++) {
+                        if (marker.equals(markerArrayList.get(k))) {
+                            inflateDialogForBubbleInfo(k);
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(context,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        mMap.setMyLocationEnabled(true);
+                    }
+                } else {
+                    mMap.setMyLocationEnabled(true);
+                }
+            });
+
+
+            setListeners();
+        }
+    }
+
+    private void repositionLocationButton() {
+        assert mapFragment.getView() != null;
+        View locationButton = ((View) mapFragment.getView().findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
+        RelativeLayout.LayoutParams rlp = (RelativeLayout.LayoutParams) locationButton.getLayoutParams();
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, 0);
+        rlp.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
+        rlp.setMargins(0, 180, 16, 0);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_user_home, container, false);
-        dialog = M.showDialog(getActivity(), "", false);
         ButterKnife.bind(UserMapFragment.this, view);
-        weakReference = new WeakReference<>(UserMapFragment.this);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            checkLocationPermission();
-        }
-        getAllStadiums();
-
-        mapFragment = getSupportMapFragmentId();
-        mapFragment.getMapAsync(googleMap -> {
-            mMap = googleMap;
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            mMap.setOnMarkerClickListener(marker -> {
-                for (int k = 0; k < markerArrayList.size(); k++) {
-                    if (marker.equals(markerArrayList.get(k))) {
-                        inflateDialogForBubbleInfo(k);
-                        return true;
-                    }
-                }
-                return false;
-            });
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    mMap.setMyLocationEnabled(true);
-                }
-            } else {
-                mMap.setMyLocationEnabled(true);
-            }
-        });
-
-
-        setListeners();
-
         return view;
     }
 
+
+    private Context context;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     SearchStadiumAdapter searchStadiumAdapter;
 
@@ -160,8 +226,13 @@ public class UserMapFragment extends Fragment implements LocationListener {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() != 0) {
+                if (etStadiumAddress.length() == 0) {
+                    progressDialog.setVisibility(View.GONE);
+                    stadiumAddressRecyclerView.setVisibility(View.GONE);
+                } else {
                     progressDialog.setVisibility(View.VISIBLE);
+
+                    stadiumAddressRecyclerView.setVisibility(View.VISIBLE);
                     getStadiumName(s.toString());
                 }
             }
@@ -176,7 +247,7 @@ public class UserMapFragment extends Fragment implements LocationListener {
 
 
     private void inflateDialogForBubbleInfo(int index) {
-        stadiumInfoDialog = DialogMethodCaller.openStadiumInfoDialog(getActivity(), R.layout.dilaog_stadium_info, true);
+        stadiumInfoDialog = DialogMethodCaller.openStadiumInfoDialog(context, R.layout.dilaog_stadium_info, true);
         stadiumInfoDialog.getAlertDialog().show();
         stadiumInfoDialog.getSd_stadiumName().setText(homeStadiumListModelArrayList.get(index).getStadium_name());
         stadiumInfoDialog.getSD_stadiumAddress().setText(homeStadiumListModelArrayList.get(index).getAddress());
@@ -215,14 +286,14 @@ public class UserMapFragment extends Fragment implements LocationListener {
             public void onClick(View view) {
                 stadiumInfoDialog.getAlertDialog().cancel();
 
-                String transitionName = getActivity().getString(R.string.allTransition);
+                String transitionName = context.getString(R.string.allTransition);
                 View transitionView = stadiumInfoDialog.getSd_stadiumImage();
                 ViewCompat.setTransitionName(transitionView, transitionName);
 
 
-                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(((Activity) getActivity()), transitionView, transitionName).toBundle();
+                Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(((Activity) context), transitionView, transitionName).toBundle();
 
-                startActivity(new Intent(getActivity(), StadiumDetailActivity.class)
+                startActivity(new Intent(context, StadiumDetailActivity.class)
                                 .putExtra("stadium_id", homeStadiumListModelArrayList.get(index).getId())
                                 .putExtra("user_id", homeStadiumListModelArrayList.get(index).getUser_id())
                                 .putExtra("stadium_name", homeStadiumListModelArrayList.get(index).getStadium_name())
@@ -250,7 +321,7 @@ public class UserMapFragment extends Fragment implements LocationListener {
         dialog.show();
         homeStadiumListModelArrayList.clear();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_homeListing(M.fetchUserTrivialInfo(getActivity(), "id"), "");
+        Call<ResponseBody> call = service.ep_homeListing(M.fetchUserTrivialInfo(context, "id"), "");
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -261,11 +332,11 @@ public class UserMapFragment extends Fragment implements LocationListener {
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
-                        Log.e(">>E", "onResponse: " + jsonObject.toString());
+                        Log.e(">>AllStadiumLists", "onResponse: " + jsonObject.toString());
                         if (status.equalsIgnoreCase("true")) {
                             JSONArray dataArray = jsonObject.getJSONArray("data");
                             if (dataArray.length() > 0) {
-                                for (int k = 1; k < dataArray.length(); k++) {
+                                for (int k = 0; k < dataArray.length(); k++) {
                                     HomeStadiumListModel homeListModel = new HomeStadiumListModel();
                                     JSONObject innerJsonObject = dataArray.getJSONObject(k);
                                     if (!(innerJsonObject.getString("lat").equals("") || innerJsonObject.getString("lat").equals("null") || innerJsonObject.getString("lng").equals("") || innerJsonObject.getString("lng").equals("null"))) {
@@ -297,34 +368,40 @@ public class UserMapFragment extends Fragment implements LocationListener {
                                                 markerArrayList.add(marker);
 
                                             }
-                                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                                            builder.include(new LatLng(Api.LAT, Api.LNG)); //Taking Point A (First LatLng)
-                                            builder.include(new LatLng(Api.LAT, Api.LNG)); //Taking Point B (Second LatLng)
-                                            LatLngBounds bounds = builder.build();
-                                            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 200);
-                                            mMap.moveCamera(cu);
-                                            mMap.animateCamera(CameraUpdateFactory.zoomTo(14));
                                         });
 
                                     }
                                 }
                             }
+                            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                            if (lat.equals("") || lng.equals("")) {
+                                builder.include(new LatLng(Api.LAT, Api.LNG)); //Taking Point A (First LatLng)
+                                builder.include(new LatLng(Api.LAT, Api.LNG)); //Taking Point B (Second LatLng)
+                            } else {
+                                builder.include(new LatLng(Double.parseDouble(lat), Double.parseDouble(lng))); //Taking Point A (First LatLng)
+                                builder.include(new LatLng(Double.parseDouble(lat), Double.parseDouble(lng))); //Taking Point B (Second LatLng)
+                            }
+                            LatLngBounds bounds = builder.build();
+                            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 200);
+                            mMap.moveCamera(cu);
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(Api.ZOOM_LEVEL));
+
                         } else {
                             Log.i(">>log", "onSuccess: " + message);
                         }
                     } else {
-                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Log.i(">>error", "onResponse: " + e.getMessage());
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.i(">>logError", "onResponse: " + e.getMessage());
+
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -334,14 +411,18 @@ public class UserMapFragment extends Fragment implements LocationListener {
     ;
 
     private void getStadiumName(String query) {
-
+        if (query.equals("")) {
+            progressDialog.setVisibility(View.GONE);
+            stadiumAddressRecyclerView.setVisibility(View.GONE);
+            return;
+        }
         Log.e(">>query", "getStadiumName: " + query);
-
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_homeListing(M.fetchUserTrivialInfo(getActivity(), "id"), query);
+        Call<ResponseBody> call = service.ep_homeListing(M.fetchUserTrivialInfo(context, "id"), query);
         call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                progressDialog.setVisibility(View.GONE);
                 try {
                     if (response.isSuccessful()) {
                         String sResponse = response.body().string();
@@ -354,7 +435,7 @@ public class UserMapFragment extends Fragment implements LocationListener {
                             searchStadiumHomeArrayList.clear();
                             JSONArray dataArray = jsonObject.getJSONArray("data");
                             if (dataArray.length() > 0) {
-                                for (int k = 1; k < dataArray.length(); k++) {
+                                for (int k = 0; k < dataArray.length(); k++) {
                                     JSONObject innerJsonObject = dataArray.getJSONObject(k);
                                     HomeStadiumListModel homeListModel = new HomeStadiumListModel();
                                     homeListModel.setStadium_name(innerJsonObject.getString("stadium_name"));
@@ -369,10 +450,8 @@ public class UserMapFragment extends Fragment implements LocationListener {
                                     homeListModel.setRating(innerJsonObject.getString("rating"));
                                     searchStadiumHomeArrayList.add(homeListModel);
                                 }
-                                progressDialog.setVisibility(View.GONE);
-                                stadiumAddressRecyclerView.setVisibility(View.VISIBLE);
-                                searchStadiumAdapter = new SearchStadiumAdapter(getActivity(), searchStadiumHomeArrayList);
-                                stadiumAddressRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+                                searchStadiumAdapter = new SearchStadiumAdapter(context, searchStadiumHomeArrayList);
+                                stadiumAddressRecyclerView.setLayoutManager(new LinearLayoutManager(context));
                                 stadiumAddressRecyclerView.setAdapter(weakReference.get().searchStadiumAdapter);
                                 searchStadiumAdapter.notifyDataSetChanged();
                             }
@@ -398,14 +477,7 @@ public class UserMapFragment extends Fragment implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-//        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//        MarkerOptions markerOptions = new MarkerOptions();
-//        markerOptions.position(latLng);
-//        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(
-//                createCustomMarker(UserMapFragment.this, R.drawable.stadium, "marker", 0)));
-//        mMap.addMarker(markerOptions);
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-//        mMap.animateCamera(CameraUpdateFactory.zoomTo(11));
+        Log.e(">>location", "onLocationChanged: " + location.getLatitude() + "\n" + location.getLongitude());
     }
 
     @Override
@@ -422,28 +494,4 @@ public class UserMapFragment extends Fragment implements LocationListener {
     public void onProviderDisabled(String s) {
 
     }
-
-
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            } else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-
 }

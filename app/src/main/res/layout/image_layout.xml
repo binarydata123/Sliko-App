@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/card"/>
+
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:orientation="vertical">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivUserImage"
-            android:layout_width="60dp"
-            android:layout_height="60dp" />
+            android:layout_width="70dp"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="1dp"
+            android:layout_height="70dp" />
 
 
         <FrameLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
 
@@ -23,28 +37,30 @@
                 android:id="@+id/onPostLoginLayoutStuff"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <app.sliko.UI.SsRegularTextView
                     android:id="@+id/etEmail"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/lightGreen" />
+                    android:textColor="@color/white" />
                 <app.sliko.UI.SsRegularTextView
                     android:id="@+id/etName"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/lightGreen"
-                    android:textSize="12sp" />
+                    android:textColor="@color/white" />
                 <app.sliko.UI.SsRegularTextView
                     android:id="@+id/etPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/lightGreen"
-                    android:textSize="12sp" />
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <app.sliko.UI.SsRegularButton
@@ -60,4 +76,4 @@
         </FrameLayout>
 
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>

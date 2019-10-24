@@ -2,11 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/transparent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar"
+        android:visibility="gone"
+        />
 
     <LinearLayout
+android:background="@drawable/white_corner_round"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -14,26 +18,92 @@
         android:padding="16dp">
 
         <FrameLayout
+            android:animateLayoutChanges="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
-
             <ImageView
-                android:layout_width="100dp"
-                android:layout_height="170dp"
+                android:visibility="gone"
+                android:id="@+id/successOrFailureImage"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_gravity="center"
                 android:background="@drawable/ic_success" />
 
-
+            <ImageView
+                android:alpha=".5"
+                android:layout_marginTop="45dp"
+                android:layout_width="wrap_content"
+                android:background="@drawable/slicko_simple_image"
+                android:layout_height="wrap_content"/>
         </FrameLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+
+        <LinearLayout
             android:layout_marginTop="15dp"
             android:gravity="center"
-            android:padding="16dp"
-            android:text="@string/thankYouMessage"
-            android:textSize="20sp" />
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:id="@+id/transitionContainer"
+            android:layout_height="wrap_content">
+            <app.sliko.UI.SsRegularTextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:text="@string/bookingInfo"
+                android:textColor="@color/black_color"
+                android:textSize="18sp"
+                android:layout_height="wrap_content"/>
+            <app.sliko.UI.SsRegularTextView
+                android:textSize="16sp"
+                android:id="@+id/stadiumName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <app.sliko.UI.SsRegularTextView
+                android:textSize="16sp"
+                android:id="@+id/pitchName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pitchName"/>
+
+            <app.sliko.UI.SsRegularTextView
+                android:id="@+id/pitchTimeSlot"
+                android:textSize="16sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pitch Time slot" />
+            <app.sliko.UI.SsRegularTextView
+                android:id="@+id/pitchbookingDate"
+                android:textSize="16sp"
+                android:layout_marginBottom="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Booking Date" />
+
+            <app.sliko.UI.SsRegularTextView
+                android:id="@+id/pitchCost"
+                android:textSize="18sp"
+                android:textColor="@color/lightGreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <app.sliko.UI.SsRegularTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:visibility="gone"
+                android:id="@+id/thankYouMessage"
+                android:padding="16dp"
+                android:text="@string/thankYouMessage"
+                android:textSize="20sp" />
+            <app.sliko.UI.SsRegularButton
+                android:layout_width="120dp"
+                android:layout_height="36dp"
+                android:text="@string/close"
+                android:background="@color/lightGreen"
+                android:textColor="@color/white"
+                android:id="@+id/closeButton"/>
+        </LinearLayout>
+
+
 
     </LinearLayout>
 

@@ -3,6 +3,7 @@
 
 <androidx.coordinatorlayout.widget.CoordinatorLayout android:id="@+id/stadiumLayout"
     android:layout_width="match_parent"
+    android:background="@color/allAppBackgroundColor"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -61,7 +62,7 @@
                     android:layout_width="100dp"
                     android:layout_gravity="end|bottom"
                     android:layout_marginBottom="10dp"
-                    android:background="@drawable/edit_bg_red"
+                    android:background="@color/toolbarColor"
                     android:textColor="@color/white"
                     android:text="@string/bookNow"
                     android:layout_height="36dp"/>
@@ -76,9 +77,8 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
         <LinearLayout
-            android:background="@color/white"
+            android:background="@color/allAppBackgroundColor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -199,7 +199,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical"
                         android:layout_marginTop="3dp"
                         android:layout_height="wrap_content">
                         <app.sliko.UI.SsRegularTextView
@@ -233,7 +232,7 @@
                             android:layout_width="match_parent"
                             android:layout_weight="1"
                             app:cardCornerRadius="5dp"
-                            android:layout_height="match_parent">
+                            android:layout_height="110dp">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:padding="10dp"
@@ -265,7 +264,6 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"/>
                                         <app.sliko.UI.SsRegularTextView
-                                            android:textSize="16sp"
                                             android:textColor="@color/white"
                                             android:layout_width="wrap_content"
                                             android:text="@string/totalBooking"
@@ -278,14 +276,14 @@
                         </androidx.cardview.widget.CardView>
 
                         <TextView
-                            android:layout_width="15dp"
+                            android:layout_width="3dp"
                             android:layout_height="match_parent"/>
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             app:cardCornerRadius="5dp"
                             android:layout_weight="1"
                             app:cardBackgroundColor="@color/lightGreen"
-                            android:layout_height="match_parent">
+                            android:layout_height="110dp">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:padding="10dp"

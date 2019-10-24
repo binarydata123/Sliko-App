@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#0d9324</color>
-    <color name="colorPrimaryDark">#055405</color>
-    <color name="colorAccent">#0d9324</color>
+    <color name="colorPrimary">#109828</color>
+    <color name="colorPrimaryDark">#109828</color>
+    <color name="colorAccent">#109828</color>
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="red">#D81B60</color>
@@ -15,13 +15,15 @@
     <color name="clickColor">#009bd4</color>
     <color name="greyColor">#ebecf0</color>
     <color name="bit_grey">#f3f3f3</color>
+    <color name="shadecolor">#ff42959a</color>
     <color name="textColor">#ff3334</color>
     <color name="toolbarColor">#ef4a50</color>
-    <color name="bit_dark_grey">#E5DBD8D8</color>
+    <color name="bit_dark_grey">#E5eee9e9</color>
     <color name="light_grey">#303030</color>
-    <color name="darkGreen">#055405</color>
     <color name="yellow">#f5af00</color>
-    <color name="lightGreen">#44d362</color>
+<!--    <color name="lightGreen">#44d362</color>-->
+    <color name="lightGreen">#109828</color>
+    <color name="semilytgreen">#6ee96e</color>
     <color name="darkGrey">#ebecf0</color>
     <color name="emptyColor">#f5c4d6</color>
     <color name="orange">#fd6a34</color>
@@ -29,4 +31,5 @@
     <color name="alphaBlack">#99000000</color>
     <color name="alphaWhite">#fbfbf7</color>
     <color name="alphaSecondryColor">#fcfcfe</color>
+    <color name="allAppBackgroundColor">#FAFAFC</color>
 </resources>

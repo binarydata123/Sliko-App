@@ -4,15 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
 import app.sliko.UI.SsRegularTextView;
 import app.sliko.booking.VerticalPitchModel;
 
@@ -37,6 +36,9 @@ public class VerticalPitchAdapter extends RecyclerView.Adapter<VerticalPitchAdap
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
         myViewHolder.pitchName.setText(verticalPitchArrayList.get(position).getPitchName());
+        myViewHolder.pitchPrice.setText(context.getString(R.string.price)+verticalPitchArrayList.get(position).getPitchPrice());
+        if (position == (verticalPitchArrayList.size() - 1))
+            myViewHolder.seprator.setVisibility(View.GONE);
     }
 
     @Override
@@ -47,10 +49,14 @@ public class VerticalPitchAdapter extends RecyclerView.Adapter<VerticalPitchAdap
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         SsRegularTextView pitchName;
+        View seprator;
+        SsMediumTextView pitchPrice;
 
         private MyViewHolder(@NonNull View itemView) {
             super(itemView);
             pitchName = itemView.findViewById(R.id.pitchName);
+            seprator = itemView.findViewById(R.id.seprator);
+            pitchPrice = itemView.findViewById(R.id.pitchPrice);
         }
     }
 }

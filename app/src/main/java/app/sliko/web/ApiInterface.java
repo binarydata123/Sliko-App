@@ -25,7 +25,12 @@ public interface ApiInterface {
                                    @Field("play_position") String playPosition,
                                    @Field("height") String height,
                                    @Field("weight") String weight,
+                                   @Field("booking_date") String booking_date,
+                                   @Field("time") String time,
                                    @Field("footedness") String footedness);
+    @FormUrlEncoded
+    @POST("fblogin")
+    Call<ResponseBody> ep_facebookApi(@Field("email") String email);
 
     @FormUrlEncoded
     @POST("login")
@@ -36,6 +41,7 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("pitch/galleryDelete")
     Call<ResponseBody> ep_pitchGalleryDelete(@Field("id") String id);
+
     @FormUrlEncoded
     @POST("stadium/galleryDelete")
     Call<ResponseBody> ep_stadiumGalleryDelete(@Field("id") String id);
@@ -60,6 +66,7 @@ public interface ApiInterface {
                                                     @Field("stadium_id") String stadium_id,
                                                     @Field("check_notification") String check_notification
     );
+
     @FormUrlEncoded
     @POST("setting/create")
     Call<ResponseBody> ep_updateNotificationTime(@Field("user_id") String user_id,
@@ -95,11 +102,12 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("stadium/mapStadiumlist")
     Call<ResponseBody> ep_homeListing(@Field("user_id") String user_id
-    ,@Field("search_data") String search_data);
+            , @Field("search_data") String search_data);
 
     @FormUrlEncoded
     @POST("logout")
     Call<ResponseBody> ep_logout(@Field("user_id") String user_id);
+
     @FormUrlEncoded
 
     @POST("logout")
@@ -123,6 +131,7 @@ public interface ApiInterface {
                                         @Field("email") String email,
                                         @Field("old_password") String old_password,
                                         @Field("new_password") String new_password);
+
     @FormUrlEncoded
     @POST("user/single_detail")
     Call<ResponseBody> ep_getUserProfile(@Field("user_id") String user_id);
@@ -251,17 +260,29 @@ public interface ApiInterface {
 
     @FormUrlEncoded
     @POST("pitchbooking/getAllPitchBookedlist")
-    Call<ResponseBody> ep_userPitchBooking(@Field("user_id") String user_id,
-                                           @Field("stadium_id") String stadium_id,
-                                           @Field("booking_date") String booking_date);
+    Call<ResponseBody> ep_userPitchBooking(
+            @Field("stadium_id") String stadium_id,
+            @Field("booking_date") String booking_date);
 
     @FormUrlEncoded
     @POST("pitchbooking/create")
     Call<ResponseBody> ep_createBooking(@Field("user_id") String user_id,
+                                        @Field("payment_type") String payment_type,
                                         @Field("cost") String cost,
                                         @Field("booking_date") String booking_date,
                                         @Field("time") String time,
                                         @Field("stadium_id") String stadium_id,
                                         @Field("pitch_id") String pitch_ida
     );
+
+    @FormUrlEncoded
+    @POST("pitchreview/create")
+    Call<ResponseBody> giveReview(@Field("user_id") String user_id,
+                                  @Field("pitchbooking_id") String pitchbooking_id,
+                                  @Field("message") String message,
+                                  @Field("rating") String rating,
+                                  @Field("stadium_id") String stadium_id,
+                                  @Field("pitch_id") String pitch_id
+    );
+
 }

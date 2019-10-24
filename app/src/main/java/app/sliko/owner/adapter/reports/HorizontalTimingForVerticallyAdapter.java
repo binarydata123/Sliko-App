@@ -1,12 +1,14 @@
 package app.sliko.owner.adapter.reports;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,7 +30,7 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
     private Context context;
     private ArrayList<UserBookingModel> verticalPitchArrayList;
     private int withThisGetPitchPosition;
-    private String type;
+    private String type,ownerside_timeget="";
 
     public HorizontalTimingForVerticallyAdapter(Context context, ArrayList<UserBookingModel> verticalPitchArrayList, int position, String type) {
         this.context = context;
@@ -49,23 +51,35 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
      * getId() >> changes to getShowSlots() will
      * return null
      **/
+
+    int index = -1;
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
         myViewHolder.timingView.setText(verticalPitchArrayList.get(position).getBooked_status());
 
-        Log.e(">>slots", "onBindViewHolder: " + verticalPitchArrayList.get(position).getShow_slot() );
+       // Log.e(">>getBooked_status", "onBindViewHolder: " + verticalPitchArrayList.get(position).getBooked_status());
+       // Log.e(">>getShow_slot", "onBindViewHolder: " + verticalPitchArrayList.get(position).getShow_slot());
+
         if (type.equalsIgnoreCase("userView")) {
-            if(verticalPitchArrayList.get(position).getShow_slot().equalsIgnoreCase("0")){
+            if (verticalPitchArrayList.get(position).getShow_slot().equalsIgnoreCase("0")) {
                 myViewHolder.timingView.setText("Can't book");
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.bit_grey));
                 myViewHolder.timingView.setAlpha(.5f);
-            }else{
+            } else {
                 if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase("") ||
-                        verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACCANT)) {
-                    myViewHolder.timingView.setText("Vacant");
+                        verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACANT)) {
+                    myViewHolder.timingView.setText(context.getString(R.string.vacant));
                     myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
                     myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.bit_dark_grey));
+                    myViewHolder.bookPitchAction.setOnClickListener(view -> {
+                        if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase("") ||
+                                verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACANT)) {
+                            EventBus.getDefault().postSticky(new PayingForPitchEvent(verticalPitchArrayList.get(position).getTime(), withThisGetPitchPosition, true));
+                        } else {
+                            Toast.makeText(context, context.getString(R.string.pleaseSelectSomeOtherPitch), Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
                     myViewHolder.timingView.setText("Occupied");
                     myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
@@ -73,14 +87,21 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
                 }
             }
         } else {
+            Log.e("check booked status","=="+verticalPitchArrayList.get(position).getBooked_status());
             if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.BOOKED)) {
                 myViewHolder.timingView.setText(context.getString(R.string.booked));
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.lightGreen));
             } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.TIME_UP)) {
-                myViewHolder.timingView.setText(context.getString(R.string.time_up));
+
+                myViewHolder.timingView.setText("Occupied");
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.toolbarColor));
+
+
+               /* myViewHolder.timingView.setText(context.getString(R.string.time_up));
+                myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
+                myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.toolbarColor));*/
             } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.PLAYING)) {
                 myViewHolder.timingView.setText(context.getString(R.string.playing));
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
@@ -90,20 +111,38 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.orange));
             } else if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase("") ||
-                    verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACCANT)) {
+                    verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACANT)) {
                 myViewHolder.timingView.setText(context.getString(R.string.vacant));
                 myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
                 myViewHolder.timingView.setBackgroundColor(context.getResources().getColor(R.color.bit_dark_grey));
+                myViewHolder.bookPitchAction.setOnClickListener(view -> {
+                    if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase("") ||
+                            verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACANT)) {
+
+                        index = position;
+                        notifyDataSetChanged();
+
+
+                        EventBus.getDefault().postSticky(new PayingForPitchEvent(verticalPitchArrayList.get(position).getTime(), withThisGetPitchPosition, true));
+                    } else {
+
+                        Toast.makeText(context, context.getString(R.string.pleaseSelectSomeOtherPitch), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                if(index==position){
+                    myViewHolder.timingView.setBackground(context.getResources().getDrawable(R.drawable.shadecolor));
+                    myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.white));
+
+                }else{
+                    Drawable transparentDrawable = new ColorDrawable(Color.TRANSPARENT);
+
+                    myViewHolder.timingView.setBackgroundDrawable(transparentDrawable);
+                    myViewHolder.timingView.setTextColor(context.getResources().getColor(R.color.black));
+                }
+
             }
         }
-        myViewHolder.bookPitchAction.setOnClickListener(view -> {
-            if (verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase("") ||
-                    verticalPitchArrayList.get(position).getBooked_status().equalsIgnoreCase(Api.VACCANT)) {
-                EventBus.getDefault().postSticky(new PayingForPitchEvent(verticalPitchArrayList.get(position).getTime(), withThisGetPitchPosition, true));
-            } else {
-                Toast.makeText(context, context.getString(R.string.pleaseSelectSomeOtherPitch), Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
     }
 
@@ -123,4 +162,5 @@ public class HorizontalTimingForVerticallyAdapter extends RecyclerView.Adapter<H
             bookPitchAction = itemView.findViewById(R.id.bookPitchAction);
         }
     }
+
 }

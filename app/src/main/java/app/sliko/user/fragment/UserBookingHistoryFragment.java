@@ -2,6 +2,7 @@ package app.sliko.user.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,13 +15,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -28,11 +31,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import app.sliko.R;
-import app.sliko.UI.SsMediumTextView;
 import app.sliko.UI.SsRegularButton;
 import app.sliko.UI.SsRegularTextView;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.BookPitchMauallyDialog;
+import app.sliko.events.SuccessFullReviewEvent;
 import app.sliko.owner.adapter.O_PitchBookingAdapter;
 import app.sliko.owner.model.BookingModel;
 import app.sliko.utills.M;
@@ -75,7 +78,31 @@ public class UserBookingHistoryFragment extends Fragment {
     @BindView(R.id.backToBookings)
     SsRegularButton backToBookings;
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+
     boolean isFirstTime = true;
+
+    private Context context;
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(SuccessFullReviewEvent successFullReviewEvent) {
+        if (successFullReviewEvent != null) {
+            if (successFullReviewEvent.isReviewGiven()) {
+                getBookingForUser();
+            }
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     public static UserBookingHistoryFragment newInstance() {
 
@@ -85,38 +112,47 @@ public class UserBookingHistoryFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (context != null) {
+            if (!EventBus.getDefault().isRegistered(this)) {
+                EventBus.getDefault().register(this);
+            }
+
+            dialog = M.showDialog(context, "", false);
+            setListeners();
+            getBookingForUser();
+
+            addBookingButton.setVisibility(View.GONE);
+            bookingRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    if (dy > 0 || dy < 0 && addBookingButton.isShown())
+                        addBookingButton.hide();
+                }
+
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE)
+                        addBookingButton.show();
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+            });
+            backToBookings.setOnClickListener(view1 -> {
+                start_date = "";
+                end_date = "";
+                getBookingForUser();
+            });
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_user_booking_list, container, false);
         ButterKnife.bind(UserBookingHistoryFragment.this, view);
-        dialog = M.showDialog(getActivity(), "", false);
-        setListeners();
-        getBookingForUser();
-
-        addBookingButton.setVisibility(View.GONE);
-        bookingRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0 || dy < 0 && addBookingButton.isShown())
-                    addBookingButton.hide();
-            }
-
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE)
-                    addBookingButton.show();
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });
-        backToBookings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                start_date = "";
-                end_date = "";
-                getBookingForUser();
-            }
-        });
         return view;
     }
 
@@ -126,9 +162,9 @@ public class UserBookingHistoryFragment extends Fragment {
     private void getBookingForUser() {
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_bookingList(M.fetchUserTrivialInfo(getActivity(), "id"),
+        Call<ResponseBody> call = service.ep_bookingList(M.fetchUserTrivialInfo(context, "id"),
                 "", "", start_date, end_date);
-        Log.e(">>stadiumId", "getBookingForUser: " + Prefs.getStadiumId(getActivity()));
+        Log.e(">>stadiumId", "getBookingForUser: " + Prefs.getStadiumId(context));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -139,6 +175,7 @@ public class UserBookingHistoryFragment extends Fragment {
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
+                        Log.e(">>bookingData", "onResponse: " + jsonObject.toString());
                         if (status.equalsIgnoreCase("true")) {
                             JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("data");
                             if (jsonArray.length() > 0) {
@@ -161,11 +198,15 @@ public class UserBookingHistoryFragment extends Fragment {
                                     bookingModel.setBooking_date(dataObject.getString("booking_date"));
                                     bookingModel.setTime(dataObject.getString("time"));
                                     bookingModel.setUser_id(dataObject.getString("user_id"));
+                                    if (dataObject.getString("booking_status").equalsIgnoreCase("1")) {
+                                        bookingModel.setFeedback_message(dataObject.getString("feedback_message"));
+                                    }
                                     bookingModelArrayList.add(bookingModel);
                                 }
                                 setAdapter();
                                 o_pitchBookingAdapter.notifyDataSetChanged();
                                 noDataLayout.setVisibility(View.GONE);
+                                bookingRecyclerView.setVisibility(View.VISIBLE);
                             } else {
                                 handleNoData();
                             }
@@ -173,17 +214,17 @@ public class UserBookingHistoryFragment extends Fragment {
                             handleNoData();
                         }
                     } else {
-                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(">>logError", "onResponse: " + e.getMessage());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -192,13 +233,7 @@ public class UserBookingHistoryFragment extends Fragment {
 
     private void handleNoData() {
         noDataLayout.setVisibility(View.VISIBLE);
-        if (isFirstTime) {
-            isFirstTime = false;
-            backToBookings.setVisibility(View.GONE);
-        } else {
-
-            backToBookings.setVisibility(View.VISIBLE);
-        }
+        bookingRecyclerView.setVisibility(View.GONE);
         image.setBackgroundResource(R.drawable.ic_booking);
         text.setText(getString(R.string.noBookingAvailableUSer));
     }
@@ -212,7 +247,7 @@ public class UserBookingHistoryFragment extends Fragment {
         int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog mDatePicker;
-        mDatePicker = new DatePickerDialog(getActivity(), R.style.DialogTheme, (datepicker, selectedyear, selectedmonth, selectedday) -> {
+        mDatePicker = new DatePickerDialog(context, R.style.DialogTheme, (datepicker, selectedyear, selectedmonth, selectedday) -> {
             selectedmonth = selectedmonth + 1;
             et.setText("" + selectedyear + "-" + selectedmonth + "-" + selectedday);
             if (whichDate == 0) {
@@ -236,9 +271,9 @@ public class UserBookingHistoryFragment extends Fragment {
 
 //            Log.i("date","date== "+start_date);
             if (startDateText.getText().toString().length() == 0) {
-                Toast.makeText(getActivity(), getString(R.string.pleaseSelectStartDate), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.pleaseSelectStartDate), Toast.LENGTH_SHORT).show();
             } else if (endDateText.getText().toString().length() == 0) {
-                Toast.makeText(getActivity(), getString(R.string.pleaseSelectEndDate), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.pleaseSelectEndDate), Toast.LENGTH_SHORT).show();
             } else {
                 start_date = startDateText.getText().toString();
                 end_date = endDateText.getText().toString();
@@ -255,15 +290,15 @@ public class UserBookingHistoryFragment extends Fragment {
 
 
         addBookingButton.setOnClickListener(view -> {
-            bookPitchMauallyDialog = DialogMethodCaller.openBookPitchMauallyDialog(getActivity(), R.layout.dialog_add_booking_manually, false);
+            bookPitchMauallyDialog = DialogMethodCaller.openBookPitchMauallyDialog(context, R.layout.dialog_add_booking_manually, false);
             bookPitchMauallyDialog.getDialog_error().show();
             bookPitchMauallyDialog.getCancelButton().setOnClickListener(view1 -> bookPitchMauallyDialog.getDialog_error().cancel());
         });
     }
 
     private void setAdapter() {
-        o_pitchBookingAdapter = new O_PitchBookingAdapter(getActivity(), bookingModelArrayList, "user");
-        bookingRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        o_pitchBookingAdapter = new O_PitchBookingAdapter(context, bookingModelArrayList, "user");
+        bookingRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         bookingRecyclerView.setAdapter(o_pitchBookingAdapter);
         bookingRecyclerView.setNestedScrollingEnabled(false);
 

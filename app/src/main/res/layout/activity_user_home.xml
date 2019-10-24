@@ -41,6 +41,7 @@
                         android:orientation="horizontal"
                         android:layout_height="wrap_content">
                         <EditText
+                            android:imeOptions="actionDone"
                             android:gravity="center_vertical"
                             android:drawableLeft="@drawable/ic_search"
                             android:layout_gravity="center_vertical"
@@ -67,7 +68,6 @@
                             android:layout_height="24sp"/>
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:visibility="gone"
                             android:id="@+id/stadiumAddressRecyclerView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>

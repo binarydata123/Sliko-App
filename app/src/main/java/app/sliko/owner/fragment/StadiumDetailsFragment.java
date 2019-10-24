@@ -1,6 +1,7 @@
 package app.sliko.owner.fragment;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +13,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +40,8 @@ import app.sliko.UI.SsRegularTextView;
 import app.sliko.adapter.StadiumImagesAdapter;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.DialogConfirmation;
+import app.sliko.events.ProfileUploadedSuccessEvent;
+import app.sliko.events.RefreshEvent;
 import app.sliko.owner.activity.AddPitchActivity;
 import app.sliko.owner.activity.AddStadiumActivity;
 import app.sliko.owner.adapter.PitchAdapterOwner;
@@ -73,8 +75,6 @@ public class StadiumDetailsFragment extends Fragment {
     LinearLayout noStadiumLayout;
     @BindView(R.id.addStadiumButton)
     Button addStadiumButton;
-    @BindView(R.id.pitchesLayout)
-    TextView pitchesLayout;
     @BindView(R.id.progressBarLoading)
     ProgressBar progressBarLoading;
     @BindView(R.id.stadiumName)
@@ -111,12 +111,22 @@ public class StadiumDetailsFragment extends Fragment {
     LinearLayout pitchSpinnerLayout;
     @BindView(R.id.noImagesLayout)
     LinearLayout noImagesLayout;
+    @BindView(R.id.addPitch)
+    SsMediumTextView addPitch;
     private ArrayList<String> reviewsModelArrayList;
     private StadiumImagesAdapter stadiumImagesAdapter;
     private View view;
     private String is_stadium = "";
     private WeakReference<StadiumDetailsFragment> weakReference;
     private Dialog dialog;
+
+    private Context context;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
 
     public static StadiumDetailsFragment newInstance() {
         Bundle args = new Bundle();
@@ -128,8 +138,129 @@ public class StadiumDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setListeners();
-        Log.e(">>user_id", "onViewCreated: " + M.fetchUserTrivialInfo(getActivity(), "id"));
+        if (context != null) {
+            dialog = M.showDialog(context, "", false);
+            if (!EventBus.getDefault().isRegistered(this)) {
+                EventBus.getDefault().register(this);
+            }
+            weakReference = new WeakReference<>(StadiumDetailsFragment.this);
+            changeStadiumLayout.setVisibility(View.VISIBLE);
+            sortArrayList = new ArrayList<String>() {
+                {
+                    add("Tất cả");
+                    add("Hôm qua");
+                    add("7 ngày qua");
+                    add("30 ngày qua");
+                }
+            };
+            sortArrayListActualList = new ArrayList<String>() {
+                {
+                    add("All");
+                    add("1");
+                    add("7");
+                    add("30");
+                }
+            };
+
+            modeOfPaymentDecidingiList = new ArrayList<String>() {
+                {
+                    add("Tất cả");
+                    add("Ngoại tuyến");
+                    add("ZaloPay");
+                    add("Trả tiền cho Momo");
+                }
+            };
+
+            modeOfPayment = new ArrayList<String>() {
+                {
+                    add("All");
+                    add("Offline");
+                    add("ZaloPay");
+                    add("Momo");
+                }
+            };
+
+            sortByDays.setAdapter(M.makeSpinnerAdapterWhite(context, sortArrayList, sortByDays));
+
+            sortByModeOfPayment.setAdapter(M.makeSpinnerAdapterWhite(context, modeOfPaymentDecidingiList, sortByModeOfPayment));
+
+            sortByDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (days) {
+
+                        if (sortByDays.getSelectedItemPosition() == 0) {
+                            filter_days = "";
+                        } else {
+                            filter_days = sortArrayListActualList.get(i);
+
+                        }
+                        getCurrentStadiumData();
+
+                    } else {
+                        days = true;
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            });
+            sortByModeOfPayment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (payment) {
+                        if (sortByModeOfPayment.getSelectedItemPosition() == 0) {
+                            filter_payment_type = "";
+                        } else {
+                            filter_payment_type = modeOfPayment.get(i);
+
+                        }
+                        getCurrentStadiumData();
+
+                    } else {
+                        payment = true;
+                    }
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+            sortByPitch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    if (pitch) {
+                        if (sortByPitch.getSelectedItemPosition() != 0) {
+                            pitch_id = pitchModelArrayList.get(sortByPitch.getSelectedItemPosition() - 1).getId();
+
+                        } else {
+                            pitch_id = "";
+                        }
+                        getCurrentStadiumData();
+
+                    } else {
+                        pitch = true;
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+            addPitch.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(context, AddPitchActivity.class));
+                }
+            });
+
+            setListeners();
+            Log.e(">>user_id", "onViewCreated: " + M.fetchUserTrivialInfo(context, "id"));
+        }
     }
 
     @Override
@@ -139,6 +270,7 @@ public class StadiumDetailsFragment extends Fragment {
     }
 
     private ArrayList<String> modeOfPayment;
+    private ArrayList<String> modeOfPaymentDecidingiList;
     private ArrayList<String> sortArrayList;
     private ArrayList<String> sortArrayListActualList;
 
@@ -146,132 +278,30 @@ public class StadiumDetailsFragment extends Fragment {
     private boolean pitch = false;
     private boolean payment = false;
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.owner_fragment_stadium_detail, container, false);
         ButterKnife.bind(StadiumDetailsFragment.this, view);
-        dialog = M.showDialog(getActivity(), "", false);
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-        weakReference = new WeakReference<>(StadiumDetailsFragment.this);
-        changeStadiumLayout.setVisibility(View.VISIBLE);
-        sortArrayList = new ArrayList<String>() {
-            {
-                add("All");
-                add("Yesterday");
-                add("Last 7 days");
-                add("Last 30 days");
-            }
-        };
-        sortArrayListActualList = new ArrayList<String>() {
-            {
-                add("All");
-                add("1");
-                add("7");
-                add("30");
-            }
-        };
 
-        modeOfPayment = new ArrayList<String>() {
-            {
-                add("All");
-                add("Offline");
-                add("ZaloPay");
-                add("Momo");
-            }
-        };
-
-        sortByDays.setAdapter(M.makeSpinnerAdapterWhite(getActivity(), sortArrayList, sortByDays));
-
-        sortByModeOfPayment.setAdapter(M.makeSpinnerAdapterWhite(getActivity(), modeOfPayment, sortByModeOfPayment));
-
-        sortByDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (days) {
-
-                    if (sortByDays.getSelectedItemPosition() == 0) {
-                        filter_days = "";
-                    } else {
-                        filter_days = sortArrayListActualList.get(i);
-
-                    }
-                    getCurrentStadiumData();
-
-                } else {
-                    days = true;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        sortByModeOfPayment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (payment) {
-                    if (sortByModeOfPayment.getSelectedItemPosition() == 0) {
-                        filter_payment_type = "";
-                    } else {
-                        filter_payment_type = modeOfPayment.get(i);
-
-                    }
-                    getCurrentStadiumData();
-
-                } else {
-                    payment = true;
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        sortByPitch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (pitch) {
-                    if (sortByPitch.getSelectedItemPosition() != 0) {
-                        pitch_id = pitchModelArrayList.get(sortByPitch.getSelectedItemPosition() - 1).getId();
-
-                    } else {
-                        pitch_id = "";
-                    }
-                    getCurrentStadiumData();
-
-                } else {
-                    pitch = true;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
         return view;
     }
 
     private void getCurrentStadiumData() {
-        Log.e(">>data", "getCurrentStadiumData: " + M.fetchUserTrivialInfo(getActivity(), "id") + "\n" +
+        Log.e(">>data", "getCurrentStadiumData: " + M.fetchUserTrivialInfo(context, "id") + "\n" +
 
-                Prefs.getStadiumId(getActivity()) + "\n" + pitch_id + "\n" + filter_days + "\n" + filter_payment_type);
+                Prefs.getStadiumId(context) + "\n" + pitch_id + "\n" + filter_days + "\n" + filter_payment_type);
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_getStadiumRevenueDetails(
-                M.fetchUserTrivialInfo(getActivity(), "id"),
-                Prefs.getStadiumId(getActivity()), pitch_id,
+                M.fetchUserTrivialInfo(context, "id"),
+                Prefs.getStadiumId(context), pitch_id,
                 filter_days,
                 filter_payment_type);
-        Log.e(">>detailsFrag", "getCurrentStadiumData: " + M.fetchUserTrivialInfo(getActivity(), "id")
+        Log.e(">>detailsFrag", "getCurrentStadiumData: " + M.fetchUserTrivialInfo(context, "id")
                 + "\n" +
-                Prefs.getStadiumId(getActivity()) + "\n" + pitch_id + "\n" +
+                Prefs.getStadiumId(context) + "\n" + pitch_id + "\n" +
                 filter_days + "\n" +
                 filter_payment_type);
         call.enqueue(new Callback<ResponseBody>() {
@@ -291,15 +321,15 @@ public class StadiumDetailsFragment extends Fragment {
                             bookingCount.setText(total_count);
                             amountCount.setText(getString(R.string.currencySymbol) + Float.parseFloat(total_amount));
                         } else {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                         }
                     } else {
                         Log.e(">>code", "onResponse: " + response.code());
-                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Log.e(">>code", "onResponse: " + e.getMessage());
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(">>logError", "onResponse: " + e.getMessage());
+
                 }
             }
 
@@ -319,7 +349,7 @@ public class StadiumDetailsFragment extends Fragment {
     String id;
 
     private void fetchStadiumInfo(String response) {
-        pitchListing.add("All");
+        pitchListing.add("Tất cả");
         pitchModelArrayList = new ArrayList<>();
         reviewsModelArrayList = new ArrayList<>();
         try {
@@ -332,13 +362,12 @@ public class StadiumDetailsFragment extends Fragment {
                 JSONObject data = jsonObject.getJSONObject("data");
                 String stadium_name = data.getString("stadium_name");
                 id = data.getString("id");
-                Prefs.saveStadiumId(id, getActivity());
+                Prefs.saveStadiumId(id, context);
                 String description = data.getString("description");
                 String address = data.getString("address");
                 String pitch_review_avg = data.getString("review_avg");
                 if (pitch_review_avg.equalsIgnoreCase("null")) {
                     SD_stadiumReviews.setText(getString(R.string.noReviews));
-                    stadiumRating.setVisibility(View.GONE);
                 } else {
                     String count = pitch_review_avg.equalsIgnoreCase("null") ?
                             "0"
@@ -352,7 +381,7 @@ public class StadiumDetailsFragment extends Fragment {
                 String created_at = data.getString("created_at");
                 stadiumName.setText(stadium_name);
                 stadiumDescription.setText(description);
-                stadiumLocation.setText(getString(R.string.adddress) + address);
+                stadiumLocation.setText(address);
                 createdDate.setText(getString(R.string.stadiumAddedOn) + M.formateDateTimeBoth(created_at));
                 Object stadium_gallery = data.get("stadium_gallery");
                 if (stadium_gallery instanceof JSONObject) {
@@ -367,6 +396,7 @@ public class StadiumDetailsFragment extends Fragment {
                     }
                 }
                 JSONArray pitchArray = data.getJSONArray("pitch_listing");
+
                 if (pitchArray.length() > 0) {
                     for (int k = 0; k < pitchArray.length(); k++) {
                         JSONObject pitchObject = pitchArray.getJSONObject(k);
@@ -376,6 +406,7 @@ public class StadiumDetailsFragment extends Fragment {
                         pitchModel.setComplete_booking(pitchObject.getString("complete_booking"));
                         pitchModel.setPitch_review_avg(pitchObject.getString("pitch_review_avg"));
                         pitchModel.setId(pitchObject.getString("id"));
+                        pitchModel.setPitch_type(pitchObject.getString("pitch_type"));
                         Log.e(">>pitchID", "fetchStadiumInfo: " + pitchObject.getString("id"));
                         pitchModel.setPrice(pitchObject.getString("price"));
                         pitchModel.setStadium_id(pitchObject.getString("stadium_id"));
@@ -388,7 +419,7 @@ public class StadiumDetailsFragment extends Fragment {
                         pitchModelArrayList.add(pitchModel);
                         pitchListing.add(pitchObject.getString("pitch_name"));
                     }
-                    sortByPitch.setAdapter(M.makeSpinnerAdapterWhite(getActivity(), pitchListing, sortByPitch));
+                    sortByPitch.setAdapter(M.makeSpinnerAdapterWhite(context, pitchListing, sortByPitch));
                     setAdapter();
                     pitchAdapterOwner.notifyDataSetChanged();
                     noPitchLayout.setVisibility(View.GONE);
@@ -400,41 +431,41 @@ public class StadiumDetailsFragment extends Fragment {
                     noPitchLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            startActivity(new Intent(getActivity(), AddPitchActivity.class));
+                            startActivity(new Intent(context, AddPitchActivity.class));
                         }
                     });
                 }
-                stadiumImagesAdapter = new StadiumImagesAdapter(getActivity(), reviewsModelArrayList);
+                stadiumImagesAdapter = new StadiumImagesAdapter(context, reviewsModelArrayList);
                 viewPager.setAdapter(stadiumImagesAdapter);
                 circleIndicator.setViewPager(viewPager);
                 getCurrentStadiumData();
             } else {
-                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-            Log.e(">>E", "onResponse: " + e.getMessage());
+            Log.e(">>logError", "onResponse: " + e.getMessage());
         }
     }
 
     private PitchAdapterOwner pitchAdapterOwner;
 
     private void setAdapter() {
-        pitchAdapterOwner = new PitchAdapterOwner(getActivity(), pitchModelArrayList);
-        pitchesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        pitchAdapterOwner = new PitchAdapterOwner(context, pitchModelArrayList);
+        pitchesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         pitchesRecyclerView.setAdapter(pitchAdapterOwner);
     }
 
     private DialogConfirmation dialogConfirmation;
 
     private void setListeners() {
-        addStadiumButton.setOnClickListener(view -> startActivity(new Intent(getActivity(), AddStadiumActivity.class)
+        addStadiumButton.setOnClickListener(view -> startActivity(new Intent(context, AddStadiumActivity.class)
                 .putExtra("stadiumType", "add")));
-        editStadiumLayout.setOnClickListener(view -> startActivity(new Intent(getActivity(), AddStadiumActivity.class)
+        editStadiumLayout.setOnClickListener(view -> startActivity(new Intent(context, AddStadiumActivity.class)
                 .putExtra("stadiumType", "edit")
                 .putExtra("stadium_id", id)));
         deleteSadiumLayout.setOnClickListener(view -> {
-                    dialogConfirmation = DialogMethodCaller.openDialogConfirmation(getActivity(), R.layout.dialog_confirmation, false);
+                    dialogConfirmation = DialogMethodCaller.openDialogConfirmation(context, R.layout.dialog_confirmation, false);
                     dialogConfirmation.getDialog_error().show();
                     dialogConfirmation.getDialogConfirmationTitle().setText(getString(R.string.deleteStadium));
                     dialogConfirmation.getDialogConfirmationMessage().setText(getString(R.string.sureDeleteThisStadium));
@@ -442,7 +473,7 @@ public class StadiumDetailsFragment extends Fragment {
                     dialogConfirmation.getOkButton().setOnClickListener(view12 -> {
                         dialogConfirmation.getDialog_error().cancel();
                         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-                        Call<ResponseBody> call = service.ep_deleteStadium(id, M.fetchUserTrivialInfo(getActivity(), "id"));
+                        Call<ResponseBody> call = service.ep_deleteStadium(id, M.fetchUserTrivialInfo(context, "id"));
                         call.enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -452,17 +483,17 @@ public class StadiumDetailsFragment extends Fragment {
                                         JSONObject jsonObject = new JSONObject(sResponse);
                                         String status = jsonObject.getString("status");
                                         String message = jsonObject.getString("message");
-                                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                        Log.e(">>data", "onResponse: " + jsonObject.toString());
+                                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                                         if (status.equalsIgnoreCase("true")) {
-                                            EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(true));
-                                        } else {
-                                            EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(false));
+                                            Prefs.saveStadiumId("", context);
+                                            EventBus.getDefault().postSticky(new StadiumExistEventOrNot(false, ""));
                                         }
                                     } else {
-                                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (Exception e) {
-                                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -484,11 +515,23 @@ public class StadiumDetailsFragment extends Fragment {
             if (stadiumExistEventOrNot.isResponseSuccess()) {
                 noStadiumLayout.setVisibility(View.GONE);
                 stadiumLayout.setVisibility(View.VISIBLE);
+
                 fetchStadiumInfo(stadiumExistEventOrNot.getReponse());
             } else {
                 noStadiumLayout.setVisibility(View.VISIBLE);
                 stadiumLayout.setVisibility(View.GONE);
+                EventBus.getDefault().postSticky(new SuccessFullyStadiumCreated(false));
             }
         }
     }
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onEvent(RefreshEvent refreshEvent) {
+        if (refreshEvent != null) {
+           if (refreshEvent.status==true){
+               setAdapter();
+           }
+        }
+    }
+
+
 }

@@ -3,7 +3,7 @@
     <item
         android:id="@+id/action_bookings"
         android:icon="@drawable/ic_stadium_owner"
-        android:title="@string/bookings" />
+        android:title="@string/Stadiums" />
     <item
         android:id="@+id/action_booking_history"
         android:icon="@drawable/ic_booking"

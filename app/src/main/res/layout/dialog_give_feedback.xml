@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_corner_round"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:padding="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/provideYourFeedback"
+                    android:textColor="@color/black_color"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:alpha=".3"
+                android:layout_marginTop="15dp"
+                android:background="@color/black_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+
+                <hyogeun.github.com.colorratingbarlib.ColorRatingBar
+                    android:id="@+id/F_userRating"
+                    style="?android:ratingBarStyleIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:rating="5"
+                    app:changeable="true"
+                    app:empty_color="@color/semi_black_color"
+                    app:half_color="@color/yellow"
+                    app:progress_color="@color/yellow" />
+
+                <EditText
+                    android:id="@+id/F_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_bg_grey"
+                    android:gravity="top|center_vertical"
+                    android:hint="@string/writeSomething"
+                    android:padding="8dp"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/F_submitButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edit_bg_green"
+                    android:text="@string/submit"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:id="@+id/cancelButton"
+        android:layout_gravity="end"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="32dp"
+            android:background="@drawable/ic_error"
+            android:layout_height="32dp"/>
+
+    </LinearLayout>
+
+</FrameLayout>

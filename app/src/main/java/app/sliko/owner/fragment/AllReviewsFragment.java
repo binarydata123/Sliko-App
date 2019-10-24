@@ -1,7 +1,9 @@
 package app.sliko.owner.fragment;//package app.sliko.owner.fragment;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -59,16 +59,32 @@ public class AllReviewsFragment extends Fragment {
         return fragment;
     }
 
+    private Context context;
+
     Dialog dialog;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (context != null) {
+            dialog = M.showDialog(context, "", false);
+            getReviewsListing();
+            setAdapter();
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_pitch_reviews, container, false);
         ButterKnife.bind(AllReviewsFragment.this, view);
-        dialog = M.showDialog(getActivity(), "", false);
-        getReviewsListing();
-        setAdapter();
+
         return view;
     }
 
@@ -76,7 +92,7 @@ public class AllReviewsFragment extends Fragment {
         pitchModelArrayList = new ArrayList<>();
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_reviewsAll(M.fetchUserTrivialInfo(getActivity(), "id"), Prefs.getStadiumId(getActivity()));
+        Call<ResponseBody> call = service.ep_reviewsAll(M.fetchUserTrivialInfo(context, "id"), Prefs.getStadiumId(context));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -110,17 +126,17 @@ public class AllReviewsFragment extends Fragment {
                             handleNoRecord();
                         }
                     } else {
-                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(">>logError", "onResponse: " + e.getMessage());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -132,8 +148,8 @@ public class AllReviewsFragment extends Fragment {
     }
 
     private void setAdapter() {
-        reviewsAdapter = new ReviewsAdapter(getActivity(), pitchModelArrayList);
-        allReviewsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        reviewsAdapter = new ReviewsAdapter(context, pitchModelArrayList);
+        allReviewsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         allReviewsRecyclerView.setAdapter(reviewsAdapter);
         reviewsAdapter.notifyDataSetChanged();
 

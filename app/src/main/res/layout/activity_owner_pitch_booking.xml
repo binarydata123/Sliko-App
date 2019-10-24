@@ -39,12 +39,19 @@
 
                     </LinearLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/pitchBookingRecyclerView"
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_below="@id/bottomLayout" />
-                    <include layout="@layout/no_data_layout"/>
+                        android:layout_below="@id/bottomLayout"
+                        android:layout_height="match_parent">
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/pitchBookingRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            />
+                        <include layout="@layout/no_data_layout"/>
+                    </FrameLayout>
+
+
                 </RelativeLayout>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton

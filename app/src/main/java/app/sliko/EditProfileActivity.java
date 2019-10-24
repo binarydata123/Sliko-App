@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import app.sliko.UI.SsMediumTextView;
 import app.sliko.UI.SsRegularEditText;
 import app.sliko.events.ProfileUploadedSuccessEvent;
-import app.sliko.location.FindLocationActivity;
+import app.sliko.location.GetLocationFromMapActivity;
 import app.sliko.utills.FilePath;
 import app.sliko.utills.M;
 import app.sliko.utills.Prefs;
@@ -153,7 +153,6 @@ public class EditProfileActivity extends AppCompatActivity {
                     RequestBody.create(MediaType.parse("multipart/form-data"), etFavouriteTeam.getText().toString()),
                     RequestBody.create(MediaType.parse("multipart/form-data"), playPositionSpinner.getSelectedItem().toString()),
                     RequestBody.create(MediaType.parse("multipart/form-data"), rightFoot.isChecked() ? "Right Foot" : "Left Foot"));
-
         } else {
             call = service.editProfileWithoutImage(
                     RequestBody.create(MediaType.parse("multipart/form-data"), M.fetchUserTrivialInfo(EditProfileActivity.this, "id")),
@@ -243,9 +242,10 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.cancelButton)
-    public void onClickCancel(){
+    public void onClickCancel() {
         onBackPressed();
     }
+
     File photoFile = null;
     String imageFilePath = "";
 
@@ -253,6 +253,7 @@ public class EditProfileActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case 201:
             case 200:
                 if (data != null) {
                     if (data.getStringExtra("lat") != null) {
@@ -284,6 +285,8 @@ public class EditProfileActivity extends AppCompatActivity {
                             photoFile = M.createImageFile(EditProfileActivity.this);
                             imageFilePath = FilePath.getPath(this, uri);
                             photoFile = new File(imageFilePath);
+                            Log.e(">>filePath", "onActivityResult: " + photoFile.getAbsolutePath()+"\n"+
+                                    photoFile.getName());
                             Picasso.get().load(photoFile).into(userImage);
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -298,7 +301,7 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_profile);
+        setContentView(R.layout.edit_profilenewscreen);
         ButterKnife.bind(EditProfileActivity.this);
         dialog = M.showDialog(EditProfileActivity.this, "", false);
         toolbar.setNavigationOnClickListener(view -> finish());
@@ -326,9 +329,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
     @OnClick(R.id.addressLayout)
     public void etAddressClick() {
-        startActivityForResult(new Intent(EditProfileActivity.this, FindLocationActivity.class), 200);
+        startActivityForResult(new Intent(EditProfileActivity.this, GetLocationFromMapActivity.class), 200);
     }
-
 
     String lat = "", lng = "";
     ArrayList<String> playPositionsArray = new ArrayList<>();

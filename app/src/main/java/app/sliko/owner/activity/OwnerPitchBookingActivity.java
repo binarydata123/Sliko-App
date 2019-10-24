@@ -149,6 +149,7 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
                 getBookingDataForPitch();
             }
         });
+        addBookingButton.setVisibility(View.GONE);
 
         addBookingButton.setOnClickListener(view -> {
             bookPitchMauallyDialog = DialogMethodCaller.openBookPitchMauallyDialog(OwnerPitchBookingActivity.this, R.layout.dialog_add_booking_manually, false);
@@ -196,9 +197,15 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
                                     bookingModel.setBooking_date(dataObject.getString("booking_date"));
                                     bookingModel.setTime(dataObject.getString("time"));
                                     bookingModel.setUser_id(dataObject.getString("user_id"));
+                                    if (dataObject.getString("booking_status").equalsIgnoreCase("1")) {
+
+                                        bookingModel.setFeedback_message(dataObject.getString("feedback_message"));
+                                    }
                                     bookingModelArrayList.add(bookingModel);
                                 }
                                 setAdapter();
+
+                                pitchBookingRecyclerView.setVisibility(View.VISIBLE);
                                 o_pitchBookingAdapter.notifyDataSetChanged();
                                 noDataLayout.setVisibility(View.GONE);
                             } else {
@@ -227,12 +234,13 @@ public class OwnerPitchBookingActivity extends AppCompatActivity {
 
     private void handleNoData() {
         noDataLayout.setVisibility(View.VISIBLE);
+        pitchBookingRecyclerView.setVisibility(View.GONE);
         if (isFirstTime) {
             isFirstTime = false;
-            backToBookings.setVisibility(View.GONE);
+            //  backToBookings.setVisibility(View.GONE);
         } else {
 
-            backToBookings.setVisibility(View.VISIBLE);
+            //   backToBookings.setVisibility(View.VISIBLE);
         }
         image.setBackgroundResource(R.drawable.ic_booking);
     }

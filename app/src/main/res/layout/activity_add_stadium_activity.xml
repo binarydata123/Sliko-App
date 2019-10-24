@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -155,12 +154,10 @@
                                         android:inputType="textNoSuggestions"
                                         android:layout_height="match_parent"
                                         android:background="@android:color/transparent"
-                                        android:ellipsize="end"
                                         android:hint="@string/Enter_Address"
                                         android:paddingLeft="16dp"
                                         android:paddingTop="16dp"
                                         android:paddingRight="16dp"
-                                        android:singleLine="true"
                                         android:textSize="14sp" />
                                 </LinearLayout>
 
@@ -211,9 +208,9 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:background="@android:color/transparent"
-                                        android:ellipsize="end"
                                         android:hint="@string/enterDescription"
                                         android:padding="16dp"
+                                        android:inputType="text"
                                         android:gravity="top|center_vertical"
                                         android:textSize="14sp" />
                                 </LinearLayout>
@@ -310,11 +307,30 @@
                                 android:layout_width="match_parent"
                                 android:orientation="vertical"
                                 android:layout_height="wrap_content">
-                                <app.sliko.UI.SsRegularTextView
-                                    android:layout_width="wrap_content"
-                                    android:text="Choose stadium opening days"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:orientation="horizontal"
+
                                     android:layout_marginBottom="10dp"
-                                    android:layout_height="wrap_content"/>
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical">
+                                    <app.sliko.UI.SsRegularTextView
+                                        android:layout_width="wrap_content"
+                                        android:text="Choose stadium opening days"
+                                        android:layout_height="wrap_content"/>
+
+                                    <TextView
+                                        android:layout_width="5dp"
+                                        android:layout_height="match_parent" />
+
+                                    <TextView
+
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="*"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="22sp" />
+                                </LinearLayout>
                                 <include layout="@layout/horizontal_separator"/>
                                 <include layout="@layout/stadium_openings"/>
                             </LinearLayout>
@@ -323,11 +339,28 @@
                                 android:orientation="vertical"
                                 android:layout_marginTop="15dp"
                                 android:layout_height="wrap_content">
-                                <app.sliko.UI.SsRegularTextView
-                                    android:layout_width="wrap_content"
-                                    android:text="Pick stadium available time slot"
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+
                                     android:layout_marginBottom="10dp"
-                                    android:layout_height="wrap_content"/>
+                                    android:orientation="horizontal"
+                                    android:layout_height="wrap_content">
+                                    <app.sliko.UI.SsRegularTextView
+                                        android:layout_width="wrap_content"
+                                        android:text="Pick stadium available time slot"
+                                        android:layout_height="wrap_content"/>
+                                    <TextView
+                                        android:layout_width="5dp"
+                                        android:layout_height="match_parent" />
+
+                                    <TextView
+
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="*"
+                                        android:textColor="@color/colorPrimary"
+                                        android:textSize="22sp" />
+                                </LinearLayout>
                                 <androidx.recyclerview.widget.RecyclerView
                                     android:layout_width="match_parent"
                                     android:nestedScrollingEnabled="false"

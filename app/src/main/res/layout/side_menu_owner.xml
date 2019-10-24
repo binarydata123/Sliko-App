@@ -10,236 +10,114 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp">
+        android:orientation="horizontal">
 
-      <include layout="@layout/image_layout"/>
+        <include layout="@layout/image_layout"/>
     </LinearLayout>
-
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center_vertical|top"
-            android:orientation="vertical">
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:alpha=".2"
-                android:background="@color/black_color" />
+            android:fillViewport="true">
 
             <LinearLayout
-                android:id="@+id/onPostLoginLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center_vertical|top"
                 android:orientation="vertical">
 
-                <LinearLayout
+
+                <app.sliko.UI.SsRegularTextView
                     android:visibility="gone"
-                    android:id="@+id/myProfileLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:background="@drawable/user"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="8dp"
-                        android:text="@string/profile"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:alpha=".2"
                     android:background="@color/black_color" />
 
                 <LinearLayout
-                    android:id="@+id/editProfileLayout"
+                    android:id="@+id/onPostLoginLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:background="@drawable/ic_edit"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp" />
-
-                    <TextView
-
+                    <LinearLayout
+                        android:id="@+id/myProfileLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
                         android:gravity="center_vertical"
-                        android:paddingLeft="8dp"
-                        android:text="@string/editProfile"
-                        android:textColor="@color/black" />
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
+                        <ImageView
+                            android:background="@drawable/ic_user_green"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp" />
 
-                </LinearLayout>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:alpha=".2"
-                    android:background="@color/black_color" />
+                        <app.sliko.UI.SsRegularTextView
+                            android:textSize="16sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="8dp"
+                            android:text="@string/profile"
+                            android:textColor="@color/black" />
 
-               <LinearLayout
-                   android:layout_width="match_parent"
-                   android:orientation="vertical"
-                   android:id="@+id/stadiumRelatedLayout"
-                   android:layout_height="wrap_content">
-                   <LinearLayout
-                       android:id="@+id/editStadiumLayout"
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:gravity="center"
-                       android:orientation="horizontal"
-                       android:padding="16dp">
+                    </LinearLayout>
+                    <app.sliko.UI.SsRegularTextView
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha=".2"
+                        android:background="@color/black_color" />
 
-                       <ImageView
-                           android:background="@drawable/ic_stadium_black"
-                           android:layout_width="18dp"
-                           android:layout_height="18dp" />
-
-                       <TextView
-                           android:layout_width="match_parent"
-                           android:layout_height="wrap_content"
-                           android:drawablePadding="10dp"
-                           android:gravity="center_vertical"
-                           android:paddingLeft="8dp"
-                           android:text="@string/editStadium"
-                           android:textColor="@color/black" />
-
-
-                   </LinearLayout>
-
-                   <TextView
-                       android:layout_width="match_parent"
-                       android:layout_height="1dp"
-                       android:alpha=".2"
-                       android:background="@color/black_color" />
-
-                   <LinearLayout
-                       android:id="@+id/addPitchLayout"
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:gravity="center"
-                       android:orientation="horizontal"
-                       android:padding="16dp">
-
-                       <ImageView
-                           android:background="@drawable/ic_pitch"
-                           android:layout_width="18dp"
-                           android:layout_height="18dp" />
-
-                       <TextView
-                           android:layout_width="match_parent"
-                           android:layout_height="wrap_content"
-                           android:drawablePadding="10dp"
-                           android:gravity="center_vertical"
-                           android:paddingLeft="8dp"
-                           android:text="@string/addPitch"
-                           android:textColor="@color/black" />
-
-
-                   </LinearLayout>
-
-               </LinearLayout>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:alpha=".2"
-                    android:background="@color/black_color" />
-
-                <LinearLayout
-                    android:id="@+id/settingLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:background="@drawable/ic_settings"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-
-                        />
-
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/editProfileLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="8dp"
-                        android:text="@string/setting"
-                        android:textColor="@color/black" />
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
-                </LinearLayout>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:alpha=".2"
-                    android:background="@color/black_color" />
+                        <ImageView
+                            android:background="@drawable/ic_edit_green"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp" />
+
+                        <app.sliko.UI.SsRegularTextView
+                            android:textSize="16sp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="8dp"
+                            android:text="@string/editProfile"
+                            android:textColor="@color/black" />
 
 
-                <LinearLayout
-                    android:id="@+id/signOutLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:background="@drawable/ic_logout"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        />
-
-                    <TextView
+                    </LinearLayout>
+                    <app.sliko.UI.SsRegularTextView
+                        android:visibility="gone"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="8dp"
-                        android:text="@string/singOut"
-                        android:textColor="@color/black" />
+                        android:layout_height="1dp"
+                        android:alpha=".2"
+                        android:background="@color/black_color" />
 
                 </LinearLayout>
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:alpha=".2"
-                    android:background="@color/black_color" />
-
-
             </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+        <ImageView
+            android:layout_margin="16dp"
+            android:alpha=".2"
+            android:layout_width="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:background="@drawable/slicko_simple_image"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+
 </LinearLayout>

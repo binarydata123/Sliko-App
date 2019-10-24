@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import app.sliko.R;
+import app.sliko.UI.SsMediumTextView;
 import app.sliko.UI.SsRegularTextView;
 import app.sliko.owner.model.AvailabilityModel;
 
@@ -49,7 +50,6 @@ public class HeaderTimingAdapter extends RecyclerView.Adapter<HeaderTimingAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
-        Log.e(">>time", "onBindViewHolder: " + imagesModelArrayList.get(i).getTime() );
         myViewHolder.timingText.setText(imagesModelArrayList.get(i).getTime());
     }
 
@@ -61,7 +61,7 @@ public class HeaderTimingAdapter extends RecyclerView.Adapter<HeaderTimingAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout changeBackground;
-        SsRegularTextView timingText;
+        SsMediumTextView timingText;
 
         private MyViewHolder(@NonNull View itemView) {
             super(itemView);

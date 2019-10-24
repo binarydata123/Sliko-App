@@ -1,6 +1,7 @@
 package app.sliko.owner.adapter.reports;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,29 +25,37 @@ public class VerticalTimingAdapter extends RecyclerView.Adapter<VerticalTimingAd
     HashMap<Integer, ArrayList<UserBookingModel>> timingArrayList;
     HorizontalTimingForVerticallyAdapter horizontalTimingForVerticallyAdapter;
 
-    public VerticalTimingAdapter(Context context, HashMap<Integer, ArrayList<UserBookingModel>> timingArrayList,String type) {
+    public VerticalTimingAdapter(Context context, HashMap<Integer, ArrayList<UserBookingModel>> timingArrayList, String type) {
         this.context = context;
         this.timingArrayList = timingArrayList;
         this.type = type;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    View itemView;
+
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_item_horizontal_timing
+        itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_item_horizontal_timing
                 , viewGroup, false);
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int position) {
-        if(timingArrayList.get(position).size()>0){
+    //    Log.e("size vertical time","=="+timingArrayList.size());
+        if (timingArrayList.get(position).size() > 0) {
             myViewHolder.noBookingLayout.setVisibility(View.GONE);
-            horizontalTimingForVerticallyAdapter = new HorizontalTimingForVerticallyAdapter(context, timingArrayList.get(position) , position ,type);
+            horizontalTimingForVerticallyAdapter = new HorizontalTimingForVerticallyAdapter(context, timingArrayList.get(position), position, type);
             myViewHolder.insideTimingRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             myViewHolder.insideTimingRecyclerView.setAdapter(horizontalTimingForVerticallyAdapter);
             horizontalTimingForVerticallyAdapter.notifyDataSetChanged();
-        }else{
+        } else {
             myViewHolder.noBookingLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -59,6 +68,7 @@ public class VerticalTimingAdapter extends RecyclerView.Adapter<VerticalTimingAd
     public class MyViewHolder extends RecyclerView.ViewHolder {
         RecyclerView insideTimingRecyclerView;
         LinearLayout noBookingLayout;
+
         private MyViewHolder(@NonNull View itemView) {
             super(itemView);
             insideTimingRecyclerView = itemView.findViewById(R.id.insideTimingRecyclerView);

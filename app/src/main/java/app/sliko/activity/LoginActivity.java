@@ -16,10 +16,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
@@ -67,23 +69,27 @@ public class LoginActivity extends AppCompatActivity {
     LinearLayout fbLoginButton;
     Dialog dialog;
     CallbackManager callbackManager;
+    boolean loggedIn;
+    String hashKey;
 
-    public void printHashKey() {
+    public String printHashKey() {
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                String hashKey = new String(Base64.encode(md.digest(), 0));
+                hashKey = new String(Base64.encode(md.digest(), 0));
                 Log.e(">>key", "printHashKey() Hash Key: " + hashKey);
             }
         } catch (Exception e) {
             Log.e(">>key", "printHashKey()", e);
         }
+        return hashKey;
     }
 
 
-    String password , name , email;
+    String password, name, email;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +98,8 @@ public class LoginActivity extends AppCompatActivity {
         //printHashKey();
         ButterKnife.bind(LoginActivity.this);
         dialog = M.showDialog(LoginActivity.this, "", false);
+
+        printHashKey();
         setListeners();
 
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -103,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                                 (object, response) -> {
                                     try {
                                         /**id as password**/
-                                        Log.e(">>id", "onSuccess: "+object.toString());
+                                        Log.e(">>id", "onSuccess: " + object.toString());
                                         password = object.getString("id");
                                         name = object.getString("name");
                                         Log.e(">>id", "onSuccess: " + password + "\n" + name);
@@ -112,7 +120,15 @@ public class LoginActivity extends AppCompatActivity {
                                             Toast.makeText(LoginActivity.this, getString(R.string.sorry_could_not_retrive_your_email), Toast.LENGTH_SHORT).show();
                                         } else {
                                             email = object.getString("name");
-                                            loginPassword(object.getString("email"), password);
+
+                                         //   loggedIn = isFacebookLoggedIn();
+
+
+                                            Log.e("check status login","<><>"+loggedIn);
+//...
+                                            LoginManager.getInstance().logOut();
+                                            facebbokApi(object.getString("email"),password);
+                                         //   loginPassword(object.getString("email"), password);
                                         }
                                     } catch (JSONException e) {
                                         LoginManager.getInstance().logOut();
@@ -126,10 +142,35 @@ public class LoginActivity extends AppCompatActivity {
                         request.executeAsync();
                     }
 
-                    @Override
+                    /*@Override
                     public void onCancel() {
                         Log.e(">>error", "onError: " + "Login attempt cancelled.");
                         Toast.makeText(LoginActivity.this, "Login attempt cancelled.", Toast.LENGTH_SHORT).show();
+                    }
+*/
+
+                    @Override
+                    public void onCancel() {
+                        AccessToken token = AccessToken.getCurrentAccessToken();
+                        if (token != null) {
+                            GraphRequest request = GraphRequest.newMeRequest(
+                                    token,
+                                    new GraphRequest.GraphJSONObjectCallback() {
+                                        @Override
+                                        public void onCompleted(
+                                                JSONObject object,
+                                                GraphResponse response) {
+                                          JSONObject   FBObject = response.getJSONObject();
+                                            Log.e("cancel","<><>"+response.getJSONObject());
+
+                                        }
+                                    });
+                            Bundle parameters = new Bundle();
+                            parameters.putString("fields", "id,name,email,gender, birthday");
+                            request.setParameters(parameters);
+                            request.executeAsync();
+
+                        }
                     }
 
                     @Override
@@ -146,6 +187,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    boolean forLoginOnly = false;
+
     private void setListeners() {
         loginbtn.setOnClickListener(view -> {
             if ((etUserEmail.length() == 0 || etUserEmail.getText().toString().trim().length() == 0)) {
@@ -158,6 +201,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, getString(R.string.please_enter_password), Toast.LENGTH_SHORT).show();
 
             } else {
+                forLoginOnly = true;
                 loginPassword(etUserEmail.getText().toString(), etPassword.getText().toString());
             }
         });
@@ -168,7 +212,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         forgotPassword.setOnClickListener(view -> {
-            startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
+  startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
             finish();
         });
 
@@ -178,7 +222,8 @@ public class LoginActivity extends AppCompatActivity {
 
     String role = Api.USER, fcmToken = Api.TOKEN;
 
-    private void loginPassword(String email, String password) {
+    private void loginPassword(String email, String password)
+    {
         if (checkOwner.isChecked()) {
             role = Api.OWNER;
         } else {
@@ -186,8 +231,11 @@ public class LoginActivity extends AppCompatActivity {
         }
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_login(etUserEmail.getText().toString(), etPassword.getText().toString(),
+        Call<ResponseBody> call= service.ep_login(email, password,
                 fcmToken);
+
+        Log.e( "kdhfkdjhjkdkApi: ",""+email+"--"+password );
+
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -195,32 +243,43 @@ public class LoginActivity extends AppCompatActivity {
                 try {
                     if (response.isSuccessful()) {
                         String sResponse = response.body().string();
-
+                       // Toast.makeText(LoginActivity.this, ""+sResponse, Toast.LENGTH_SHORT).show();
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
+                        Log.e(">>loginData", "onResponse: " + jsonObject.toString());
+                       // Toast.makeText(LoginActivity.this, "login status"+status, Toast.LENGTH_SHORT).show();
                         if (status.equalsIgnoreCase("true")) {
-                            Log.e(">>loginData", "onResponse: " + jsonObject.toString());
+
                             Prefs.saveUserData(jsonObject.getJSONObject("data").toString(), LoginActivity.this);
                             if (jsonObject.getJSONObject("data").getString("role").equalsIgnoreCase("owner")) {
                                 startActivity(new Intent(LoginActivity.this, StadiumOwnerHomeActivity.class));
                             } else {
                                 startActivity(new Intent(LoginActivity.this, UserDashboard.class));
                             }
+                            finish();
                         } else {
-                            if (jsonObject.getString("error").equalsIgnoreCase("1")) {
-                                startActivity(new Intent(LoginActivity.this, RegisterActivity.class)
-                                        .putExtra("password" , password)
-                                        .putExtra("email" , email)
-                                        .putExtra("for" , "forFb")
-                                        .putExtra("name" , name)
-                                );
-                            }else{
+                            if (!forLoginOnly) {
+                                if (jsonObject.getString("error").equalsIgnoreCase("1")) {
+
+                                    startActivity(new Intent(LoginActivity.this, RegisterActivity.class)
+                                            .putExtra("password", password)
+                                            .putExtra("email", email)
+                                            .putExtra("for", "forFb")
+                                            .putExtra("name", name)
+                                    );
+                                    finish();
+                                }
+
+                                else {
+                                    Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
                                 Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
 
+
                         }
-                        finish();
                     } else {
                         Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                     }
@@ -236,5 +295,52 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+/* facebook api*/
+private void facebbokApi(String email1,String password1)
+{
+
+    dialog.show();
+    ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
+    Call<ResponseBody> call= service.ep_facebookApi(email1);
+
+
+    call.enqueue(new Callback<ResponseBody>() {
+        @Override
+        public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+            dialog.cancel();
+            try {
+                if (response.isSuccessful()) {
+                    String sResponse = response.body().string();
+                    JSONObject jsonObject = new JSONObject(sResponse);
+                    String status = jsonObject.getString("status");
+                    String message = jsonObject.getString("message");
+                    Log.e(">>Facebbok APi", "onResponse: " + jsonObject.toString());
+                    if (status.equalsIgnoreCase("true")) {
+                      //  Toast.makeText(LoginActivity.this, "facebook"+status, Toast.LENGTH_SHORT).show();
+
+                    //    Toast.makeText(LoginActivity.this, "hga"+email1+"pass"+password1, Toast.LENGTH_SHORT).show();
+                        loginPassword(email1, password1);
+
+
+                    } else {
+                       loginPassword(email1, password1);
+
+                    }
+                } else {
+                    Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                }
+            } catch (Exception e) {
+                Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
+            dialog.cancel();
+            Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    });
+}
 }
 

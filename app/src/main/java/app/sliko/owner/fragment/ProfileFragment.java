@@ -1,20 +1,22 @@
 package app.sliko.owner.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,10 +29,15 @@ import org.json.JSONObject;
 
 import app.sliko.EditProfileActivity;
 import app.sliko.R;
+import app.sliko.UI.SsRegularTextView;
+import app.sliko.activity.LoginActivity;
+import app.sliko.activity.SettingActivity;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.ChangePasswordDialog;
+import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.events.ProfileUploadedSuccessEvent;
 import app.sliko.utills.M;
+import app.sliko.utills.Prefs;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
@@ -67,8 +74,16 @@ public class ProfileFragment extends Fragment {
     TextView etWeight;
     @BindView(R.id.etFootedness)
     TextView etFootedness;
-    @BindView(R.id.changePasswordButton)
-    Button changePasswordButton;
+    @BindView(R.id.changePassword)
+    LinearLayout changePassword;
+    @BindView(R.id.settingLayout)
+    LinearLayout settingLayout;
+    @BindView(R.id.signOutLayout)
+    LinearLayout signOutLayout;
+    @BindView(R.id.totalSpent)
+    SsRegularTextView totalSpent;
+    @BindView(R.id.totalBooking)
+    SsRegularTextView totalBooking;
 
     public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
@@ -95,19 +110,36 @@ public class ProfileFragment extends Fragment {
 
     }
 
+    private Context context;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        this.context = context;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+        if (context != null) {
+            dialog = M.showDialog(context, "", false);
+
+            progressImage.setVisibility(View.VISIBLE);
+            fetchProfileInfo();
+            setListener();
+        }
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(ProfileFragment.this, view);
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-        dialog = M.showDialog(getActivity(), "", false);
 
-        progressImage.setVisibility(View.VISIBLE);
-        fetchProfileInfo();
-        setListener();
         return view;
     }
 
@@ -115,29 +147,32 @@ public class ProfileFragment extends Fragment {
 
     private void setListener() {
         editProfileButton.setOnClickListener(view -> {
-            startActivity(new Intent(getActivity(), EditProfileActivity.class));
+            startActivity(new Intent(context, EditProfileActivity.class));
 
         });
-        changePasswordButton.setOnClickListener(view -> {
-            changePasswordDialog = DialogMethodCaller.openChangePasswordDialog(getActivity(), R.layout.dialog_change_password, false);
+        changePassword.setOnClickListener(view -> {
+            changePasswordDialog = DialogMethodCaller.openChangePasswordDialog(context, R.layout.dialog_change_password, false);
             changePasswordDialog.getDialog_error().show();
+            changePasswordDialog.getEtUserEmail().setText(M.fetchUserTrivialInfo(getActivity(), "email"));
+            changePasswordDialog.getEtUserEmail().setEnabled(false);
+
             changePasswordDialog.getCancelButton().setOnClickListener(view1 -> changePasswordDialog.getDialog_error().dismiss());
             changePasswordDialog.getSendButton().setOnClickListener(view12 -> {
                 if (M.matchValidation(changePasswordDialog.getEtUserEmail())) {
-                    Toast.makeText(getActivity(), getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
                 } else if (!M.validateEmail(changePasswordDialog.getEtUserEmail().getText().toString())) {
-                    Toast.makeText(getActivity(), getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
                 } else if (M.matchValidation(changePasswordDialog.getEtPassword())) {
-                    Toast.makeText(getActivity(), getString(R.string.please_enter_password), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.please_enter_password), Toast.LENGTH_SHORT).show();
 
                 } else if ((changePasswordDialog.getEtPassword().length() < 6)) {
-                    Toast.makeText(getActivity(), getString(R.string.password_should_big), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.password_should_big), Toast.LENGTH_SHORT).show();
 
                 } else if (M.matchValidation(changePasswordDialog.getEtNewPassword())) {
-                    Toast.makeText(getActivity(), getString(R.string.please_enter_new_password), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.please_enter_new_password), Toast.LENGTH_SHORT).show();
 
                 } else if ((changePasswordDialog.getEtNewPassword().length() < 6)) {
-                    Toast.makeText(getActivity(), getString(R.string.password_should_big), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, getString(R.string.password_should_big), Toast.LENGTH_SHORT).show();
 
                 } else {
                     changePasswordDialog.getDialog_error().dismiss();
@@ -147,12 +182,44 @@ public class ProfileFragment extends Fragment {
                 }
             });
         });
+        signOutLayout.setOnClickListener(view -> {
+            dialogConfirmation = DialogMethodCaller.openDialogConfirmation(context, R.layout.dialog_confirmation, false);
+            dialogConfirmation.getDialog_error().show();
+            dialogConfirmation.getDialogConfirmationMessage().setText(getString(R.string.doYouWantToSignOut));
+            dialogConfirmation.getDialogConfirmationTitle().setText(getString(R.string.signout));
+            dialogConfirmation.getCloseButton().setOnClickListener(view12 -> dialogConfirmation.getDialog_error().dismiss());
+            dialogConfirmation.getOkButton().setOnClickListener(view1 -> {
+                dialogConfirmation.getDialog_error().dismiss();
+                logoutApi();
+            });
+        });
+
+        settingLayout.setOnClickListener(view -> startActivity(new Intent(context, SettingActivity.class)));
+
     }
+
+    Handler handler;
+    Runnable runnable;
+
+    private void logoutApi() {
+        dialog.show();
+        handler = new Handler();
+        runnable = () -> {
+            dialog.cancel();
+            Prefs.clearUserData(context);
+            startActivity(new Intent(context, LoginActivity.class));
+            ((Activity) context).finish();
+        };
+        handler.postDelayed(runnable, 500);
+    }
+
+
+    DialogConfirmation dialogConfirmation;
 
     private void hitResetPassword(String email, String oldPassword, String newPassword) {
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_resetPassword(M.fetchUserTrivialInfo(getActivity(), "id"), email, oldPassword, newPassword);
+        Call<ResponseBody> call = service.ep_resetPassword(M.fetchUserTrivialInfo(context, "id"), email, oldPassword, newPassword);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -163,29 +230,29 @@ public class ProfileFragment extends Fragment {
                         Log.i(">>loginData", "onResponse: " + sResponse.toString());
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String message = jsonObject.getString("message");
-                        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(">>logError", "onResponse: " + e.getMessage());
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void fetchProfileInfo() {
         dialog.show();
-        String userID = M.fetchUserTrivialInfo(getActivity(), "id");
+        String userID = M.fetchUserTrivialInfo(context, "id");
         Log.i(">>user_id", "fetchProfileInfo: " + userID);
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_getUserProfile(M.fetchUserTrivialInfo(getActivity(), "id"));
+        Call<ResponseBody> call = service.ep_getUserProfile(M.fetchUserTrivialInfo(context, "id"));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -198,7 +265,6 @@ public class ProfileFragment extends Fragment {
                         String status = jsonObject.getString("status");
                         if (status.equalsIgnoreCase("true")) {
                             JSONObject dataObject = jsonObject.getJSONObject("data");
-
                             Picasso.get().load(dataObject.getString("profilepic")).error(R.drawable.user).into(userImage, new com.squareup.picasso.Callback() {
                                 @Override
                                 public void onSuccess() {
@@ -210,31 +276,33 @@ public class ProfileFragment extends Fragment {
                                     progressImage.setVisibility(View.GONE);
                                 }
                             });
-                            etName.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("fullname")));
-                            etEmail.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("email")));
-                            etPhone.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("phone")));
-                            etAddress.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("address")));
-                            etHeight.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("height")));
-                            etWeight.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("weight")));
-                            etFootedness.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("footedness")));
-                            etFavouriteTeam.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("favourite_team")));
-                            etPlayPosition.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("play_position")));
+                            totalBooking.setText(M.actAccordinglyWithJson(getActivity(), dataObject.getString("total_count")) + "");
+                            totalSpent.setText(getActivity().getString(R.string.currencySymbol) + "" + M.actAccordinglyWithJson(dataObject.getString("total_revenue")) + "");
+                            etName.setText(M.actAccordinglyWithJson(context, dataObject.getString("fullname")));
+                            etEmail.setText(M.actAccordinglyWithJson(context, dataObject.getString("email")));
+                            etPhone.setText(M.actAccordinglyWithJson(context, dataObject.getString("phone")));
+                            etAddress.setText(M.actAccordinglyWithJson(context, dataObject.getString("address")));
+                            etHeight.setText(M.actAccordinglyWithJson(context, dataObject.getString("height")));
+                            etWeight.setText(M.actAccordinglyWithJson(context, dataObject.getString("weight")));
+                            etFootedness.setText(M.actAccordinglyWithJson(context, dataObject.getString("footedness")));
+                            etFavouriteTeam.setText(M.actAccordinglyWithJson(context, dataObject.getString("favourite_team")));
+                            etPlayPosition.setText(M.actAccordinglyWithJson(context, dataObject.getString("play_position")));
                         } else {
-                            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
-                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

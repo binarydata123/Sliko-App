@@ -35,29 +35,105 @@
                     android:id="@+id/bottomLay"
                     android:layout_alignParentBottom="true"
                     android:layout_height="wrap_content">
-                    <app.sliko.UI.SsRegularButton
-                        android:id="@+id/cancelButton"
-                        android:layout_weight="1"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:background="@drawable/edit_bg_grey"
 
-                        android:text="@string/close"
-                        android:textAllCaps="false"
-                        android:textColor="@color/black_color" />
+
+                    <com.loopeer.shadow.ShadowView
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+android:visibility="gone"
+                    android:layout_height="60dp"
+                    android:elevation="10dp"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:onClick="onShadowClickTest"
+                    app:cornerRadius="2dp"
+                    app:shadowColor="@color/greyColor"
+                    app:shadowMargin="10dp"
+                        app:shadowRadius="10dp">
+
+                    </com.loopeer.shadow.ShadowView>
+
+
+                    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+android:layout_margin="3dp"
+                        android:layout_height="40dp"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        app:cardBackgroundColor="@color/white"
+                        android:gravity="center"
+                        app:cardElevation="5dp"
+                        android:id="@+id/cardid"
+                        android:orientation="vertical">
+                        <app.sliko.UI.SsRegularButton
+                            android:id="@+id/cancelButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/edit_bg_grey"
+
+                            android:text="@string/close"
+                            android:textAllCaps="false"
+                            android:textColor="@color/black_color" />
+                    </androidx.cardview.widget.CardView>
+
                     <TextView
                         android:layout_width="15dp"
                         android:layout_height="match_parent"/>
-                    <app.sliko.UI.SsRegularButton
-                        android:layout_weight="1"
-                        android:id="@+id/saveButton"
+
+                    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                         android:layout_width="match_parent"
+                        android:layout_weight="1"
+android:layout_margin="3dp"
+                        android:visibility="gone"
                         android:layout_height="40dp"
-                        android:background="@drawable/edit_bg_green"
-                        android:layout_alignParentBottom="true"
-                        android:text="@string/saveProfile"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white" />
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        app:cardBackgroundColor="@color/white"
+                        android:gravity="center"
+                        app:cardElevation="5dp"
+                        android:orientation="vertical">
+                        <app.sliko.UI.SsRegularButton
+
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/edit_bg_green"
+                            android:text="@string/saveProfile"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white" />
+
+
+                    </androidx.cardview.widget.CardView>
+                    <com.loopeer.shadow.ShadowView
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
+
+                        android:layout_height="60dp"
+                        android:elevation="10dp"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:onClick="onShadowClickTest"
+                        app:cornerRadius="2dp"
+                        app:shadowColor="@color/semilytgreen"
+                        app:shadowMargin="10dp"
+                        app:shadowRadius="10dp">
+
+                        <app.sliko.UI.SsRegularButton
+
+                            android:id="@+id/saveButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@drawable/edit_bg_green"
+                            android:text="@string/saveProfile"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white" />
+
+                    </com.loopeer.shadow.ShadowView>
+
+
+
+
+
+
+
+
+
 
                 </LinearLayout>
                 <ScrollView
@@ -67,15 +143,15 @@
                     android:layout_above="@id/bottomLay"
                     android:layout_height="match_parent">
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                    <androidx.cardview.widget.CardView
-                        android:layout_marginRight="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginTop="50dp"
-                        android:elevation="5dp"
+                        <androidx.cardview.widget.CardView
+                            android:layout_marginRight="16dp"
+                            android:layout_marginLeft="16dp"
+                            android:layout_marginTop="50dp"
+                            android:elevation="5dp"
                             app:cardElevation="0dp"
                             android:layout_gravity="center_horizontal"
                             app:cardCornerRadius="8dp"
@@ -190,6 +266,7 @@
                                                 android:textSize="14sp" />
                                         </LinearLayout>
                                         <LinearLayout
+                                            android:visibility="gone"
                                             android:id="@+id/passwordLayout"
                                             android:layout_width="match_parent"
                                             android:layout_height="50dp"
@@ -413,49 +490,48 @@
                                                     android:layout_height="wrap_content"/>
                                             </RadioGroup>
                                         </LinearLayout>
-
                                     </LinearLayout>
                                 </LinearLayout>
                             </FrameLayout>
                         </androidx.cardview.widget.CardView>
 
-                    <FrameLayout
-                        android:layout_gravity="center_horizontal"
-                        android:id="@+id/userImageLayout"
-                        android:layout_width="90dp"
-                        android:layout_height="90dp">
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/userImage"
-                            app:civ_border_color="@color/white"
-                            app:civ_border_width="1dp"
-                            android:layout_gravity="center"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                        <FrameLayout
+                            android:layout_gravity="center_horizontal"
+                            android:id="@+id/userImageLayout"
+                            android:layout_width="90dp"
+                            android:layout_height="90dp">
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/userImage"
+                                app:civ_border_color="@color/semilytgreen"
+                                app:civ_border_width="1dp"
+                                android:layout_gravity="center"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
 
-                        <ProgressBar
-                            android:layout_gravity="center"
-                            android:layout_width="28sp"
-                            android:visibility="gone"
-                            android:id="@+id/progressImage"
-                            android:layout_height="28sp"/>
+                            <ProgressBar
+                                android:layout_gravity="center"
+                                android:layout_width="28sp"
+                                android:visibility="gone"
+                                android:id="@+id/progressImage"
+                                android:layout_height="28sp"/>
 
-                        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end|bottom"
-                            android:backgroundTint="@color/lightGreen"
-                            android:fadingEdge="none"
-                            android:fadingEdgeLength="0dp"
-                            android:foregroundTint="@color/lightGreen"
-                            android:requiresFadingEdge="none"
-                            android:src="@drawable/ic_photo_camera"
-                            app:backgroundTint="@color/lightGreen"
-                            app:elevation="1dp"
-                            app:fabCustomSize="24dp"
-                            app:fabSize="mini"
-                            app:maxImageSize="12dp" />
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end|bottom"
+                                android:backgroundTint="@color/lightGreen"
+                                android:fadingEdge="none"
+                                android:fadingEdgeLength="0dp"
+                                android:foregroundTint="@color/lightGreen"
+                                android:requiresFadingEdge="none"
+                                android:src="@drawable/ic_photo_camera"
+                                app:backgroundTint="@color/lightGreen"
+                                app:elevation="1dp"
+                                app:fabCustomSize="24dp"
+                                app:fabSize="mini"
+                                app:maxImageSize="12dp" />
+                        </FrameLayout>
                     </FrameLayout>
-                </FrameLayout>
                 </ScrollView>
             </RelativeLayout>
 

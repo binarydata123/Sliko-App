@@ -1,19 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <app.sliko.UI.SsRegularTextView
-        android:layout_width="wrap_content"
-        android:text=""
-        android:padding="11dp"
-        android:singleLine="true"
-        android:id="@+id/pitchName"
-        android:textSize="11sp"
-        android:layout_height="wrap_content"/>
-    <View
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:orientation="vertical">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="11dp">
+        <app.sliko.UI.SsRegularTextView
+            android:id="@+id/pitchName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:text=""
+            android:textSize="11sp" />
+        <app.sliko.UI.SsMediumTextView
+            android:layout_marginTop="1dp"
+            android:id="@+id/pitchPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_tag_green"
+            android:drawablePadding="3dp"
+            android:singleLine="true"
+            android:text=""
+            android:textColor="@color/lightGreen"
+            android:textSize="11sp" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/seprator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
         android:alpha=".2"
-        android:background="@color/alphaBlack"/>
+        android:background="@color/alphaBlack" />
 
 </LinearLayout>

@@ -75,7 +75,8 @@ public class RegisterActivity extends AppCompatActivity {
     String selectedPlayerPosition = "";
 
     String password = "", email = "", name = "", type = "";
-    boolean forFb= false;
+    boolean forFb = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,14 +120,14 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(forFb){
-            if(LoginManager.getInstance()!=null){
+        if (forFb) {
+            if (LoginManager.getInstance() != null) {
                 LoginManager.getInstance().logOut();
                 Toast.makeText(this, getString(R.string.loggingOutFromFb), Toast.LENGTH_SHORT).show();
                 finish();
             }
-        }else{
-            onBackPressed();
+        } else {
+            finish();
         }
     }
 
@@ -146,10 +147,9 @@ public class RegisterActivity extends AppCompatActivity {
             } else if (!M.validateEmail(etEmail.getText().toString())) {
                 Toast.makeText(this, getString(R.string.please_enter_valid_email), Toast.LENGTH_SHORT).show();
 
-            } else if(!forFb){
+            } else if (!forFb) {
                 if ((etPassword.length() == 0 || etPassword.getText().toString().trim().length() == 0)) {
                     Toast.makeText(this, getString(R.string.please_enter_password), Toast.LENGTH_SHORT).show();
-
                 } else if ((etPassword.length() < 6)) {
                     Toast.makeText(this, getString(R.string.password_should_big), Toast.LENGTH_SHORT).show();
 
@@ -158,7 +158,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                 } else if (!(etConfirmPassword.getText().toString().equalsIgnoreCase(etPassword.getText().toString()))) {
                     Toast.makeText(this, getString(R.string.password_do_not_match), Toast.LENGTH_SHORT).show();
-
+                } else {
+                    registerRequest();
                 }
             } else {
                 registerRequest();
@@ -173,8 +174,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     String role = "", fcmToken = "";
 
-    /**Password contains unique id got from facebook using it as
-     *social_id param and password for new user*/
+    /**
+     * Password contains unique id got from facebook using it as
+     * social_id param and password for new user
+     */
 
     private void registerRequest() {
         if (checkOwner.isChecked()) {
@@ -187,14 +190,14 @@ public class RegisterActivity extends AppCompatActivity {
         Call<ResponseBody> call = service.ep_register(etUserName.getText().toString(),
                 etEmail.getText().toString(),
                 etPhone.getText().toString(),
-                forFb?password:etPassword.getText().toString(),
+                forFb ? password : etPassword.getText().toString(),
                 role,
-                forFb?password:"",
+                forFb ? password : "",
                 fcmToken,
                 etFavouirteTeam.getText().toString(),
                 selectedPlayerPosition,
                 etHeight.getText().toString(),
-                etWeight.getText().toString(),
+                etWeight.getText().toString(),"","",
                 rightFoot.isChecked() ? "Right Foot" : "Left Foot");
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -210,13 +213,13 @@ public class RegisterActivity extends AppCompatActivity {
                         if (status.equalsIgnoreCase("true")) {
                             Prefs.saveUserData(jsonObject.getJSONObject("data").toString(), RegisterActivity.this);
                             Toast.makeText(RegisterActivity.this, message, Toast.LENGTH_SHORT).show();
-                            if(forFb){
+                            if (forFb) {
                                 if (jsonObject.getJSONObject("data").getString("role").equalsIgnoreCase("owner")) {
                                     startActivity(new Intent(RegisterActivity.this, StadiumOwnerHomeActivity.class));
                                 } else {
                                     startActivity(new Intent(RegisterActivity.this, UserDashboard.class));
                                 }
-                            }else{
+                            } else {
                                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                             }
                             finish();

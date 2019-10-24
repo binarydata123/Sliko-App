@@ -9,248 +9,161 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp">
+        android:orientation="horizontal">
 
         <include layout="@layout/image_layout"/>
     </LinearLayout>
 
-    <ScrollView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center_vertical|top"
-            android:orientation="vertical">
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:alpha=".2"
-                android:visibility="gone"
-                android:background="@color/black_color" />
+            android:fillViewport="true">
 
             <LinearLayout
-                android:id="@+id/onPostLoginLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center_vertical|top"
                 android:orientation="vertical">
 
-                <LinearLayout
-                    android:visibility="gone"
-                    android:id="@+id/profileLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:background="@drawable/ic_user"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-
-                        />
-
-                    <app.sliko.UI.SsRegularTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="8dp"
-                        android:text="@string/profile"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-
-
-
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:alpha=".2"
-                    android:background="@color/black_color"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:background="@color/black_color" />
 
                 <LinearLayout
+                    android:id="@+id/onPostLoginLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
-                    <ImageView
+                    <LinearLayout
+                        android:id="@+id/profileLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
+                        <ImageView
+                            android:background="@drawable/ic_user_green"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
 
-                        android:backgroundTint="@color/black"
-                        android:tint="@color/black" />
+                            />
+
+                        <app.sliko.UI.SsRegularTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="8dp"
+                            android:textSize="16sp"
+                            android:text="@string/profile"
+                            android:textColor="@color/black" />
+
+                    </LinearLayout>
+
+
+
+
 
                     <TextView
-                        android:id="@+id/changeRole"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha=".2"
+
+                        android:background="@color/black_color"
+                        android:visibility="gone" />
+
+
+
+                    <TextView
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha=".2"
+                        android:background="@color/black_color" />
+
+
+                    <LinearLayout
+                        android:id="@+id/editProfileLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
                         android:gravity="center_vertical"
-                        android:paddingLeft="8dp"
-                        android:text="Mudar de função"
-                        android:textColor="@color/black" />
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
-                </LinearLayout>
+                        <ImageView
+                            android:background="@drawable/ic_edit_green"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+
+                            />
+
+                        <app.sliko.UI.SsRegularTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+
+                            android:paddingLeft="8dp"
+                            android:textSize="16sp"
+                            android:text="@string/editProfile"
+                            android:textColor="@color/black" />
+
+                    </LinearLayout>
+                    <TextView
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:alpha=".2"
+                        android:background="@color/black_color" />
 
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:alpha=".2"
-                    android:background="@color/black_color" />
-
-
-                <LinearLayout
-                    android:id="@+id/editProfileLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:background="@drawable/ic_edit"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-
-                        />
-
-                    <app.sliko.UI.SsRegularTextView
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/etUserBookingLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
                         android:gravity="center_vertical"
-                        android:paddingLeft="8dp"
-                        android:text="@string/editProfile"
-                        android:textColor="@color/black" />
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
+                        <ImageView
+                            android:background="@drawable/ic_booking_green"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+
+                            />
+
+                        <app.sliko.UI.SsRegularTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:textSize="16sp"
+                            android:paddingLeft="8dp"
+                            android:text="@string/myBookings"
+                            android:textColor="@color/black" />
+
+                    </LinearLayout>
                 </LinearLayout>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:alpha=".2"
-                    android:background="@color/black_color" />
-
-
-                <LinearLayout
-                    android:visibility="gone"
-                    android:id="@+id/etUserBookingLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:background="@drawable/ic_booking"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-
-                        />
-
-                    <app.sliko.UI.SsRegularTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="8dp"
-                        android:text="@string/myBookings"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-                <TextView
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:alpha=".2"
-                    android:background="@color/black_color" />
-
-                <LinearLayout
-                    android:id="@+id/settingLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:background="@drawable/ic_settings"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-
-                        />
-
-                    <app.sliko.UI.SsRegularTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="8dp"
-                        android:text="@string/setting"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:alpha=".2"
-                    android:background="@color/black_color" />
-
-                <LinearLayout
-                    android:id="@+id/signOutLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:background="@drawable/ic_logout"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-
-                        />
-
-                    <app.sliko.UI.SsRegularTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="8dp"
-                        android:text="@string/signout"
-                        android:textColor="@color/black" />
-
-                </LinearLayout>
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:alpha=".2"
-                    android:background="@color/black_color" />
-
-
             </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+        <ImageView
+            android:layout_margin="16dp"
+            android:alpha=".2"
+            android:layout_width="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:background="@drawable/slicko_simple_image"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
 </LinearLayout>

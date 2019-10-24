@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:background="@color/white"
+    android:background="@android:color/transparent"
     android:layout_height="match_parent">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/stadiumLayout"
-        android:background="@color/white"
+        android:visibility="gone"
+        android:background="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
@@ -19,13 +20,13 @@
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="@color/white">
+            android:background="@android:color/transparent">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@android:color/transparent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <FrameLayout
@@ -103,8 +104,11 @@
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
+
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
+            android:background="@color/allAppBackgroundColor"
             android:layout_height="match_parent"
             android:fillViewport="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
@@ -124,6 +128,7 @@
                         android:layout_width="wrap_content"
                         android:text="@string/stadiumReport"
                         android:layout_height="wrap_content"/>
+<!--
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
@@ -133,10 +138,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:layout_weight="1">
+                            android:layout_weight=".4">
                             <app.sliko.UI.SsRegularTextView
                                 android:layout_width="wrap_content"
-                                android:text="Days"
+                                android:text="@string/days"
                                 android:paddingRight="5dp"
                                 android:paddingBottom="5dp"
                                 android:paddingTop="5dp"
@@ -159,12 +164,20 @@
                         <TextView
                             android:layout_width="8dp"
                             android:layout_height="match_parent"/>
+
+
+
+
+
+
+
+
                         <LinearLayout
                             android:id="@+id/pitchSpinnerLayout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:layout_weight="1">
+                            android:layout_weight=".4">
                             <app.sliko.UI.SsRegularTextView
                                 android:layout_width="wrap_content"
                                 android:text="@string/pitch"
@@ -195,7 +208,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:layout_weight="1">
+                            android:layout_weight=".31">
                             <app.sliko.UI.SsRegularTextView
                                 android:layout_width="wrap_content"
                                 android:text="@string/paymentMode"
@@ -221,6 +234,119 @@
                         </LinearLayout>
 
                     </LinearLayout>
+-->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="5dp"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                        android:layout_weight=".4"
+                            android:weightSum="1"
+                          >
+                            <app.sliko.UI.SsRegularTextView
+                                android:layout_width="wrap_content"
+                                android:text="@string/days"
+                                android:paddingRight="5dp"
+                                android:paddingBottom="5dp"
+                                android:paddingTop="5dp"
+                                android:layout_weight="0.5"
+                                android:layout_height="0dp"/>
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:layout_width="match_parent"
+                                android:background="@drawable/edit_bg_light_grey"
+                                android:layout_weight="0.5"
+                                android:layout_height="0dp">
+                                <Spinner
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_width="match_parent"
+                                    android:id="@+id/sortSpinner"
+                                    android:background="@android:color/transparent"
+                                    android:layout_height="wrap_content"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="match_parent"/>
+
+                        <LinearLayout
+                            android:id="@+id/pitchSpinnerLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:weightSum="1"
+                            android:layout_weight=".4">
+                            <app.sliko.UI.SsRegularTextView
+                                android:layout_width="wrap_content"
+                                android:text="@string/pitch"
+                                android:paddingRight="5dp"
+                                android:paddingBottom="5dp"
+                                android:layout_weight="0.5"
+                                android:paddingTop="5dp"
+                                android:layout_height="0dp"/>
+
+                            <LinearLayout
+                                android:layout_weight="0.5"
+                                android:orientation="vertical"
+                                android:layout_width="match_parent"
+                                android:background="@drawable/edit_bg_light_grey"
+                                android:layout_height="0dp">
+
+                                <Spinner
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_width="match_parent"
+                                    android:id="@+id/sortByPitch"
+                                    android:background="@android:color/transparent"
+                                    android:layout_height="wrap_content"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                        <TextView
+                            android:layout_width="8dp"
+                            android:layout_height="match_parent"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:weightSum="1"
+                            android:layout_weight=".4">
+                            <app.sliko.UI.SsRegularTextView
+                                android:layout_width="wrap_content"
+                                android:text="@string/paymentMode"
+                                android:paddingRight="5dp"
+                                android:paddingBottom="5dp"
+                                android:layout_weight="0.5"
+                                android:paddingTop="5dp"
+                                android:layout_height="0dp"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:background="@drawable/edit_bg_light_grey"
+                                android:orientation="vertical"
+                                android:layout_weight="0.5"
+                                android:layout_height="0dp">
+
+                                <Spinner
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_width="match_parent"
+                                    android:id="@+id/sortByModeOfPayment"
+                                    android:background="@android:color/transparent"
+                                    android:layout_height="wrap_content"/>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <!--==================-->
                     <LinearLayout
                         android:layout_marginTop="8dp"
                         android:layout_width="match_parent"
@@ -231,7 +357,7 @@
                             android:layout_width="match_parent"
                             android:layout_weight="1"
                             app:cardCornerRadius="5dp"
-                            android:layout_height="match_parent">
+                            android:layout_height="110dp">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:padding="10dp"
@@ -264,7 +390,6 @@
                                             android:layout_height="wrap_content"/>
 
                                         <app.sliko.UI.SsRegularTextView
-                                            android:textSize="16sp"
                                             android:textColor="@color/white"
                                             android:layout_width="wrap_content"
                                             android:text="@string/totalBooking"
@@ -277,14 +402,14 @@
                         </androidx.cardview.widget.CardView>
 
                         <TextView
-                            android:layout_width="15dp"
+                            android:layout_width="2dp"
                             android:layout_height="match_parent"/>
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             app:cardCornerRadius="5dp"
                             android:layout_weight="1"
                             app:cardBackgroundColor="@color/lightGreen"
-                            android:layout_height="match_parent">
+                            android:layout_height="110dp">
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:padding="10dp"
@@ -342,6 +467,29 @@
                         android:focusableInTouchMode="true"
                         android:text="@string/stadiumInfo"
                         android:textColor="@color/lightGreen" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <hyogeun.github.com.colorratingbarlib.ColorRatingBar
+                            android:id="@+id/stadiumRating"
+                            style="?android:ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:changeable="false"
+                            app:empty_color="@color/semi_black_color"
+                            app:half_color="@color/yellow"
+                            app:progress_color="@color/yellow" />
+
+                        <app.sliko.UI.SsRegularTextView
+                            android:id="@+id/SD_stadiumReviews"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp" />
+                    </LinearLayout>
 
 
                 </FrameLayout>
@@ -362,29 +510,6 @@
                         android:orientation="vertical"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp">
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:gravity="end"
-                            android:orientation="horizontal">
-
-                            <hyogeun.github.com.colorratingbarlib.ColorRatingBar
-                                android:id="@+id/stadiumRating"
-                                style="?android:ratingBarStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:changeable="false"
-                                app:empty_color="@color/semi_black_color"
-                                app:half_color="@color/yellow"
-                                app:progress_color="@color/yellow" />
-
-                            <app.sliko.UI.SsRegularTextView
-                                android:id="@+id/SD_stadiumReviews"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="12sp" />
-                        </LinearLayout>
 
                         <app.sliko.UI.SsRegularTextView
                             android:id="@+id/stadiumName"
@@ -404,7 +529,6 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:orientation="horizontal"
-                            android:gravity="center_vertical"
                             android:layout_marginTop="5dp"
                             android:layout_height="wrap_content">
                             <TextView
@@ -446,24 +570,41 @@
                     android:alpha=".2"
                     android:background="@color/black" />
 
-                <app.sliko.UI.SsMediumTextView
-                    android:id="@+id/pitchesLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <FrameLayout
+                    android:layout_width="match_parent"
                     android:layout_marginTop="15dp"
-                    android:background="@drawable/edit_bg_green"
-                    android:paddingLeft="16dp"
-                    android:paddingTop="3dp"
-                    android:paddingRight="16dp"
-                    android:paddingBottom="3dp"
-                    android:text="@string/pitches"
-                    android:textColor="@color/white" />
+                    android:layout_height="wrap_content">
+                    <app.sliko.UI.SsMediumTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_bg_green"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/pitches"
+                        android:textColor="@color/white" />
+                    <app.sliko.UI.SsMediumTextView
+                        android:layout_gravity="end|center_vertical"
+                        android:id="@+id/addPitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edit_bg_green"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="3dp"
+                        android:paddingRight="16dp"
+                        android:paddingBottom="3dp"
+                        android:text="@string/addPitch"
+                        android:textColor="@color/white" />
+
+                </FrameLayout>
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:layout_marginTop="5dp"
                         android:id="@+id/pitchesRecyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -510,7 +651,11 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
 
     <LinearLayout
         android:visibility="gone"

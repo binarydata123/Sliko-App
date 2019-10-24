@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import app.sliko.UI.SsRegularButton;
 import app.sliko.UI.SsRegularEditText;
+import app.sliko.UI.SsRegularTextView;
 
 public class BookPitchMauallyDialog {
 
@@ -18,8 +19,18 @@ public class BookPitchMauallyDialog {
     private SsRegularButton bookButtonLayout;
     private LinearLayout cancelButton;
 
+    public SsRegularTextView getTxtdate() {
+        return txtdate;
+    }
+
+    public SsRegularTextView getTxttime() {
+        return txttime;
+    }
+
+    private SsRegularTextView txtdate;
+private  SsRegularTextView txttime;
     public BookPitchMauallyDialog(AlertDialog dialog_error, SsRegularEditText etName,SsRegularEditText etEmail, SsRegularEditText etPhone,
-                                  SsRegularButton bookButtonLayout,LinearLayout cancelButton) {
+                                  SsRegularButton bookButtonLayout,LinearLayout cancelButton,SsRegularTextView txtdate,SsRegularTextView txttime) {
 
         this.dialog_error = dialog_error;
         this.etName = etName;
@@ -27,6 +38,8 @@ public class BookPitchMauallyDialog {
         this.etPhone = etPhone;
         this.bookButtonLayout = bookButtonLayout;
         this.cancelButton = cancelButton;
+        this.txtdate=txtdate;
+        this.txttime= txttime;
     }
 
     public AlertDialog getDialog_error() {

@@ -32,16 +32,12 @@ public class StadiumImagesAdapter extends PagerAdapter {
     public int getCount() {
         return reviewsModelArrayList.size();
     }
-
-    int width;
-    int height;
-
+    private int width;
+    private int height;
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-
         return object == view;
     }
-
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {

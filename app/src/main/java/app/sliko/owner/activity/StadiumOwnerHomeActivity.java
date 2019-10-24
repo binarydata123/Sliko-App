@@ -3,9 +3,8 @@ package app.sliko.owner.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,10 +30,6 @@ import org.json.JSONObject;
 import app.sliko.EditProfileActivity;
 import app.sliko.R;
 import app.sliko.UI.SsMediumTextView;
-import app.sliko.activity.LoginActivity;
-import app.sliko.activity.SettingActivity;
-import app.sliko.dialogs.DialogMethodCaller;
-import app.sliko.dialogs.models.DialogConfirmation;
 import app.sliko.owner.events.StadiumExistEventOrNot;
 import app.sliko.owner.events.SuccessFullyStadiumCreated;
 import app.sliko.owner.fragment.AllReviewsFragment;
@@ -44,7 +39,6 @@ import app.sliko.owner.fragment.ReportsFragment;
 import app.sliko.owner.fragment.StadiumDetailsFragment;
 import app.sliko.utills.M;
 import app.sliko.utills.Prefs;
-import app.sliko.web.Api;
 import app.sliko.web.ApiInterface;
 import app.sliko.web.RetrofitClientInstance;
 import butterknife.BindView;
@@ -58,34 +52,28 @@ import retrofit2.Response;
 public class StadiumOwnerHomeActivity extends AppCompatActivity {
     @BindView(R.id.bottomLayout)
     BottomNavigationView bottomLayout;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
-    @BindView(R.id.ivUserImage)
-    CircleImageView ivUserImage;
+//    @BindView(R.id.drawer_layout)
+//    DrawerLayout mDrawerLayout;
+//    @BindView(R.id.ivUserImage)
+//    CircleImageView ivUserImage;
     @BindView(R.id.toolbarTitle)
     SsMediumTextView toolbarTitle;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.addPitchLayout)
-    LinearLayout addPitchLayout;
-    @BindView(R.id.myProfileLayout)
-    LinearLayout myProfileLayout;
-    @BindView(R.id.signOutLayout)
-    LinearLayout signOutLayout;
-    @BindView(R.id.editStadiumLayout)
-    LinearLayout editStadiumLayout;
-    @BindView(R.id.etName)
-    TextView etName;
-    @BindView(R.id.etEmail)
-    TextView etEmail;
-    @BindView(R.id.etPhone)
-    TextView etPhone;
-    @BindView(R.id.editProfileLayout)
-    LinearLayout editProfileLayout;
-    @BindView(R.id.stadiumRelatedLayout)
-    LinearLayout stadiumRelatedLayout;    @BindView(R.id.settingLayout)
-    LinearLayout settingLayout;
+//    @BindView(R.id.myProfileLayout)
+//    LinearLayout myProfileLayout;
+//
+//    @BindView(R.id.etName)
+//    TextView etName;
+//    @BindView(R.id.etEmail)
+//    TextView etEmail;
+//    @BindView(R.id.etPhone)
+//    TextView etPhone;
+//    @BindView(R.id.editProfileLayout)
+//    LinearLayout editProfileLayout;
+
     Dialog dialog;
+    FragmentManager fragmentManager;
 
     @Override
     protected void onDestroy() {
@@ -97,51 +85,42 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stadium_owner_home);
+        fragmentManager = getSupportFragmentManager();
         ButterKnife.bind(StadiumOwnerHomeActivity.this);
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         dialog = M.showDialog(StadiumOwnerHomeActivity.this, "", false);
         toolbarTitle.setText(getString(R.string.home));
-        toolbar.setNavigationIcon(R.drawable.ic_menu);
+//        toolbar.setNavigationIcon(R.drawable.ic_menu);
         swapContentFragment(StadiumDetailsFragment.newInstance(), true, R.id.frameContainer);
         setListeners();
-        toolbar.setNavigationOnClickListener(view -> {
-            if (mDrawerLayout.isDrawerVisible(GravityCompat.START)) {
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-            } else {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-
-//        int startEntry = 9;
-//        int stopEntry = 17;
-//        int slot = 2;
-//        int temp = startEntry;
-//        for (int k = startEntry; k < stopEntry; k++) {
-//            if (temp < stopEntry) {
-//                Log.i(">>data", "checkForLoop: " + ((temp) + "-" + (temp + slot)));
-//                temp += slot;
+//        toolbar.setNavigationOnClickListener(view -> {
+//            if (mDrawerLayout.isDrawerVisible(GravityCompat.START)) {
+//                mDrawerLayout.closeDrawer(GravityCompat.START);
+//            } else {
+//                mDrawerLayout.openDrawer(GravityCompat.START);
 //            }
-//        }
+//        });
+
         setUpLayout();
         if (!M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id").equalsIgnoreCase("")) {
             fetchStadiumInfo();
         }
+//        myProfileLayout.setOnClickListener(view -> {
+//                    mDrawerLayout.closeDrawer(GravityCompat.START);
+//                    bottomLayout.setSelectedItemId(R.id.action_profile);
+//                }
+//        );
     }
 
     private void setUpLayout() {
-        if (M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "profilepic").equalsIgnoreCase("")) {
-            Picasso.get().load(Api.DUMMY_PROFILE).into(ivUserImage);
-        } else {
-            Picasso.get().load(Api.DUMMY_PROFILE).into(ivUserImage);
-        }
-        etEmail.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "email"));
-        etName.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "fullname"));
-        etPhone.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "phone"));
-        Log.e(">>data", "setUpLayout: " +  M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, Api.IS_STADIUM));
- Log.e(">>userId", "setUpLayout: " +  M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id"));
-
+        Log.e(">>id", "setUpLayout: " + M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id"));
+        Log.e(">>id", "setUpLayout: " + M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "profilepic"));
+//        Picasso.get().load(M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "profilepic")).error(R.drawable.app_icon).into(ivUserImage);
+//        etEmail.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "email"));
+//        etName.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "fullname"));
+//        etPhone.setText(M.actAccordingly(StadiumOwnerHomeActivity.this, "phone"));
     }
 
     public void swapContentFragment(final Fragment i_newFragment, final boolean i_addToStack, final int container) {
@@ -181,87 +160,10 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
             return false;
         });
 
-        editStadiumLayout.setOnClickListener(view ->
-                startActivity(new Intent(StadiumOwnerHomeActivity.this, AddStadiumActivity.class)
-                        .putExtra("stadiumType", "edit")
-                        .putExtra("stadium_id", stadiumId)));
-        addPitchLayout.setOnClickListener(view ->
-                handleTransition(AddPitchActivity.class));
-        editProfileLayout.setOnClickListener(view ->
-                startActivity(new Intent(StadiumOwnerHomeActivity.this, EditProfileActivity.class).putExtra("typeOfProfile", "user")));
-        signOutLayout.setOnClickListener(view -> {
-            dialogConfirmation = DialogMethodCaller.openDialogConfirmation(StadiumOwnerHomeActivity.this, R.layout.dialog_confirmation, false);
-            dialogConfirmation.getDialog_error().show();
-            dialogConfirmation.getDialogConfirmationMessage().setText(getString(R.string.doYouWantToSignOut));
-            dialogConfirmation.getDialogConfirmationTitle().setText(getString(R.string.signout));
-            dialogConfirmation.getCloseButton().setOnClickListener(view12 -> dialogConfirmation.getDialog_error().dismiss());
-            dialogConfirmation.getOkButton().setOnClickListener(view1 -> {
-                dialogConfirmation.getDialog_error().dismiss();
-                logoutApi();
-            });
-        });
 
-        settingLayout.setOnClickListener(view -> startActivity(new Intent(StadiumOwnerHomeActivity.this, SettingActivity.class)));
-    }
-
-    Handler handler;
-    Runnable runnable;
-
-    private void logoutApi() {
-        dialog.show();
-        handler = new Handler();
-        runnable = () -> {
-            dialog.cancel();
-            Prefs.clearUserData(StadiumOwnerHomeActivity.this);
-            startActivity(new Intent(StadiumOwnerHomeActivity.this, LoginActivity.class));
-            finish();
-        };
-        handler.postDelayed(runnable, 500);
-    }
-//    private void logoutApi() {
-//        dialog.show();
-//        ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-//        Call<ResponseBody> call = service.ep_logout(M.fetchUserTrivialInfo(StadiumOwnerHomeActivity.this, "id"));
-//        call.enqueue(new retrofit2.Callback<ResponseBody>() {
-//            @Override
-//            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-//                dialog.cancel();
-//                try {
-//                    if (response.isSuccessful()) {
-//                        String sResponse = response.body().string();
-//                        JSONObject jsonObject = new JSONObject(sResponse);
-//                        String status = jsonObject.getString("status");
-//                        String message = jsonObject.getString("message");
-//                        if (status.equalsIgnoreCase("true")) {
-//                            Prefs.clearUserData(StadiumOwnerHomeActivity.this);
-//                            Toast.makeText(StadiumOwnerHomeActivity.this, message, Toast.LENGTH_SHORT).show();
-//                            startActivity(new Intent(StadiumOwnerHomeActivity.this, LoginActivity.class));
-//                            finish();
-//                        } else {
-//                            Toast.makeText(StadiumOwnerHomeActivity.this, message, Toast.LENGTH_SHORT).show();
-//                        }
-//                    } else {
-//                        Toast.makeText(StadiumOwnerHomeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-//                    }
-//                } catch (Exception e) {
-//                    Log.i(">>error", "onResponse: " + e.getMessage());
-//                    Toast.makeText(StadiumOwnerHomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
+//        editProfileLayout.setOnClickListener(view ->
+//                startActivity(new Intent(StadiumOwnerHomeActivity.this, EditProfileActivity.class).putExtra("typeOfProfile", "user")));
 //
-//            @Override
-//            public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
-//                dialog.cancel();
-//                Toast.makeText(StadiumOwnerHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-
-    DialogConfirmation dialogConfirmation;
-
-    private void handleTransition(Class<?> navigateTo) {
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        startActivity(new Intent(StadiumOwnerHomeActivity.this, navigateTo));
     }
 
     String stadiumId = "";
@@ -287,12 +189,15 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
                             Prefs.saveStadiumId(stadiumId, StadiumOwnerHomeActivity.this);
                             EventBus.getDefault().postSticky(new StadiumExistEventOrNot(true, jsonObject.toString()));
                         } else {
+
                             EventBus.getDefault().postSticky(new StadiumExistEventOrNot(false, message));
                         }
                     } else {
+
                         Toast.makeText(StadiumOwnerHomeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
+
                     Toast.makeText(StadiumOwnerHomeActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -300,6 +205,7 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, Throwable t) {
                 dialog.cancel();
+
                 Toast.makeText(StadiumOwnerHomeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -311,8 +217,22 @@ public class StadiumOwnerHomeActivity extends AppCompatActivity {
             if (successFullyStadiumCreated.isStatus()) {
                 fetchStadiumInfo();
                 setUpLayout();
-                stadiumRelatedLayout.setVisibility(View.VISIBLE);
+
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        MenuItem homeItem = bottomLayout.getMenu().getItem(0);
+        if (fragmentManager.getBackStackEntryCount() == 1) {
+            finish();
+        } else {
+            Toast.makeText(this, getString(R.string.press_once_more), Toast.LENGTH_SHORT).show();
+            for (int k = 0; k < fragmentManager.getBackStackEntryCount(); k++) {
+                fragmentManager.popBackStack();
+            }
+            bottomLayout.setSelectedItemId(homeItem.getItemId());
         }
     }
 

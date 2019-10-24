@@ -79,4 +79,91 @@ public class Prefs {
         SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
         return preferences.getString(playerPosition, "");
     }
+
+
+    public static void saveDays(String sun, String mon,String tues,String wed,String thurs,String fri,String sat,Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("sun", sun);
+        editor.putString("mon", mon);
+        editor.putString("tues", tues);
+        editor.putString("wed", wed);
+        editor.putString("thurs", thurs);
+        editor.putString("fri", fri);
+        editor.putString("sat", sat);
+
+        editor.apply();
+    }
+
+    public static String getSun(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("sun", "");
+    }
+    public static String getMon(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("mon", "");
+    }
+    public static String getTues(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("tues", "");
+    }
+    public static String getWed(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("wed", "");
+    }
+    public static String getThurs(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("thurs", "");
+    }
+    public static String getFri(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("fri", "");
+    }
+    public static String getSat(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("sat", "");
+    }
+/* owner side*/
+public static void saveDaysowner(String sun, String mon,String tues,String wed,String thurs,String fri,String sat,Context context) {
+    SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+    SharedPreferences.Editor editor = preferences.edit();
+    editor.putString("sun", sun);
+    editor.putString("mon", mon);
+    editor.putString("tues", tues);
+    editor.putString("wed", wed);
+    editor.putString("thurs", thurs);
+    editor.putString("fri", fri);
+    editor.putString("sat", sat);
+
+    editor.apply();
+}
+
+    public static String getSuno(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("sun", "");
+    }
+    public static String getMono(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("mon", "");
+    }
+    public static String getTueso(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("tues", "");
+    }
+    public static String getWedo(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("wed", "");
+    }
+    public static String getThurso(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("thurs", "");
+    }
+    public static String getFrio(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("fri", "");
+    }
+    public static String getSato(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(APP_KEY, Activity.MODE_PRIVATE);
+        return preferences.getString("sat", "");
+    }
 }

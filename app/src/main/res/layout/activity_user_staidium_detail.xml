@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/appbar_layout_activity"
     android:layout_width="match_parent"
-    android:background="@color/white"
+    android:background="@color/allAppBackgroundColor"
 
     android:layout_height="match_parent">
     <ImageView
@@ -61,6 +61,19 @@
 
                 </me.relex.circleindicator.CircleIndicator>
                 <include layout="@layout/no_image_layouts"/>
+
+                <app.sliko.UI.SsRegularButton
+                    android:id="@+id/bookButton"
+                    android:visibility="gone"
+                    android:layout_width="100dp"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/toolbarColor"
+                    android:textColor="@color/white"
+                    android:text="@string/bookNow"
+                    android:layout_height="36dp"/>
+
+
             </FrameLayout>
 
             <include layout="@layout/toolbar_transparent"/>
@@ -71,10 +84,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+            android:background="@color/allAppBackgroundColor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -170,7 +183,29 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical"
+                        android:layout_marginTop="3dp"
+                        android:layout_height="wrap_content">
+                        <app.sliko.UI.SsRegularTextView
+                            android:textColor="@color/lightGreen"
+                            android:text="@string/phone"
+                            android:drawablePadding="5dp"
+                            android:drawableLeft="@drawable/ic_call_answer_small"
+                            android:layout_width="110dp"
+                            android:layout_height="wrap_content"/>
+                        <app.sliko.UI.SsRegularTextView
+                            android:id="@+id/stadiumPhone"
+                            android:drawablePadding="5dp"
+                            android:paddingLeft="3dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:textSize="16sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
                         android:layout_marginTop="3dp"
                         android:layout_height="wrap_content">
                         <app.sliko.UI.SsRegularTextView
@@ -178,16 +213,14 @@
                             android:text="@string/location"
                             android:drawablePadding="5dp"
                             android:drawableLeft="@drawable/ic_location"
-                            android:layout_width="wrap_content"
+                            android:layout_width="110dp"
                             android:layout_height="wrap_content"/>
                         <app.sliko.UI.SsRegularTextView
-                            android:layout_marginTop="5dp"
                             android:id="@+id/stadiumAddress"
                             android:drawablePadding="5dp"
+                            android:paddingLeft="3dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:gravity="center_vertical"
                             android:textSize="16sp" />
 
                     </LinearLayout>
@@ -197,7 +230,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical"
                         android:layout_marginTop="3dp"
                         android:layout_height="wrap_content">
                         <app.sliko.UI.SsRegularTextView
@@ -205,10 +237,10 @@
                             android:text="@string/lowestPitchPrice"
                             android:drawablePadding="5dp"
                             android:drawableLeft="@drawable/ic_tag"
-                            android:layout_width="wrap_content"
+                            android:layout_width="110dp"
                             android:layout_height="wrap_content"/>
                         <app.sliko.UI.SsRegularTextView
-                            android:paddingLeft="5dp"
+                            android:paddingLeft="3dp"
                             android:id="@+id/stadiumPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -220,7 +252,75 @@
                 </LinearLayout>
 
             </FrameLayout>
+            <LinearLayout
+                android:id="@+id/stadiumOffDaysLayout"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="15dp"
+                    android:alpha=".1"
+                    android:background="@color/black" />
 
+                <app.sliko.UI.SsRegularTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/edit_bg_green"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="3dp"
+                    android:paddingRight="16dp"
+                    android:textColor="@color/white"
+                    android:paddingBottom="3dp"
+                    android:text="@string/stadiumOffDays" />
+
+
+             <RelativeLayout
+                 android:layout_marginTop="10dp"
+
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content">
+
+                 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                     android:layout_width="wrap_content"
+                     android:layout_height="35dp"
+                     xmlns:app="http://schemas.android.com/apk/res-auto"
+                     app:cardBackgroundColor="@color/white"
+                     android:gravity="center_vertical"
+                     app:cardElevation="5dp"
+
+                     android:id="@+id/cardid"
+                     android:layout_margin="3dp"
+                     android:orientation="vertical">
+                     <app.sliko.UI.SsRegularTextView
+                         android:id="@+id/timeslotset"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+android:paddingLeft="15dp"
+                         android:layout_gravity="center"
+                         android:paddingRight="15dp"
+                         android:gravity="center"
+                         android:background="@drawable/white_corner_round"
+                         android:textColor="@color/black"
+                         android:text="" />
+
+                 </androidx.cardview.widget.CardView>
+
+
+
+
+                 <androidx.recyclerview.widget.RecyclerView
+                     android:layout_marginTop="10dp"
+                     android:layout_width="match_parent"
+                     android:nestedScrollingEnabled="false"
+                     android:id="@+id/stadiumOffDaysRecyclerView"
+                     android:layout_height="wrap_content"/>
+             </RelativeLayout>
+
+
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/stadiumAvailabilityLayout"
                 android:layout_width="match_parent"
@@ -244,9 +344,29 @@
                     android:textColor="@color/white"
                     android:paddingBottom="3dp"
                     android:text="@string/stadiumAvailability" />
+                <LinearLayout
+                    android:layout_marginTop="10dp"
 
+                    android:id="@+id/changeBackground"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:background="@drawable/available"
+                        android:layout_height="15dp"/>
+                    <app.sliko.UI.SsRegularTextView
+                        android:paddingLeft="8dp"
+                        android:textSize="14sp"
+                        android:textColor="@color/black_color"
+                        android:id="@+id/timingText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
                 <androidx.recyclerview.widget.RecyclerView
                     android:layout_marginTop="10dp"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:nestedScrollingEnabled="false"
                     android:id="@+id/stadiumAvailabilityRecyclerView"

@@ -3,13 +3,12 @@ package app.sliko.activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -65,7 +64,7 @@ public class SettingActivity extends AppCompatActivity {
         toolbarTitle.setText(getString(R.string.setting));
         dialog = M.showDialog(SettingActivity.this, "", false);
         fetchSettings();
-        enableDisableNotificationButton.setOnClickListener(view -> enableDisableNotification(enableDisableNotificationButton.isChecked()?"1":"0"));
+        enableDisableNotificationButton.setOnClickListener(view -> enableDisableNotification(enableDisableNotificationButton.isChecked() ? "1" : "0"));
         saveButton.setOnClickListener(view -> {
             if (etTime.length() == 0 || etTime.getText().toString().trim().length() == 0) {
                 Toast.makeText(SettingActivity.this, getString(R.string.please_enter_suitale_time), Toast.LENGTH_SHORT).show();
@@ -75,7 +74,7 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         changePasswordLayout.setOnClickListener(view -> {
-            changePasswordDialog = DialogMethodCaller.openChangePasswordDialog(SettingActivity.this, R.layout.dialog_change_password , false);
+            changePasswordDialog = DialogMethodCaller.openChangePasswordDialog(SettingActivity.this, R.layout.dialog_change_password, false);
             changePasswordDialog.getDialog_error().show();
             changePasswordDialog.getCancelButton().setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,7 +87,7 @@ public class SettingActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     changePasswordDialog.getDialog_error().dismiss();
                     hitResetPassword(changePasswordDialog.getEtUserEmail().getText().toString()
-                            , changePasswordDialog.getEtPassword().getText().toString(),changePasswordDialog.getEtNewPassword().getText().toString());
+                            , changePasswordDialog.getEtPassword().getText().toString(), changePasswordDialog.getEtNewPassword().getText().toString());
                 }
             });
         });
@@ -101,14 +100,24 @@ public class SettingActivity extends AppCompatActivity {
             dialogConfirmation.getCloseButton().setOnClickListener(view12 -> dialogConfirmation.getDialog_error().dismiss());
             dialogConfirmation.getOkButton().setOnClickListener(view1 -> {
                 dialogConfirmation.getDialog_error().dismiss();
-                deactivateApi();
+                dialog.show();
+                handler = new Handler();
+                runnable = () -> {
+                    dialog.cancel();
+                    Prefs.clearUserData(SettingActivity.this);
+                    startActivity(new Intent(SettingActivity.this, LoginActivity.class));
+                    finish();
+                };
+                handler.postDelayed(runnable, 500);
             });
         });
     }
 
+    Handler handler;
+    Runnable runnable;
     DialogConfirmation dialogConfirmation;
 
-        private void deactivateApi() {
+    private void deactivateApi() {
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_deactivateAccount(M.fetchUserTrivialInfo(SettingActivity.this, "id"));
@@ -147,10 +156,10 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
-    private void hitResetPassword(String email , String oldPassword  , String newPassword){
+    private void hitResetPassword(String email, String oldPassword, String newPassword) {
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
-        Call<ResponseBody> call = service.ep_resetPassword(M.fetchUserTrivialInfo(SettingActivity.this, "id"),email , oldPassword , newPassword);
+        Call<ResponseBody> call = service.ep_resetPassword(M.fetchUserTrivialInfo(SettingActivity.this, "id"), email, oldPassword, newPassword);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -179,8 +188,10 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     ChangePasswordDialog changePasswordDialog;
+
     private void enableDisableNotification(String notificationCheck) {
-        Log.e(">>check", "enableDisableNotification: " + notificationCheck );
+        Log.i(">>error", "onResponse: " + M.fetchUserTrivialInfo(SettingActivity.this , "id"));
+        Log.e(">>check", "enableDisableNotification: " + notificationCheck);
         dialog.show();
         ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
         Call<ResponseBody> call = service.ep_enableDisableNotification(M.fetchUserTrivialInfo(SettingActivity.this, "id"),
@@ -192,13 +203,12 @@ public class SettingActivity extends AppCompatActivity {
                 try {
                     if (response.isSuccessful()) {
                         String sResponse = response.body().string();
-
                         JSONObject jsonObject = new JSONObject(sResponse);
                         String status = jsonObject.getString("status");
                         String message = jsonObject.getString("message");
+                        Log.e(">>error", "onResponse: " + jsonObject.toString());
                         if (status.equalsIgnoreCase("true")) {
                             JSONObject data = jsonObject.getJSONObject("data");
-                            enableDisableNotificationButton.setChecked(data.getString("check_notification").equalsIgnoreCase("1"));
                             if (data.getString("check_notification").equalsIgnoreCase("0")) {
                                 saveButton.setVisibility(View.GONE);
                                 etTime.setEnabled(false);

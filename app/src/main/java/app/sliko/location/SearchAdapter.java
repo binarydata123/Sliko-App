@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -80,6 +79,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
                             lat = dataObject.getString("lat");
                             lng = dataObject.getString("lng");
                             Intent returnIntent = new Intent();
+                            returnIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            returnIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             returnIntent.putExtra("lat", lat);
                             returnIntent.putExtra("lng", lng);
                             returnIntent.putExtra("addressSelected", address);

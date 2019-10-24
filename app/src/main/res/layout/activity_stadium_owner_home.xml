@@ -49,5 +49,5 @@
     </FrameLayout>
 
 
-    <include layout="@layout/side_menu_owner" />
+<!--    <include layout="@layout/side_menu_owner" />-->
 </androidx.drawerlayout.widget.DrawerLayout>

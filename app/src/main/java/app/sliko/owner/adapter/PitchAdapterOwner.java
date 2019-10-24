@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -26,9 +27,11 @@ import app.sliko.UI.SsMediumTextView;
 import app.sliko.UI.SsRegularTextView;
 import app.sliko.dialogs.DialogMethodCaller;
 import app.sliko.dialogs.models.DialogConfirmation;
+import app.sliko.events.RefreshEvent;
 import app.sliko.owner.activity.AddPitchActivity;
 import app.sliko.owner.activity.OwnerPitchBookingActivity;
 import app.sliko.owner.activity.PitchDetailActivity;
+import app.sliko.owner.events.StadiumExistEventOrNot;
 import app.sliko.owner.model.PitchModel;
 import app.sliko.utills.M;
 import app.sliko.web.ApiInterface;
@@ -68,8 +71,8 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
         } else {
             myViewHolder.SD_stadiumReviews.setText(pitchModelArrayList.get(i).getPitch_review_avg());
         }
-
         myViewHolder.pitchPrice.setText(context.getString(R.string.price) + ": " + pitchModelArrayList.get(i).getPrice());
+        myViewHolder.pitchType.setText(context.getString(R.string.pitchType) + ": " + M.actAccordinglyWithJson(context,pitchModelArrayList.get(i).getPitch_type()));
         myViewHolder.totalBookingOrders.setText(context.getString(R.string.totalBooking) + (Integer.parseInt(pitchModelArrayList.get(i).getProcess_booking()) + Integer.parseInt(pitchModelArrayList.get(i).getComplete_booking())) + "");
 
         Picasso.get().load(pitchModelArrayList.get(i).getPitch_gallery().get(0)).into(myViewHolder.pitchImage);
@@ -117,6 +120,8 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
                                 if (status.equalsIgnoreCase("true")) {
                                     pitchModelArrayList.remove(i);
                                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                                    EventBus.getDefault().postSticky(new RefreshEvent(true));
+
                                 } else {
                                     Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
                                 }
@@ -152,7 +157,8 @@ public class PitchAdapterOwner extends RecyclerView.Adapter<PitchAdapterOwner.My
         @BindView(R.id.pitchImage)
         ImageView pitchImage;
         @BindView(R.id.delete)
-        FloatingActionButton btn_remove;
+        FloatingActionButton btn_remove;        @BindView(R.id.pitchType)
+        SsRegularTextView pitchType;
         @BindView(R.id.viewBookingDetailsButton)
         LinearLayout viewBookingDetailsButton;
         @BindView(R.id.pitchName)

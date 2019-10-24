@@ -5,10 +5,8 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -36,7 +34,7 @@ import app.sliko.UI.SsMediumTextView;
 import app.sliko.UI.SsRegularButton;
 import app.sliko.UI.SsRegularEditText;
 import app.sliko.UI.SsRegularTextView;
-import app.sliko.location.FindLocationActivity;
+import app.sliko.location.GetLocationFromMapActivity;
 import app.sliko.models.StadiumImagesModel;
 import app.sliko.owner.adapter.AddImagesAdapter;
 import app.sliko.owner.adapter.StadiumOpeningAdapter;
@@ -178,7 +176,8 @@ public class AddStadiumActivity extends AppCompatActivity {
 
     @OnClick(R.id.stadiumAddress)
     void clickAddress() {
-        startActivityForResult(new Intent(AddStadiumActivity.this, FindLocationActivity.class), 200);
+
+        startActivityForResult(new Intent(AddStadiumActivity.this, GetLocationFromMapActivity.class), 200);
     }
 
 
@@ -196,11 +195,9 @@ public class AddStadiumActivity extends AppCompatActivity {
             openingString = stadiumOpeningAdapter.getSelectedArrayList().toString();
 
             if (openingString.endsWith(",")) {
-                Log.e(">>OpeningData", "setlisteners: " + openingString.substring(0, openingString.length() - 1));
-            } else {
-                Log.e(">>OpeningData", "setlisteners: " + openingString);
-
+                openingString = openingString.substring(0, openingString.length() - 1);
             }
+            Log.e(">>OpeningData", "setlisteners: " + openingString);
 
             updateMyInfo();
         }
@@ -264,6 +261,7 @@ public class AddStadiumActivity extends AppCompatActivity {
                 }
 
                 break;
+            case 201:
             case 200:
                 if (data != null) {
                     if (data.getStringExtra("lat") != null) {
@@ -307,7 +305,7 @@ public class AddStadiumActivity extends AppCompatActivity {
             lng = Api.LNG + "";
         }
         try {
-            dialog.show();
+          //  dialog.show();
             ApiInterface service = RetrofitClientInstance.getRetrofitInstance().create(ApiInterface.class);
             MultipartBody.Part[] multipart_body = null;
             if (files.size() != 0) {
@@ -374,6 +372,7 @@ public class AddStadiumActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         try {
                             String responseString = response.body().string();
+                            Log.e("update stadium","=="+responseString);
                             JSONObject jsonObject = new JSONObject(responseString);
                             String status = jsonObject.getString("status");
                             String message = jsonObject.getString("message");
